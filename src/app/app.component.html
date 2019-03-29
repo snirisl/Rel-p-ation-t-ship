@@ -1,0 +1,32 @@
+<ion-app>
+  <ion-menu slot="start" menuId="m1">
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Relpationtship</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <ion-list>
+        <ion-menu-toggle menu="m1">
+          <ion-item routerLink="/requests" button>
+            <ion-icon name="paper-plane"></ion-icon>
+            <ion-label>Requests</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+        <ion-menu-toggle menu="m1">
+          <ion-item (click)="onLogout()" button>
+            <ion-icon name="exit"></ion-icon>
+            <ion-label>Logout</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+        <ion-menu-toggle menu="m1">
+          <ion-item routerLink="/about" button>
+            <ion-icon name="information-circle-outline"></ion-icon>
+            <ion-label>About</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+  <ion-router-outlet main></ion-router-outlet>
+</ion-app>
