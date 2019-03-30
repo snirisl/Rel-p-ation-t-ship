@@ -43,10 +43,5 @@ export class RequestsService {
   get requests() {
     return [...this._requests];
   }
-
-  add(id) {
-    console.log('added!');
-    return;
-  }
   constructor() {}
 }
