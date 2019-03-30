@@ -14,4 +14,8 @@ export class AddRequestsPage implements OnInit {
   ngOnInit() {
     this.loadedRequests = this.requestsService.requests;
   }
+
+  addRequest(id) {
+    this.requestsService.add(id);
+  }
 }

@@ -16,7 +16,10 @@
             <ion-thumbnail slot="start">
               <ion-img [src]="request.imgUrl"></ion-img>
             </ion-thumbnail>
-            <ion-button slot="end" color="success"
+            <ion-button
+              slot="end"
+              color="success"
+              *ngIf="request.status === 'Done'"
               >Done
               <ion-icon name="checkmark-circle-outline"></ion-icon>
             </ion-button>
@@ -24,6 +27,12 @@
               <h2>{{ request.title }}</h2>
               <p>{{ request.description }}</p>
             </ion-label>
+            <ion-spinner
+              slot="end"
+              *ngIf="request.status === 'In progress'"
+              name="lines"
+              color="secondary"
+            ></ion-spinner>
           </ion-item>
         </ion-list>
       </ion-col>

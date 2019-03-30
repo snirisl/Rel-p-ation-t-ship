@@ -11,7 +11,7 @@
   <ion-grid>
     <ion-row>
       <ion-col *ngFor="let request of loadedRequests" size="6">
-        <ion-card style="min-height: 250px">
+        <ion-card style="min-height: 250px" (click)="addRequest(request.id)">
           <ion-card-header>
             <ion-card-subtitle>{{ request.title }}</ion-card-subtitle>
           </ion-card-header>
