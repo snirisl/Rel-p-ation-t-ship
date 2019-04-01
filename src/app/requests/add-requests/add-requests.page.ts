@@ -22,14 +22,14 @@ export class AddRequestsPage implements OnInit {
     this.loadedRequests = this.requestsService.requests;
   }
 
-  addRequest() {
+  addRequest(request: Request) {
     this.actionSheetCtrl.create({
       header: 'Send this Request?',
       buttons: [
         {
           text: 'Send',
           handler: () => {
-            this.openMessageModal('Send');
+            this.openMessageModal('Send', request);
           }
         },
         {
@@ -42,7 +42,7 @@ export class AddRequestsPage implements OnInit {
     });
   }
 
-  openMessageModal(mode: 'Send') {
+  openMessageModal(mode: 'Send', request) {
     console.log(mode);
     this.modalCtrl
       .create({
@@ -57,6 +57,7 @@ export class AddRequestsPage implements OnInit {
         console.log(resultData.data, resultData.role);
         if (resultData.role === 'confirm') {
           console.log('Request Sent!');
+          console.log(request);
         }
       });
   }
