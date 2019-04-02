@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Request } from '../request.model';
 import { RequestsService } from '../requests.service';
-import { IonItemSliding, } from '@ionic/angular';
+import { IonItemSliding, IonSegment } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { SegmentChangeEventDetail } from '@ionic/core';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-my-requests',
@@ -12,13 +12,19 @@ import { SegmentChangeEventDetail } from '@ionic/core';
 })
 export class MyRequestsPage implements OnInit {
   myRequests: Request[];
+  status = '';
+
+  @ViewChild(IonSegment) segment: IonSegment;
+  requestsObs: Observable<any>;
+
   constructor(
     private requestsService: RequestsService,
-    private router: Router,
+    private router: Router
   ) {}
 
   ngOnInit() {
-    this.myRequests = this.requestsService.requests;
+    this.segment.value = 'all';
+    this.requestsObs = this.requestsService.getRequests();
   }
 
   onComplete(requestId: string, slidingItem: IonItemSliding) {
@@ -31,7 +37,13 @@ export class MyRequestsPage implements OnInit {
     console.log('Request Archived.');
   }
 
-  onFilterUpdate(event: CustomEvent<SegmentChangeEventDetail>) {
-    console.log(event.detail);
+  onFilterUpdate(event: any) {
+    const filteredOption = event.detail.value;
+    if (filteredOption === 'all') {
+      this.status = '';
+      return;
+    }
+    this.status = filteredOption;
+    console.log(this.status);
   }
 }

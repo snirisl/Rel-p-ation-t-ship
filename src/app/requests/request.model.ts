@@ -4,6 +4,7 @@ export class Request {
     public title: string,
     public description: string,
     public imgUrl: string,
-    public status: string
+    public status: string,
+    public date: string
   ) {}
 }

@@ -6,6 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { MyRequestsPage } from './my-requests.page';
+import { ApplicationPipesModule } from 'src/app/application-pipes/application-pipes.module';
 
 const routes: Routes = [
   {
@@ -19,7 +20,8 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    ApplicationPipesModule
   ],
   declarations: [MyRequestsPage]
 })
