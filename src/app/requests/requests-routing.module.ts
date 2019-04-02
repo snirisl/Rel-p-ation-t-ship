@@ -29,14 +29,14 @@ const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: '/requests/tabs/add-requests',
+        redirectTo: '/requests/tabs/my-requests',
         pathMatch: 'full'
       }
     ]
   },
   {
     path: '',
-    redirectTo: '/requests/tabs/add-requests',
+    redirectTo: '/requests/tabs/my-requests',
     pathMatch: 'full'
   }
 ];
