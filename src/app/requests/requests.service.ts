@@ -61,7 +61,7 @@ export class RequestsService {
       request.title,
       request.description,
       request.imgUrl,
-      request.status,
+      'In progress',
       newDate
     );
     this._requests.push(newRequest);
