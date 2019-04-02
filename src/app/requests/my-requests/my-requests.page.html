@@ -8,9 +8,11 @@
 </ion-header>
 <ion-content>
   <ion-segment mode="md" (ionChange)="onFilterUpdate($event)" color="tertiary">
-    <ion-segment-button value="all">All Requests</ion-segment-button>
+    <ion-segment-button value="all"
+      ><ion-label>All Requests</ion-label></ion-segment-button
+    >
     <ion-segment-button value="completed"
-      >Completed Requests</ion-segment-button
+      ><ion-label>Completed Requests</ion-label></ion-segment-button
     >
   </ion-segment>
   <ion-grid>
