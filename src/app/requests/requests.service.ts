@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Request } from './request.model';
 import { Observable, of } from 'rxjs';
-
+import { HttpClient } from '@angular/common/http';
+import { tap } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
@@ -64,7 +65,17 @@ export class RequestsService {
       'In progress',
       newDate
     );
-    this._requests.push(newRequest);
+    return this.http
+      .post('https://relpationtship-test.firebaseio.com/added-requests.json', {
+        ...newRequest,
+        id: null
+      })
+      .pipe(
+        tap(resData => {
+          console.log(resData);
+        })
+      );
+    // this._requests.push(newRequest);
   }
-  constructor() {}
+  constructor(private http: HttpClient) {}
 }

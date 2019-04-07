@@ -61,8 +61,9 @@ export class AddRequestsPage implements OnInit {
         {
           text: 'Close',
           handler: () => {
-            this.requestsService.add(request);
-            this.router.navigateByUrl('/requests/tabs/my-requests');
+            this.requestsService.add(request).subscribe(() => {
+              this.router.navigateByUrl('/requests/tabs/my-requests');
+            });
           }
         }
       ]
