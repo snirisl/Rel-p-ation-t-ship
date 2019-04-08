@@ -53,4 +53,10 @@ export class MyRequestsPage implements OnInit, OnDestroy {
     this.status = filteredOption;
     console.log(this.status);
   }
+
+  doRefresh(event) {
+    this.requestsService.fetchRequests().subscribe(() => {
+      event.target.complete();
+    });
+  }
 }
