@@ -1,18 +1,20 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { Request } from '../request.model';
 import { RequestsService } from '../requests.service';
 import { IonItemSliding, IonSegment } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-my-requests',
   templateUrl: './my-requests.page.html',
   styleUrls: ['./my-requests.page.scss']
 })
-export class MyRequestsPage implements OnInit {
+export class MyRequestsPage implements OnInit, OnDestroy {
   myRequests: Request[];
+  requestsSub: Subscription;
   status = '';
+  isLoading = false;
 
   @ViewChild(IonSegment) segment: IonSegment;
   requestsObs: Observable<any>;
@@ -24,17 +26,22 @@ export class MyRequestsPage implements OnInit {
 
   ngOnInit() {
     this.segment.value = 'all';
-    this.requestsObs = this.requestsService.getRequests();
+    this.requestsSub = this.requestsService.requests.subscribe(requests => {
+      this.myRequests = requests;
+    });
   }
 
-  onComplete(requestId: string, slidingItem: IonItemSliding) {
-    slidingItem.close();
-    console.log('Request Completed.');
+  ionViewWillEnter() {
+    this.isLoading = true;
+    this.requestsService.fetchRequests().subscribe(() => {
+      this.isLoading = false;
+    });
   }
 
-  onArchive(requestId: string, slidingItem: IonItemSliding) {
-    slidingItem.close();
-    console.log('Request Archived.');
+  ngOnDestroy() {
+    if (this.requestsSub) {
+      this.requestsSub.unsubscribe();
+    }
   }
 
   onFilterUpdate(event: any) {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RequestsService } from '../requests.service';
 import { Request } from '../request.model';
 import {
@@ -8,26 +8,39 @@ import {
 } from '@ionic/angular';
 import { RequestMessageComponent } from './request-message/request-message.component';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { DepartmentRequestsService } from '../department-requests.service';
+import { StaticRequest } from '../static-requests.model';
 
 @Component({
   selector: 'app-add-requests',
   templateUrl: './add-requests.page.html',
   styleUrls: ['./add-requests.page.scss']
 })
-export class AddRequestsPage implements OnInit {
-  loadedRequests: Observable<any>;
+export class AddRequestsPage implements OnInit, OnDestroy {
+  loadedRequests: StaticRequest[];
+  requestsSub: Subscription;
   request: Request;
   constructor(
     private requestsService: RequestsService,
+    private departmentRequestsService: DepartmentRequestsService,
     private actionSheetCtrl: ActionSheetController,
-    private modalCtrl: ModalController,
     private alertController: AlertController,
     private router: Router
   ) {}
 
   ngOnInit() {
-    this.loadedRequests = this.requestsService.getRequests();
+    this.requestsSub = this.departmentRequestsService.departmentRequests.subscribe(
+      requests => {
+        this.loadedRequests = requests;
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    if (this.requestsSub) {
+      this.requestsSub.unsubscribe();
+    }
   }
 
   addRequest(request: Request) {

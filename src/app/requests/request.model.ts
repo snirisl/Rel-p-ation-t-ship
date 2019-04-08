@@ -5,6 +5,6 @@ export class Request {
     public description: string,
     public imgUrl: string,
     public status: string,
-    public date: string
+    public date: Date
   ) {}
 }
