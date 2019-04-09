@@ -17,8 +17,8 @@
     </ion-refresher-content>
   </ion-refresher>
   <ion-segment mode="md" (ionChange)="onFilterUpdate($event)" color="tertiary">
-    <ion-segment-button value="all"
-      ><ion-label>All Requests</ion-label></ion-segment-button
+    <ion-segment-button value="progress"
+      ><ion-label>Pending Requests</ion-label></ion-segment-button
     >
     <ion-segment-button value="completed"
       ><ion-label>Completed Requests</ion-label></ion-segment-button
@@ -30,7 +30,7 @@
         <div *ngIf="isLoading" text-center>
           <ion-spinner color="primary"></ion-spinner>
         </div>
-        <div text-center *ngIf="isLoading || myRequests.length <= 0">
+        <div text-center *ngIf="((myRequests | filter: status:'status').length <= 0 && status=== 'progress')">
           <p>
             No Requests found! Please create one first!
           </p>
@@ -38,6 +38,11 @@
             >Add Request</ion-button
           >
         </div>
+        <div text-center *ngIf="((myRequests | filter: status:'status').length <= 0 && status=== 'completed')">
+            <p>
+              No Completed Requests yet...
+            </p>
+          </div>
         <ion-list *ngIf="!isLoading || myRequests.length > 0">
           <ion-item-sliding
             *ngFor="
@@ -60,7 +65,7 @@
                   text-right
                   *ngIf="
                     request.status === 'In progress' &&
-                    this.segment.value === 'all'
+                    this.segment.value === 'progress'
                   "
                   color="secondary"
                   >In progress</ion-label
@@ -68,7 +73,7 @@
                 <ion-label
                   *ngIf="
                     request.status === 'Completed' &&
-                    this.segment.value === 'all'
+                    this.segment.value === 'completed'
                   "
                   color="success"
                   slot="start"

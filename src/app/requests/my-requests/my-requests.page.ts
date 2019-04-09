@@ -13,7 +13,7 @@ import { Observable, Subscription } from 'rxjs';
 export class MyRequestsPage implements OnInit, OnDestroy {
   myRequests: Request[];
   requestsSub: Subscription;
-  status = '';
+  status = 'progress';
   isLoading = false;
 
   @ViewChild(IonSegment) segment: IonSegment;
@@ -26,7 +26,7 @@ export class MyRequestsPage implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.segment.value = 'all';
+    this.segment.value = 'progress';
     this.requestsSub = this.requestsService.requests.subscribe(requests => {
       this.myRequests = requests;
     });
@@ -47,15 +47,10 @@ export class MyRequestsPage implements OnInit, OnDestroy {
 
   onFilterUpdate(event: any) {
     const filteredOption = event.detail.value;
-    if (filteredOption === 'all') {
-      this.status = '';
-      return;
-    }
     this.status = filteredOption;
-    console.log(this.status);
   }
 
-  doRefresh(event) {
+  doRefresh(event: any) {
     this.requestsService.fetchRequests().subscribe(() => {
       event.target.complete();
     });

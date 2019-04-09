@@ -4,12 +4,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class FilterPipe implements PipeTransform {
   transform(arrangement: any[], text: string, column: string): any[] {
-    console.log(
-      text + ' ' + column
-    );
-    if (text === '') {
-      return arrangement;
-    }
+    // if (text === '') {
+    //   return arrangement;
+    // }
 
     text = text.toLowerCase();
 
