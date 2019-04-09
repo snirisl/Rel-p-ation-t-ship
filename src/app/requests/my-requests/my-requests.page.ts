@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { Request } from '../request.model';
 import { RequestsService } from '../requests.service';
-import { IonItemSliding, IonSegment } from '@ionic/angular';
+import { IonItemSliding, IonSegment, LoadingController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 
@@ -21,7 +21,8 @@ export class MyRequestsPage implements OnInit, OnDestroy {
 
   constructor(
     private requestsService: RequestsService,
-    private router: Router
+    private router: Router,
+    private loadingCtrl: LoadingController
   ) {}
 
   ngOnInit() {
@@ -57,6 +58,18 @@ export class MyRequestsPage implements OnInit, OnDestroy {
   doRefresh(event) {
     this.requestsService.fetchRequests().subscribe(() => {
       event.target.complete();
+    });
+  }
+
+  setAsCompleted(id: string, slidingItem: IonItemSliding) {
+    slidingItem.close();
+    this.loadingCtrl.create({
+      message: 'Setting Request as Completed...'
+    }).then(loadingEl => {
+      loadingEl.present();
+      this.requestsService.setRequestAsCompleted(id).subscribe(() => {
+        loadingEl.dismiss();
+      });
     });
   }
 }

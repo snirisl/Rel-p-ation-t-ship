@@ -7,14 +7,15 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
-        <ion-refresher-content
-          pullingIcon="arrow-dropdown"
-          pullingText="Pull to refresh"
-          refreshingSpinner="circles"
-          refreshingText="Refreshing...">
-        </ion-refresher-content>
-      </ion-refresher>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      pullingIcon="arrow-dropdown"
+      pullingText="Pull to refresh"
+      refreshingSpinner="circles"
+      refreshingText="Refreshing..."
+    >
+    </ion-refresher-content>
+  </ion-refresher>
   <ion-segment mode="md" (ionChange)="onFilterUpdate($event)" color="tertiary">
     <ion-segment-button value="all"
       ><ion-label>All Requests</ion-label></ion-segment-button
@@ -27,51 +28,66 @@
     <ion-row>
       <ion-col size="12" size-sm="8" offset-sm="2" text-center>
         <div *ngIf="isLoading" text-center>
-            <ion-spinner color="primary"></ion-spinner>
+          <ion-spinner color="primary"></ion-spinner>
         </div>
         <div text-center *ngIf="isLoading || myRequests.length <= 0">
-            <p>
-                No Requests found! Please create one first!
-              </p>
-              <ion-button color="primary" routerLink="/requests/tabs/add-requests"
-                >Add Request</ion-button
-              >
-            </div>
+          <p>
+            No Requests found! Please create one first!
+          </p>
+          <ion-button color="primary" routerLink="/requests/tabs/add-requests"
+            >Add Request</ion-button
+          >
+        </div>
         <ion-list *ngIf="!isLoading || myRequests.length > 0">
-            <ion-item
-              *ngFor="
-                let request of (myRequests
-                  | filter: status:'status'
-                  | sortArray)
-              "
-            >
+          <ion-item-sliding
+            *ngFor="
+              let request of (myRequests | filter: status:'status' | sortArray)
+            "
+            #slidingItem
+          >
+            <ion-item>
               <ion-thumbnail slot="start">
                 <ion-img [src]="request.imgUrl"></ion-img>
               </ion-thumbnail>
               <ion-label>
                 <h2>{{ request.title }}</h2>
                 <p>{{ request.description }}</p>
-                <p *ngIf="request.data !== ''">{{ request.date | date: 'dd/MM/yyyy HH:mm' : '+3'}}</p>
+                <p *ngIf="request.data !== ''">
+                  {{ request.date | date: 'dd/MM/yyyy HH:mm':'+3' }}
+                </p>
+                <ion-label
+                  slot="start"
+                  text-right
+                  *ngIf="
+                    request.status === 'In progress' &&
+                    this.segment.value === 'all'
+                  "
+                  color="secondary"
+                  >In progress</ion-label
+                >
+                <ion-label
+                  *ngIf="
+                    request.status === 'Completed' &&
+                    this.segment.value === 'all'
+                  "
+                  color="success"
+                  slot="start"
+                  text-right
+                  >Completed</ion-label
+                >
               </ion-label>
-              <ion-label
-                slot="end"
-                text-right
-                *ngIf="
-                  request.status === 'In progress' && this.segment.value === 'all'
-                "
-                color="secondary"
-                >In progress</ion-label
-              >
-              <ion-label
-                *ngIf="
-                  request.status === 'Completed' && this.segment.value === 'all'
-                "
-                color="success"
-                slot="end"
-                text-right
-                >Completed</ion-label
-              >
             </ion-item>
+            <div *ngIf="request.status !== 'Completed'">
+              <ion-item-options side="end">
+                <ion-item-option
+                  color="secondary"
+                  (click)="setAsCompleted(request.id, slidingItem)"
+                >
+                  <ion-icon name="archive" slot="icon-only"></ion-icon>
+                </ion-item-option>
+              </ion-item-options>
+            </div>
+          </ion-item-sliding>
         </ion-list>
       </ion-col>
     </ion-row>

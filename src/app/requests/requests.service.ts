@@ -53,7 +53,6 @@ export class RequestsService {
   }
 
   add(request: Request) {
-
     let generatedId: string;
     const newRequest = new Request(
       request.id,
@@ -82,8 +81,37 @@ export class RequestsService {
     // this._requests.push(newRequest);
   }
   constructor(private http: HttpClient) {}
-}
 
+  setRequestAsCompleted(requestId: string) {
+    let updatedRequests: Request[];
+    return this.requests.pipe(
+      take(1),
+      switchMap(requests => {
+        const updatedRequestIndex = requests.findIndex(
+          req => req.id === requestId
+        );
+        updatedRequests = [...requests];
+        const oldRequest = updatedRequests[updatedRequestIndex];
+        updatedRequests[updatedRequestIndex] = new Request(
+          oldRequest.id,
+          oldRequest.title,
+          oldRequest.description,
+          oldRequest.imgUrl,
+          'Completed',
+          oldRequest.date
+        );
+        console.log(`https://relpationtship-test.firebaseio.com/added-requests/${requestId}.json`);
+        return this.http.put(
+          `https://relpationtship-test.firebaseio.com/added-requests/${requestId}.json`,
+          { ...updatedRequests[updatedRequestIndex], id: null }
+        );
+      }),
+      tap(() => {
+        this._requests.next(updatedRequests);
+      })
+    );
+  }
+}
 
 // [
 //   new Request(
