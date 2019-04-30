@@ -5,6 +5,7 @@ export class Request {
     public description: string,
     public imgUrl: string,
     public status: string,
-    public date: Date
+    public date: Date,
+    public patientId: string
   ) {}
 }

@@ -3,6 +3,7 @@ import { Request } from './request.model';
 import { BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { tap, switchMap, take, map } from 'rxjs/operators';
+import { AuthService } from '../auth/auth.service';
 
 interface RequestData {
   date: string;
@@ -10,6 +11,7 @@ interface RequestData {
   imgUrl: string;
   status: string;
   title: string;
+  patientId: string;
 }
 
 @Injectable({
@@ -25,29 +27,33 @@ export class RequestsService {
   fetchRequests() {
     return this.http
       .get<{ [key: string]: RequestData }>(
-        'https://relpationtship-test.firebaseio.com/added-requests.json'
+        `https://relpationtship-test.firebaseio.com/added-requests.json?orderBy="patientId"&equalTo="${
+          this.authService.patientId
+        }"`
       )
       .pipe(
-        map(resData => {
-          const requests = [];
-          for (const key in resData) {
-            if (resData.hasOwnProperty(key)) {
-              requests.push(
+        map(patientRequestsData => {
+          console.log(patientRequestsData);
+          const patientRequests = [];
+          for (const key in patientRequestsData) {
+            if (patientRequestsData.hasOwnProperty(key)) {
+              patientRequests.push(
                 new Request(
                   key,
-                  resData[key].title,
-                  resData[key].description,
-                  resData[key].imgUrl,
-                  resData[key].status,
-                  new Date(resData[key].date)
+                  patientRequestsData[key].title,
+                  patientRequestsData[key].description,
+                  patientRequestsData[key].imgUrl,
+                  patientRequestsData[key].status,
+                  new Date(patientRequestsData[key].date),
+                  patientRequestsData[key].patientId
                 )
               );
             }
           }
-          return requests;
+          return patientRequests;
         }),
-        tap(requests => {
-          this._requests.next(requests);
+        tap(patientRequests => {
+          this._requests.next(patientRequests);
         })
       );
   }
@@ -60,7 +66,8 @@ export class RequestsService {
       request.description,
       request.imgUrl,
       'In progress',
-      new Date()
+      new Date(),
+      this.authService.patientId
     );
     return this.http
       .post<{ name: string }>(
@@ -80,7 +87,7 @@ export class RequestsService {
       );
     // this._requests.push(newRequest);
   }
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
   setRequestAsCompleted(requestId: string) {
     let updatedRequests: Request[];
@@ -98,9 +105,12 @@ export class RequestsService {
           oldRequest.description,
           oldRequest.imgUrl,
           'Completed',
-          oldRequest.date
+          oldRequest.date,
+          oldRequest.patientId
         );
-        console.log(`https://relpationtship-test.firebaseio.com/added-requests/${requestId}.json`);
+        console.log(
+          `https://relpationtship-test.firebaseio.com/added-requests/${requestId}.json`
+        );
         return this.http.put(
           `https://relpationtship-test.firebaseio.com/added-requests/${requestId}.json`,
           { ...updatedRequests[updatedRequestIndex], id: null }
@@ -112,38 +122,3 @@ export class RequestsService {
     );
   }
 }
-
-// [
-//   new Request(
-//     'r1',
-//     'Towel',
-//     'Need new towel',
-//     'https://www.enchantehome.com/wp-content/uploads/2018/06/types-of-towels-1024x684.jpeg',
-//     'In progress',
-//     new Date('2019-01-01')
-//   ),
-//   new Request(
-//     'r2',
-//     'Get up',
-//     'Need help getting out of bed',
-//     'https://www.dreams.co.uk/sleep-matters-club/wp-content/uploads/2015/11/shutterstock_228939076-2.jpg',
-//     'In progress',
-//     new Date('2019-01-01')
-//   ),
-//   new Request(
-//     'r3',
-//     'Shower',
-//     'I want to take a shower',
-//     'https://img-aws.ehowcdn.com/350x235p/s3-us-west-1.amazonaws.com/contentlab.studiod/getty/ba3c626a08e64d8e88284ab26f8f1f6e.jpg',
-//     'Completed',
-//     new Date('2019-01-01')
-//   ),
-//   new Request(
-//     'r4',
-//     'Ouch!',
-//     'I am in pain',
-//     'https://www.virtua.org/-/media/Images/Virtua%20Enterprise/Virtua%20Corporate/Virtua%20Site/Teaser/pain-management-teaser.ashx?bc=ffffff&as=1&h=299&la=en&w=629&hash=FF3F56E787C52D09C58C0A57E9AF6ABF32DE2D45',
-//     'Completed',
-//     new Date('2019-01-01')
-//   )
-// ]
