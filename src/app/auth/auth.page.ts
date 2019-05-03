@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, AlertController } from '@ionic/angular';
 import { NgForm } from '@angular/forms';
 
 @Component({
@@ -15,12 +15,13 @@ export class AuthPage implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private alertCtrl: AlertController
   ) {}
 
   ngOnInit() {}
 
-  onLogin() {
+  authenticate(email: string, password: string) {
     this.isLoading = true;
     this.authService.login();
     this.loadingCtrl
@@ -30,26 +31,40 @@ export class AuthPage implements OnInit {
       })
       .then(loadingEl => {
         loadingEl.present();
-        setTimeout(() => {
+        this.authService.signup(email, password).subscribe(resData => {
+          console.log(resData);
           this.isLoading = false;
           loadingEl.dismiss();
           this.router.navigateByUrl('/requests/tabs/add-requests');
-        }, 1500);
+        }, errRes => {
+          loadingEl.dismiss();
+          const code = errRes.error.error.message;
+          let message = 'Could not sign you up, please try again.';
+          if (code === 'EMAIL_EXISTS') {
+            message = 'This Id exists already!';
+          }
+          this.showAlert(message);
+        });
       });
   }
-
   onSubmit(form: NgForm) {
     if (!form.valid) {
       return;
     }
-    const pid = form.value.pid;
+    const uid = form.value.pid + '@test.com';
     const password = form.value.password;
-    console.log(pid, password);
-    if (this.isLogin) {
-      // send a request to login servers
-    } else {
-      // send a request to signup servers
-    }
+    console.log(uid, password);
+    this.authenticate(uid, password);
+  }
+
+  private showAlert(message: string) {
+    this.alertCtrl
+      .create({
+        header: 'Authentication failed',
+        message: message,
+        buttons: ['Okay']
+      })
+      .then(alertEl => alertEl.present());
   }
 
   onSwitchAuthMode() {
