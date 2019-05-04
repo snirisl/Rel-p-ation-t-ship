@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, from } from 'rxjs';
 import { User } from './user.model';
 import { map, tap } from 'rxjs/operators';
-
+import { Plugins } from '@capacitor/core';
+import { stringify } from '@angular/core/src/render3/util';
 export interface AuthResponseData {
   kind: string;
   idToken: string;
@@ -64,9 +65,44 @@ export class AuthService {
         `https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=${
           environment.firebaseAPIKey
         }`,
-        { email: email, password: password }
+        { email: email, password: password, returnSecureToken: true}
       )
       .pipe(tap(this.setUserData.bind(this)));
+  }
+
+  autoLogin() {
+    return from(Plugins.Storage.get({ key: 'authData' })).pipe(
+      map(storedData => {
+        if (!storedData || !storedData.value) {
+          return null;
+        }
+        const parsedData = JSON.parse(storedData.value) as {
+          token: string;
+          tokenExpirationDate: string;
+          userId: string;
+          email: string;
+        };
+        const expirationTime = new Date(parsedData.tokenExpirationDate);
+        if (expirationTime <= new Date()) {
+          return null;
+        }
+        const user = new User(
+          parsedData.userId,
+          parsedData.email,
+          parsedData.token,
+          expirationTime
+        );
+        return user;
+      }),
+      tap(user => {
+        if (user) {
+          this._user.next(user);
+        }
+      }),
+      map(user => {
+        return !!user;
+      })
+    );
   }
 
   signup(email: string, password: string) {
@@ -96,11 +132,26 @@ export class AuthService {
         expirationTime
       )
     );
+    this.storeAuthData(
+      userData.localId,
+      userData.idToken,
+      expirationTime.toISOString(),
+      userData.email
+    );
   }
 
   private storeAuthData(
     userId: string,
     token: string,
-    tokenExpirationDate: string
-  ) {}
+    tokenExpirationDate: string,
+    email: string
+  ) {
+    const data = JSON.stringify({
+      userId: userId,
+      token: token,
+      tokenExpirationDate: tokenExpirationDate,
+      email: email
+    });
+    Plugins.Storage.set({ key: 'authData', value: data });
+  }
 }
