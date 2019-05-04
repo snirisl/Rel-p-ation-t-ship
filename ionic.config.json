@@ -1,5 +1,7 @@
 {
   "name": "Relpationtship",
-  "integrations": {},
+  "integrations": {
+    "capacitor": {}
+  },
   "type": "angular"
 }
