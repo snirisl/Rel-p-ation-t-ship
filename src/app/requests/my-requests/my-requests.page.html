@@ -83,7 +83,7 @@
               </ion-label>
             </ion-item>
             <div *ngIf="request.status !== 'Completed'">
-              <ion-item-options side="end">
+              <ion-item-options side="end" *ngIf="this.authService.userType !== 'p'">
                 <ion-item-option
                   color="secondary"
                   (click)="setAsCompleted(request.id, slidingItem)"

@@ -4,6 +4,7 @@ import { RequestsService } from '../requests.service';
 import { IonItemSliding, IonSegment, LoadingController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-my-requests',
@@ -22,7 +23,8 @@ export class MyRequestsPage implements OnInit, OnDestroy {
   constructor(
     private requestsService: RequestsService,
     private router: Router,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    public authService: AuthService
   ) {}
 
   ngOnInit() {
