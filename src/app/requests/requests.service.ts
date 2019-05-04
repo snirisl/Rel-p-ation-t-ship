@@ -25,15 +25,19 @@ export class RequestsService {
   }
 
   fetchRequests() {
+    let currentId = this.authService.userId;
     if (this.authService.userType === 'p') {
       return this.http
         .get<{ [key: string]: RequestData }>(
           `https://relpationtship-test.firebaseio.com/added-requests.json?orderBy="patientId"&equalTo="${
-            this.authService.userId
+            currentId
           }"`
         )
         .pipe(
           map(patientRequestsData => {
+            console.log(`https://relpationtship-test.firebaseio.com/added-requests.json?orderBy="patientId"&equalTo="${
+              currentId
+            }"`);
             console.log(patientRequestsData);
             const patientRequests = [];
             for (const key in patientRequestsData) {
@@ -92,31 +96,37 @@ export class RequestsService {
 
   add(request: Request) {
     let generatedId: string;
-    const newRequest = new Request(
-      request.id,
-      request.title,
-      request.description,
-      request.imgUrl,
-      'In progress',
-      new Date(),
-      this.authService.userId
+    let newRequest: Request;
+    return this.authService.userId.pipe(
+      take(1),
+      switchMap(userId => {
+        if (!userId) {
+          throw new Error('No user id found!');
+        }
+        newRequest = new Request(
+          request.id,
+          request.title,
+          request.description,
+          request.imgUrl,
+          'In progress',
+          new Date(),
+          userId
+        );
+        return this.http.post<{ name: string }>(
+          'https://relpationtship-test.firebaseio.com/added-requests.json',
+          { ...newRequest, id: null }
+        );
+      }),
+      switchMap(resData => {
+        generatedId = resData.name;
+        return this.requests;
+      }),
+      take(1),
+      tap(requests => {
+        newRequest.id = generatedId;
+        this._requests.next(requests.concat(newRequest));
+      })
     );
-    return this.http
-      .post<{ name: string }>(
-        'https://relpationtship-test.firebaseio.com/added-requests.json',
-        { ...newRequest, id: null }
-      )
-      .pipe(
-        switchMap(resData => {
-          generatedId = resData.name;
-          return this.requests;
-        }),
-        take(1),
-        tap(requests => {
-          newRequest.id = generatedId;
-          this._requests.next(requests.concat(newRequest));
-        })
-      );
     // this._requests.push(newRequest);
   }
   constructor(private http: HttpClient, private authService: AuthService) {}
