@@ -97,4 +97,10 @@ export class AuthService {
       )
     );
   }
+
+  private storeAuthData(
+    userId: string,
+    token: string,
+    tokenExpirationDate: string
+  ) {}
 }
