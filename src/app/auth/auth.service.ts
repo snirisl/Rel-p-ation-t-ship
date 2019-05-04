@@ -65,7 +65,7 @@ export class AuthService {
         `https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=${
           environment.firebaseAPIKey
         }`,
-        { email: email, password: password, returnSecureToken: true}
+        { email: email, password: password, returnSecureToken: true }
       )
       .pipe(tap(this.setUserData.bind(this)));
   }
@@ -118,6 +118,7 @@ export class AuthService {
 
   logout() {
     this._user.next(null);
+    Plugins.Storage.remove({ key: 'authData' }); 
   }
 
   private setUserData(userData: AuthResponseData) {
