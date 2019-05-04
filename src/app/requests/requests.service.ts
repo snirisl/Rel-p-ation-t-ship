@@ -25,42 +25,40 @@ export class RequestsService {
   }
 
   fetchRequests() {
-    let currentId = this.authService.userId;
     if (this.authService.userType === 'p') {
-      return this.http
-        .get<{ [key: string]: RequestData }>(
-          `https://relpationtship-test.firebaseio.com/added-requests.json?orderBy="patientId"&equalTo="${
-            currentId
-          }"`
-        )
-        .pipe(
-          map(patientRequestsData => {
-            console.log(`https://relpationtship-test.firebaseio.com/added-requests.json?orderBy="patientId"&equalTo="${
-              currentId
-            }"`);
-            console.log(patientRequestsData);
-            const patientRequests = [];
-            for (const key in patientRequestsData) {
-              if (patientRequestsData.hasOwnProperty(key)) {
-                patientRequests.push(
-                  new Request(
-                    key,
-                    patientRequestsData[key].title,
-                    patientRequestsData[key].description,
-                    patientRequestsData[key].imgUrl,
-                    patientRequestsData[key].status,
-                    new Date(patientRequestsData[key].date),
-                    patientRequestsData[key].patientId
-                  )
-                );
-              }
+      return this.authService.userId.pipe(
+        switchMap(userId => {
+          if (!userId) {
+            throw new Error('User not found');
+          }
+          return this.http.get<{ [key: string]: RequestData }>(
+            `https://relpationtship-test.firebaseio.com/added-requests.json?orderBy="patientId"&equalTo="${userId}"`
+          );
+        }),
+        map(patientRequestsData => {
+          console.log(patientRequestsData);
+          const patientRequests = [];
+          for (const key in patientRequestsData) {
+            if (patientRequestsData.hasOwnProperty(key)) {
+              patientRequests.push(
+                new Request(
+                  key,
+                  patientRequestsData[key].title,
+                  patientRequestsData[key].description,
+                  patientRequestsData[key].imgUrl,
+                  patientRequestsData[key].status,
+                  new Date(patientRequestsData[key].date),
+                  patientRequestsData[key].patientId
+                )
+              );
             }
-            return patientRequests;
-          }),
-          tap(patientRequests => {
-            this._requests.next(patientRequests);
-          })
-        );
+          }
+          return patientRequests;
+        }),
+        tap(patientRequests => {
+          this._requests.next(patientRequests);
+        })
+      );
     } else {
       return this.http
         .get<{ [key: string]: RequestData }>(
