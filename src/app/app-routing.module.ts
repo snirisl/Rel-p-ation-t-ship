@@ -14,6 +14,11 @@ const routes: Routes = [
     path: 'about',
     loadChildren: './about/about.module#AboutPageModule',
     canLoad: [AuthGuard]
+  },
+  {
+    path: 'add-patient',
+    loadChildren: './add-patient/add-patient.module#AddPatientPageModule',
+    canLoad: [AuthGuard]
   }
 ];
 

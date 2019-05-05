@@ -66,7 +66,6 @@ export class RequestsService {
         )
         .pipe(
           map(patientRequestsData => {
-            console.log(patientRequestsData);
             const patientRequests = [];
             for (const key in patientRequestsData) {
               if (patientRequestsData.hasOwnProperty(key)) {

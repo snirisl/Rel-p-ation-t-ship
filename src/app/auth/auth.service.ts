@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject, from } from 'rxjs';
@@ -6,6 +6,7 @@ import { User } from './user.model';
 import { map, tap } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
 import { stringify } from '@angular/core/src/render3/util';
+
 export interface AuthResponseData {
   kind: string;
   idToken: string;
@@ -15,15 +16,21 @@ export interface AuthResponseData {
   expiresIn: string;
   registered?: boolean;
 }
+interface UserData {
+  id: string;
+  name: string;
+  type: string;
+  room: string;
+  userId: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService implements OnDestroy{
+export class AuthService {
   private _user = new BehaviorSubject<User>(null);
   private _roomNumber = '100';
-  private _userType = 'p';
-  private activeLogoutTimer: any;
+  private _userType = 'n';
 
   constructor(private http: HttpClient) {}
 
@@ -98,7 +105,6 @@ export class AuthService implements OnDestroy{
       tap(user => {
         if (user) {
           this._user.next(user);
-          this.autoLougout(user.tokenDuration);
         }
       }),
       map(user => {
@@ -119,40 +125,22 @@ export class AuthService implements OnDestroy{
   }
 
   logout() {
-    if (this.activeLogoutTimer) {
-      clearTimeout(this.activeLogoutTimer);
-    }
     this._user.next(null);
     Plugins.Storage.remove({ key: 'authData' });
-  }
-
-  private autoLougout(duration: number) {
-    if (this.activeLogoutTimer) {
-      clearTimeout(this.activeLogoutTimer);
-    }
-    this.activeLogoutTimer = setTimeout(() => {
-      this.logout();
-    }, duration);
-  }
-
-  ngOnDestroy() {
-    if (this.activeLogoutTimer) {
-      clearTimeout(this.activeLogoutTimer);
-    }
   }
 
   private setUserData(userData: AuthResponseData) {
     const expirationTime = new Date(
       new Date().getTime() + +userData.expiresIn * 1000
     );
-    const user = new User(
-      userData.localId,
-      userData.email,
-      userData.idToken,
-      expirationTime
+    this._user.next(
+      new User(
+        userData.localId,
+        userData.email,
+        userData.idToken,
+        expirationTime
+      )
     );
-    this._user.next(user);
-    this.autoLougout(user.tokenDuration);
     this.storeAuthData(
       userData.localId,
       userData.idToken,

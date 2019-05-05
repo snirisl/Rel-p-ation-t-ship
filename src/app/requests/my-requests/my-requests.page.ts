@@ -32,6 +32,13 @@ export class MyRequestsPage implements OnInit, OnDestroy {
     this.requestsSub = this.requestsService.requests.subscribe(requests => {
       this.myRequests = requests;
     });
+    console.log('type is', this.authService.userType);
+  }
+
+  ngOnDestroy() {
+    if (this.requestsSub) {
+      this.requestsSub.unsubscribe();
+    }
   }
 
   ionViewWillEnter() {
@@ -39,12 +46,6 @@ export class MyRequestsPage implements OnInit, OnDestroy {
     this.requestsService.fetchRequests().subscribe(() => {
       this.isLoading = false;
     });
-  }
-
-  ngOnDestroy() {
-    if (this.requestsSub) {
-      this.requestsSub.unsubscribe();
-    }
   }
 
   onFilterUpdate(event: any) {
@@ -60,13 +61,15 @@ export class MyRequestsPage implements OnInit, OnDestroy {
 
   setAsCompleted(id: string, slidingItem: IonItemSliding) {
     slidingItem.close();
-    this.loadingCtrl.create({
-      message: 'Setting Request as Completed...'
-    }).then(loadingEl => {
-      loadingEl.present();
-      this.requestsService.setRequestAsCompleted(id).subscribe(() => {
-        loadingEl.dismiss();
+    this.loadingCtrl
+      .create({
+        message: 'Setting Request as Completed...'
+      })
+      .then(loadingEl => {
+        loadingEl.present();
+        this.requestsService.setRequestAsCompleted(id).subscribe(() => {
+          loadingEl.dismiss();
+        });
       });
-    });
   }
 }
