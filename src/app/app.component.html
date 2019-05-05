@@ -14,6 +14,18 @@
             <ion-label>Requests</ion-label>
           </ion-item>
         </ion-menu-toggle>
+        <ion-menu-toggle menu="m1" *ngIf="this.authService.userType !== 'p'">
+          <ion-item lines="none" routerLink="/about" button>
+            <ion-icon name="information-circle-outline"></ion-icon>
+            <ion-label>Add Patient</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+        <ion-menu-toggle menu="m1" *ngIf="this.authService.userType !== 'p'">
+          <ion-item lines="none" routerLink="/about" button>
+            <ion-icon name="information-circle-outline"></ion-icon>
+            <ion-label>Assign Rooms</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
         <ion-menu-toggle menu="m1">
           <ion-item lines="none" (click)="onLogout()" button>
             <ion-icon name="exit"></ion-icon>
