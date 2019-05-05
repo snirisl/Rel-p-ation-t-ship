@@ -7,10 +7,9 @@ img.onload =function(){
     console.log('result is: ', result)
     $('#result').text(result.words.text);
 
-    var myObj = {name: result.words[0].text, lastName: result.words[1].text, birthDate: result.words[2].text, id: result.words[3].text};
+    var myObj = {name: result.words[1].text, lastName: result.words[0].text, birthDate: result.words[2].text, id: result.words[3].text};
     var myJSON = JSON.stringify(myObj);
-    var ko= JSON.parse(myJSON);
-
-    document.getElementById("result").innerHTML =ko.name;
+    var paitentObject= JSON.parse(myJSON);
+    console.log(paitentObject);
   })
 }
