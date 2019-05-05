@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject, from } from 'rxjs';
@@ -19,10 +19,11 @@ export interface AuthResponseData {
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService implements OnDestroy{
   private _user = new BehaviorSubject<User>(null);
   private _roomNumber = '100';
   private _userType = 'p';
+  private activeLogoutTimer: any;
 
   constructor(private http: HttpClient) {}
 
@@ -97,6 +98,7 @@ export class AuthService {
       tap(user => {
         if (user) {
           this._user.next(user);
+          this.autoLougout(user.tokenDuration);
         }
       }),
       map(user => {
@@ -117,22 +119,40 @@ export class AuthService {
   }
 
   logout() {
+    if (this.activeLogoutTimer) {
+      clearTimeout(this.activeLogoutTimer);
+    }
     this._user.next(null);
-    Plugins.Storage.remove({ key: 'authData' }); 
+    Plugins.Storage.remove({ key: 'authData' });
+  }
+
+  private autoLougout(duration: number) {
+    if (this.activeLogoutTimer) {
+      clearTimeout(this.activeLogoutTimer);
+    }
+    this.activeLogoutTimer = setTimeout(() => {
+      this.logout();
+    }, duration);
+  }
+
+  ngOnDestroy() {
+    if (this.activeLogoutTimer) {
+      clearTimeout(this.activeLogoutTimer);
+    }
   }
 
   private setUserData(userData: AuthResponseData) {
     const expirationTime = new Date(
       new Date().getTime() + +userData.expiresIn * 1000
     );
-    this._user.next(
-      new User(
-        userData.localId,
-        userData.email,
-        userData.idToken,
-        expirationTime
-      )
+    const user = new User(
+      userData.localId,
+      userData.email,
+      userData.idToken,
+      expirationTime
     );
+    this._user.next(user);
+    this.autoLougout(user.tokenDuration);
     this.storeAuthData(
       userData.localId,
       userData.idToken,
