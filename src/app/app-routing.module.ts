@@ -19,6 +19,10 @@ const routes: Routes = [
     path: 'add-patient',
     loadChildren: './add-patient/add-patient.module#AddPatientPageModule',
     canLoad: [AuthGuard]
+  },
+  {
+    path: 'manage-users',
+    loadChildren: './manage-users/manage-users.module#ManageUsersPageModule'
   }
 ];
 

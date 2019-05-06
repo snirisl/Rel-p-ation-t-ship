@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button menu="m1"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Manager Users</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        Name
+      </ion-col>
+      <ion-col>
+        Id
+      </ion-col>
+      <ion-col>
+        Room
+      </ion-col>
+      <ion-col>
+        Type
+      </ion-col>
+      <ion-col>
+
+      </ion-col>
+    </ion-row>
+    <ion-row *ngFor="let user of addedUsers">
+        <ion-col>
+            {{user.name}}
+        </ion-col>
+        <ion-col>
+            {{user.id}}
+        </ion-col>
+        <ion-col>
+            {{user.room}}
+        </ion-col>
+        <ion-col>
+            {{user.type}}
+        </ion-col>
+        <ion-col>
+          <ion-button (click)="delete(user.id)">
+            Delete
+          </ion-button>
+        </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

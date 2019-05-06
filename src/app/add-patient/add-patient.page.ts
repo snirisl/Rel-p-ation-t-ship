@@ -78,9 +78,7 @@ export class AddPatientPage implements OnInit, OnDestroy {
             this.isLoading = false;
             loadingEl.dismiss();
             const newAddedUser = new AddPatient(uid, name, type, room, localId);
-            this.addPatientService.add(newAddedUser).subscribe(() => {
-              return;
-            });
+            this.addPatientService.add(newAddedUser);
             this.router.navigateByUrl('/requests/tabs/my-requests');
           },
           errRes => {
