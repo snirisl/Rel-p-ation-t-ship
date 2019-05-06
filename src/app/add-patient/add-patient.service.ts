@@ -32,15 +32,13 @@ export class AddPatientService {
   }
 
   createAddedUser(addedUser: AddPatient) {
-    let user: any;
-    user = Object.assign({}, {
+    return this.firestore.collection('added-users').doc(addedUser.id).set({
       id: addedUser.id,
       name: addedUser.name,
       room: addedUser.room,
       type: addedUser.type,
       userId: addedUser.userId
     });
-    return this.firestore.collection('added-users').add(user);
   }
 
   updateAddedUser(addedUser: AddPatient) {
