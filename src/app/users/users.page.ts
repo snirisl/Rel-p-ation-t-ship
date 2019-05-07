@@ -4,28 +4,28 @@ import { AuthService, AuthResponseData } from '../auth/auth.service';
 import { Router } from '@angular/router';
 import { LoadingController, AlertController } from '@ionic/angular';
 import { Observable, Subscription } from 'rxjs';
-import { AddPatientService } from './add-patient.service';
-import { AddPatient } from './add-patient.model';
+import { UsersService } from './users.service';
+import { Users } from './users.model';
 
 @Component({
   selector: 'app-add-patient',
   templateUrl: './add-patient.page.html',
   styleUrls: ['./add-patient.page.scss']
 })
-export class AddPatientPage implements OnInit, OnDestroy {
+export class AddUserPage implements OnInit, OnDestroy {
   isLoading = false;
   usersSub: Subscription;
-  usersList: AddPatient[];
+  usersList: Users[];
   constructor(
     private authService: AuthService,
     private router: Router,
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
-    private addPatientService: AddPatientService
+    private usersService: UsersService
   ) {}
 
   ngOnInit() {
-    this.usersSub = this.addPatientService.addedPatient.subscribe(users => {
+    this.usersSub = this.usersService.getUsers().subscribe(users => {
       this.usersList = users;
     });
   }
@@ -38,7 +38,7 @@ export class AddPatientPage implements OnInit, OnDestroy {
 
   ionViewWillEnter() {
     this.isLoading = true;
-    this.addPatientService.fetchUsers().subscribe(() => {
+    this.usersService.fetchUsers().subscribe(() => {
       this.isLoading = false;
     });
   }
@@ -77,8 +77,8 @@ export class AddPatientPage implements OnInit, OnDestroy {
             localId = resData.localId;
             this.isLoading = false;
             loadingEl.dismiss();
-            const newAddedUser = new AddPatient(uid, name, type, room, localId);
-            this.addPatientService.add(newAddedUser);
+            const newAddedUser = new Users(uid, name, type, room, localId);
+            this.usersService.add(newAddedUser);
             this.router.navigateByUrl('/requests/tabs/my-requests');
           },
           errRes => {

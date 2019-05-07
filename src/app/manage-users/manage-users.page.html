@@ -8,43 +8,25 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-grid>
-    <ion-row>
-      <ion-col>
-        Name
-      </ion-col>
-      <ion-col>
-        Id
-      </ion-col>
-      <ion-col>
-        Room
-      </ion-col>
-      <ion-col>
-        Type
-      </ion-col>
-      <ion-col>
+  <div *ngIf="usersList?.length > 0; else noUsers">
+    <ion-list *ngFor="let user of usersList">
+      <ion-item
+        ><ion-avatar
+          ><ion-icon name="contact" size="large"></ion-icon
+        ></ion-avatar>
+        <ion-label>
+          <h5>{{ user.name }}:</h5>
+          <p>
+            Room Number: {{ user.room }},
+            {{ user.type == 'p' ? 'Patient' : 'Nurse' }}
+          </p></ion-label
+        >
+      </ion-item>
+    </ion-list>
+  </div>
 
-      </ion-col>
-    </ion-row>
-    <ion-row *ngFor="let user of addedUsers">
-        <ion-col>
-            {{user.name}}
-        </ion-col>
-        <ion-col>
-            {{user.id}}
-        </ion-col>
-        <ion-col>
-            {{user.room}}
-        </ion-col>
-        <ion-col>
-            {{user.type}}
-        </ion-col>
-        <ion-col>
-          <ion-button (click)="delete(user.id)">
-            Delete
-          </ion-button>
-        </ion-col>
-    </ion-row>
-  </ion-grid>
-
+  <ng-template #noUsers>
+    <hr />
+    <h5>There are no users yet.</h5>
+  </ng-template>
 </ion-content>

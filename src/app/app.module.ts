@@ -12,6 +12,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { RequestMessageComponent } from './requests/add-requests/request-message/request-message.component';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { AddUserService } from './users/users.service';
 
 @NgModule({
   declarations: [AppComponent, RequestMessageComponent],
@@ -28,9 +29,11 @@ import { AngularFirestore } from '@angular/fire/firestore';
     StatusBar,
     SplashScreen,
     AngularFirestore,
+    AddUserService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent],
   exports: [RequestMessageComponent]
 })
+
 export class AppModule {}

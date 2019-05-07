@@ -16,8 +16,8 @@ const routes: Routes = [
     canLoad: [AuthGuard]
   },
   {
-    path: 'add-patient',
-    loadChildren: './add-patient/add-patient.module#AddPatientPageModule',
+    path: 'add-user',
+    loadChildren: './add-user/add-user.module#AddUserPageModule',
     canLoad: [AuthGuard]
   },
   {

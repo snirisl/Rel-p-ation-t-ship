@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
-import { AddPatient } from './add-patient.model';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { Users } from './users.model';
+import {
+  AngularFirestore,
+  AngularFirestoreDocument,
+  AngularFirestoreCollection
+} from '@angular/fire/firestore';
 import { AuthService } from '../auth/auth.service';
 import { take, switchMap, tap, map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 interface UserData {
   id: string;
@@ -17,31 +21,44 @@ interface UserData {
 @Injectable({
   providedIn: 'root'
 })
-export class AddPatientService {
-  private _users = new BehaviorSubject<AddPatient[]>([]);
+export class UsersService {
+  private _users = new BehaviorSubject<Users[]>([]);
+  usersCollection: AngularFirestoreCollection<Users>;
+  users: Observable<any[]>;
 
   constructor(
     private authService: AuthService,
     private http: HttpClient,
-    private firestore: AngularFirestore,
-    private addPatientService: AddPatientService
-  ) {}
-
-  getAddedUsers() {
-    return this.firestore.collection('added-users').snapshotChanges();
+    public firestore: AngularFirestore
+  ) {
+    // this.users = this.firestore.collection('added-users').valueChanges();
+    this.users = this.firestore.collection('added-users').snapshotChanges().pipe(map(changes => {
+      return changes.map(a => {
+        const data = a.payload.doc.data() as Users;
+        data.id = a.payload.doc.id;
+        return data;
+      });
+    }));
   }
 
-  createAddedUser(addedUser: AddPatient) {
-    return this.firestore.collection('added-users').doc(addedUser.id).set({
-      id: addedUser.id,
-      name: addedUser.name,
-      room: addedUser.room,
-      type: addedUser.type,
-      userId: addedUser.userId
-    });
+  getUsers() {
+    return this.users;
   }
 
-  updateAddedUser(addedUser: AddPatient) {
+  createAddedUser(addedUser: Users) {
+    return this.firestore
+      .collection('added-users')
+      .doc(addedUser.id)
+      .set({
+        id: addedUser.id,
+        name: addedUser.name,
+        room: addedUser.room,
+        type: addedUser.type,
+        userId: addedUser.userId
+      });
+  }
+
+  updateAddedUser(addedUser: Users) {
     delete addedUser.id;
     this.firestore.doc('added-users/' + addedUser.id).update(addedUser);
   }
@@ -50,11 +67,11 @@ export class AddPatientService {
     this.firestore.doc('added-users/' + addedUserId).delete();
   }
 
-  add(newAddedUser: AddPatient) {
+  add(newAddedUser: Users) {
     console.log('In add');
     this.createAddedUser(newAddedUser);
     // let generatedId: string;
-    // let newUser: AddPatient;
+    // let newUser: Users;
     // return this.authService.userId.pipe(
     //   take(1),
     //   switchMap(userId => {
@@ -62,7 +79,7 @@ export class AddPatientService {
     //       throw new Error('No user id found!');
     //     }
     //     console.log(newAddedUser.userId);
-    //     newUser = new AddPatient(
+    //     newUser = new Users(
     //       newAddedUser.id,
     //       newAddedUser.name,
     //       newAddedUser.type,
@@ -98,7 +115,7 @@ export class AddPatientService {
           for (const key in usersData) {
             if (usersData.hasOwnProperty(key)) {
               users.push(
-                new AddPatient(
+                new Users(
                   usersData[key].id,
                   usersData[key].name,
                   usersData[key].type,
