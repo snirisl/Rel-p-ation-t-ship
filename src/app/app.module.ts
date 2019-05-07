@@ -12,7 +12,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { RequestMessageComponent } from './requests/add-requests/request-message/request-message.component';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { AddUserService } from './users/users.service';
+import { UsersService } from './users/users.service';
 
 @NgModule({
   declarations: [AppComponent, RequestMessageComponent],
@@ -29,7 +29,7 @@ import { AddUserService } from './users/users.service';
     StatusBar,
     SplashScreen,
     AngularFirestore,
-    AddUserService,
+    UsersService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent],

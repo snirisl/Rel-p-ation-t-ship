@@ -8,11 +8,11 @@ import { UsersService } from './users.service';
 import { Users } from './users.model';
 
 @Component({
-  selector: 'app-add-patient',
-  templateUrl: './add-patient.page.html',
-  styleUrls: ['./add-patient.page.scss']
+  selector: 'app-users',
+  templateUrl: './users.page.html',
+  styleUrls: ['./users.page.scss']
 })
-export class AddUserPage implements OnInit, OnDestroy {
+export class UsersPage implements OnInit, OnDestroy {
   isLoading = false;
   usersSub: Subscription;
   usersList: Users[];

@@ -6,7 +6,7 @@ import {
   AngularFirestoreCollection
 } from '@angular/fire/firestore';
 import { AuthService } from '../auth/auth.service';
-import { take, switchMap, tap, map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 
@@ -32,30 +32,22 @@ export class UsersService {
     public firestore: AngularFirestore
   ) {
     // this.users = this.firestore.collection('added-users').valueChanges();
-    this.users = this.firestore.collection('added-users').snapshotChanges().pipe(map(changes => {
-      return changes.map(a => {
-        const data = a.payload.doc.data() as Users;
-        data.id = a.payload.doc.id;
-        return data;
-      });
-    }));
-  }
+    this.users = this.firestore
+      .collection('added-users')
+      .snapshotChanges()
+      .pipe(
+        map(changes => {
+          return changes.map(a => {
+            const data = a.payload.doc.data() as Users;
+            data.id = a.payload.doc.id;
+            return data;
+          });
+        })
+      );
+    }
 
   getUsers() {
     return this.users;
-  }
-
-  createAddedUser(addedUser: Users) {
-    return this.firestore
-      .collection('added-users')
-      .doc(addedUser.id)
-      .set({
-        id: addedUser.id,
-        name: addedUser.name,
-        room: addedUser.room,
-        type: addedUser.type,
-        userId: addedUser.userId
-      });
   }
 
   updateAddedUser(addedUser: Users) {
@@ -68,40 +60,13 @@ export class UsersService {
   }
 
   add(newAddedUser: Users) {
-    console.log('In add');
-    this.createAddedUser(newAddedUser);
-    // let generatedId: string;
-    // let newUser: Users;
-    // return this.authService.userId.pipe(
-    //   take(1),
-    //   switchMap(userId => {
-    //     if (!userId) {
-    //       throw new Error('No user id found!');
-    //     }
-    //     console.log(newAddedUser.userId);
-    //     newUser = new Users(
-    //       newAddedUser.id,
-    //       newAddedUser.name,
-    //       newAddedUser.type,
-    //       newAddedUser.room,
-    //       newAddedUser.userId
-    //     );
-    //     return this.http.post<{ name: string }>(
-    //       `https://relpationtship-test.firebaseio.com/added-users.json/`,
-    //       { ...newUser }
-    //     );
-    //   }),
-    //   switchMap(resData => {
-    //     generatedId = resData.name;
-    //     return this.addedPatient;
-    //   }),
-    //   take(1),
-    //   tap(users => {
-    //     // newUser.userId = generatedId;
-    //     // console.log('In add: ', generatedId);
-    //     this._users.next(users.concat(newUser));
-    //   })
-    // );
+    return this.firestore.collection('added-users').doc(newAddedUser.id).set({
+        id: newAddedUser.id,
+        name: newAddedUser.name,
+        room: newAddedUser.room,
+        type: newAddedUser.type,
+        userId: newAddedUser.userId
+      });
   }
 
   fetchUsers() {

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AddUser } from '../users/users.model';
-import { AddUserService } from '../users/users.service';
+import { Users } from '../users/users.model';
+import { UsersService } from '../users/users.service';
 
 
 @Component({
@@ -9,11 +9,11 @@ import { AddUserService } from '../users/users.service';
   styleUrls: ['./manage-users.page.scss']
 })
 export class ManageUsersPage implements OnInit {
-  usersList: AddUser[];
-  constructor(private addUserService: AddUserService) {}
+  usersList: Users[];
+  constructor(private usersService: UsersService) {}
 
   ngOnInit() {
-    this.addUserService.getUsers().subscribe(users => {
+    this.usersService.getUsers().subscribe(users => {
       this.usersList = users;
     });
     // this.addPatientService.getUsers().subscribe(data => {
@@ -21,20 +21,20 @@ export class ManageUsersPage implements OnInit {
     //     return {
     //       id: e.payload.doc.id,
     //       ...e.payload.doc.data()
-    //     } as AddUser;
+    //     } as Users;
     //   });
     // });
   }
 
-  create(addedUser: AddUser) {
-    this.addUserService.add(addedUser);
+  create(addedUser: Users) {
+    this.usersService.add(addedUser);
   }
 
-  update(addedUser: AddUser) {
-    this.addUserService.updateAddedUser(addedUser);
+  update(addedUser: Users) {
+    this.usersService.updateAddedUser(addedUser);
   }
 
   delete(id: string) {
-    this.addUserService.deleteAddedUser(id);
+    this.usersService.deleteAddedUser(id);
   }
 }
