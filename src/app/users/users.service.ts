@@ -25,6 +25,7 @@ export class UsersService {
   private _users = new BehaviorSubject<Users[]>([]);
   usersCollection: AngularFirestoreCollection<Users>;
   users: Observable<any[]>;
+  userDoc: AngularFirestoreDocument<Users>;
 
   constructor(
     private authService: AuthService,
@@ -32,8 +33,8 @@ export class UsersService {
     public firestore: AngularFirestore
   ) {
     // this.users = this.firestore.collection('added-users').valueChanges();
-    this.users = this.firestore
-      .collection('added-users')
+    this.usersCollection = this.firestore.collection('added-users', ref => ref.orderBy('name', 'asc'));
+    this.users = this.usersCollection
       .snapshotChanges()
       .pipe(
         map(changes => {
@@ -55,8 +56,9 @@ export class UsersService {
     this.firestore.doc('added-users/' + addedUser.id).update(addedUser);
   }
 
-  deleteAddedUser(addedUserId: string) {
-    this.firestore.doc('added-users/' + addedUserId).delete();
+  deleteUser(deletedUser: Users) {
+    this.userDoc = this.firestore.doc(`added-users/${deletedUser.id}`);
+    this.userDoc.delete();
   }
 
   add(newAddedUser: Users) {

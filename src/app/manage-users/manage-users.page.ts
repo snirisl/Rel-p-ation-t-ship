@@ -26,15 +26,15 @@ export class ManageUsersPage implements OnInit {
     // });
   }
 
-  create(addedUser: Users) {
-    this.usersService.add(addedUser);
+  create(user: Users) {
+    this.usersService.add(user);
   }
 
-  update(addedUser: Users) {
-    this.usersService.updateAddedUser(addedUser);
+  update(user: Users) {
+    this.usersService.updateAddedUser(user);
   }
 
-  delete(id: string) {
-    this.usersService.deleteAddedUser(id);
+  delete(user: Users) {
+    this.usersService.deleteUser(user);
   }
 }
