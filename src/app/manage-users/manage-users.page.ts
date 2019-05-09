@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Users } from '../users/users.model';
 import { UsersService } from '../users/users.service';
+import { User } from '../auth/user.model';
+import { UsersPageModule } from '../users/users.module';
 
 
 @Component({
@@ -10,6 +12,9 @@ import { UsersService } from '../users/users.service';
 })
 export class ManageUsersPage implements OnInit {
   usersList: Users[];
+  editState: Boolean = false;
+  userToEdit: Users;
+
   constructor(private usersService: UsersService) {}
 
   ngOnInit() {
@@ -36,5 +41,10 @@ export class ManageUsersPage implements OnInit {
 
   delete(user: Users) {
     this.usersService.deleteUser(user);
+  }
+
+  editUser(event, user: Users) {
+    this.editState = true;
+    this.userToEdit = user;
   }
 }
