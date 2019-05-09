@@ -52,8 +52,8 @@ export class UsersService {
   }
 
   updateAddedUser(addedUser: Users) {
-    delete addedUser.id;
-    this.firestore.doc('added-users/' + addedUser.id).update(addedUser);
+    this.userDoc = this.firestore.doc(`added-users/${addedUser.id}`);
+    this.userDoc.update(addedUser);
   }
 
   deleteUser(deletedUser: Users) {

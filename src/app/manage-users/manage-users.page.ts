@@ -3,6 +3,7 @@ import { Users } from '../users/users.model';
 import { UsersService } from '../users/users.service';
 import { User } from '../auth/user.model';
 import { UsersPageModule } from '../users/users.module';
+import { IonItemSliding } from '@ionic/angular';
 
 
 @Component({
@@ -37,14 +38,22 @@ export class ManageUsersPage implements OnInit {
 
   update(user: Users) {
     this.usersService.updateAddedUser(user);
+    this.clearState();
   }
 
   delete(user: Users) {
+    this.clearState();
     this.usersService.deleteUser(user);
   }
 
-  editUser(event, user: Users) {
+  editUser(event, user: Users, itemSliding: IonItemSliding) {
+    itemSliding.close();
     this.editState = true;
     this.userToEdit = user;
+  }
+
+  clearState() {
+    this.editState = false;
+    this.userToEdit = null;
   }
 }

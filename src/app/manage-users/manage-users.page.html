@@ -11,30 +11,106 @@
   <div *ngIf="usersList?.length > 0; else noUsers">
     <ion-list *ngFor="let user of usersList">
       <ion-item-sliding #slidingItem>
-      <ion-item text-wrap
-        ><ion-avatar
-          ><ion-icon name="contact" size="large"></ion-icon
-        ></ion-avatar>
-        <ion-label>
-          <h5>{{ user.name }}:</h5>
-          <p>
-            Room Number: {{ user.room }},
-            {{ user.type == 'p' ? 'Patient' : 'Nurse' }}
-          </p></ion-label
-        >
-        <ion-card *ngIf="editState && userToEdit.id == user.id">
-          test
-        </ion-card>
-      </ion-item>
-      <ion-item-options side="end" *ngIf="user.type == 'p'">
-        <ion-item-option color="secondary" (click)="editUser($event,user)" size="small">
+        <ion-item
+          text-wrap
+          color="{{ user.type == 'p' ? 'primary' : 'secondary' }}"
+          ><ion-avatar
+            ><ion-icon name="contact" size="large"></ion-icon
+          ></ion-avatar>
+          <ion-label>
+            <h5>{{ user.name }}:</h5>
+            <p>
+              Room Number: {{ user.room }},
+              {{ user.type == 'p' ? 'Patient' : 'Nurse' }}
+            </p>
+            <div *ngIf="editState && userToEdit.id == user.id">
+              <form #f="ngForm" (ngSubmit)="update(user)">
+                <ion-list>
+                  <ion-item>
+                    <ion-input
+                      type="string"
+                      ngModel
+                      name="uid"
+                      required
+                      #uidCtrl="ngModel"
+                      [(ngModel)]="user.id"
+                    ></ion-input>
+                  </ion-item>
+                  <ion-item
+                    *ngIf="!uidCtrl.valid && uidCtrl.touched"
+                    lines="none"
+                  >
+                    <ion-label>
+                      Should be at least 8 characters long.
+                    </ion-label>
+                  </ion-item>
+                  <ion-item>
+                    <ion-input
+                      type="string"
+                      ngModel
+                      name="name"
+                      required
+                      #uidCtrl="ngModel"
+                      [(ngModel)]="user.name"
+                    ></ion-input>
+                  </ion-item>
+                  <ion-item>
+                    <ion-select
+                      placeholder="Select Type"
+                      interface="popover"
+                      ngModel
+                      name="type"
+                      required
+                      #typeCtrl="ngModel"
+                      [(ngModel)]="user.type"
+                    >
+                      <ion-select-option value="p">Patient</ion-select-option>
+                      <ion-select-option value="n">Nurse</ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                  <ion-item *ngIf="typeCtrl.value == 'p'">
+                    <ion-select
+                      placeholder="Select Room Number"
+                      interface="popover"
+                      ngModel
+                      name="room"
+                      required
+                      #roomCtrl="ngModel"
+                      [(ngModel)]="user.room"
+                    >
+                      <ion-select-option value="100">100</ion-select-option>
+                      <ion-select-option value="101">101</ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                  <ion-item>
+                    <ion-input
+                      ><ion-button
+                        type="submit"
+                        color="warning"
+                        expand="block"
+                        [disabled]="!f.valid"
+                      >Update User</ion-button
+                    >
+                  <ion-button (click)="editState=false" color="danger">Cancel</ion-button></ion-input>
+                  </ion-item>
+                </ion-list>
+              </form>
+            </div>
+          </ion-label>
+        </ion-item>
+        <ion-item-options side="end" *ngIf="user.type == 'p'">
+          <ion-item-option
+            color="secondary"
+            (click)="editUser($event, user, slidingItem)"
+            size="small"
+          >
             <ion-icon name="create" slot="icon-only"></ion-icon>
-        </ion-item-option>
-        <ion-item-option color="danger" (click)="delete(user)">
+          </ion-item-option>
+          <ion-item-option color="danger" (click)="delete(user)">
             <ion-icon name="trash" slot="icon-only"></ion-icon>
-        </ion-item-option>
-      </ion-item-options>
-    </ion-item-sliding>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
     </ion-list>
   </div>
 
