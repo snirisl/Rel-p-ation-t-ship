@@ -9,6 +9,7 @@ import { AuthService } from '../auth/auth.service';
 import { map, tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { Room } from './room.model';
 
 interface UserData {
   id: string;
@@ -26,6 +27,8 @@ export class UsersService {
   usersCollection: AngularFirestoreCollection<Users>;
   users: Observable<any[]>;
   userDoc: AngularFirestoreDocument<Users>;
+  roomCollection: AngularFirestoreCollection<Room>;
+  rooms: Observable<any[]>;
 
   constructor(
     private authService: AuthService,
@@ -33,22 +36,37 @@ export class UsersService {
     public firestore: AngularFirestore
   ) {
     // this.users = this.firestore.collection('added-users').valueChanges();
-    this.usersCollection = this.firestore.collection('added-users', ref => ref.orderBy('name', 'asc'));
-    this.users = this.usersCollection
-      .snapshotChanges()
-      .pipe(
-        map(changes => {
-          return changes.map(a => {
-            const data = a.payload.doc.data() as Users;
-            data.id = a.payload.doc.id;
-            return data;
-          });
-        })
-      );
-    }
+    this.usersCollection = this.firestore.collection('added-users', ref =>
+      ref.orderBy('name', 'asc')
+    );
+    this.users = this.usersCollection.snapshotChanges().pipe(
+      map(changes => {
+        return changes.map(a => {
+          const data = a.payload.doc.data() as Users;
+          data.id = a.payload.doc.id;
+          return data;
+        });
+      })
+    );
+    this.roomCollection = this.firestore.collection('rooms', ref =>
+      ref.orderBy('roomNum', 'asc')
+    );
+    this.rooms = this.roomCollection.snapshotChanges().pipe(
+      map(changes => {
+        return changes.map(a => {
+          const data = a.payload.doc.data() as Room;
+          return data;
+        });
+      })
+    );
+  }
 
   getUsers() {
     return this.users;
+  }
+
+  getRooms() {
+    return this.rooms;
   }
 
   updateAddedUser(addedUser: Users) {
@@ -62,7 +80,10 @@ export class UsersService {
   }
 
   add(newAddedUser: Users) {
-    return this.firestore.collection('added-users').doc(newAddedUser.id).set({
+    return this.firestore
+      .collection('added-users')
+      .doc(newAddedUser.id)
+      .set({
         id: newAddedUser.id,
         name: newAddedUser.name,
         room: newAddedUser.room,

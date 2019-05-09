@@ -4,6 +4,7 @@ import { UsersService } from '../users/users.service';
 import { User } from '../auth/user.model';
 import { UsersPageModule } from '../users/users.module';
 import { IonItemSliding } from '@ionic/angular';
+import { Room } from '../users/room.model';
 
 
 @Component({
@@ -15,12 +16,16 @@ export class ManageUsersPage implements OnInit {
   usersList: Users[];
   editState: Boolean = false;
   userToEdit: Users;
+  roomsList: Room[];
 
   constructor(private usersService: UsersService) {}
 
   ngOnInit() {
     this.usersService.getUsers().subscribe(users => {
       this.usersList = users;
+    });
+    this.usersService.getRooms().subscribe(rooms => {
+      this.roomsList = rooms;
     });
     // this.addPatientService.getUsers().subscribe(data => {
     //   this.addedUsers = data.map(e => {
@@ -37,6 +42,7 @@ export class ManageUsersPage implements OnInit {
   }
 
   update(user: Users) {
+    console.log('in update');
     this.usersService.updateAddedUser(user);
     this.clearState();
   }

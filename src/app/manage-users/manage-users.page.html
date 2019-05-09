@@ -11,9 +11,7 @@
   <div *ngIf="usersList?.length > 0; else noUsers">
     <ion-list *ngFor="let user of usersList">
       <ion-item-sliding #slidingItem>
-        <ion-item
-          text-wrap
-          color="{{ user.type == 'p' ? 'secondary' : 'danger' }}"
+        <ion-item text-wrap color="{{ user.type == 'p' ? 'light' : 'dark' }}"
           ><ion-avatar
             ><ion-icon name="contact" size="large"></ion-icon
           ></ion-avatar>
@@ -78,20 +76,24 @@
                       #roomCtrl="ngModel"
                       [(ngModel)]="user.room"
                     >
-                      <ion-select-option value="100">100</ion-select-option>
-                      <ion-select-option value="101">101</ion-select-option>
+                      <ion-select-option
+                        *ngFor="let room of roomsList"
+                        value="{{ room.roomNum }}"
+                        >{{ room.roomNum }}
+                      </ion-select-option>
                     </ion-select>
                   </ion-item>
                   <ion-item>
-                    <ion-input
-                      ><ion-button
-                        type="submit"
-                        color="warning"
-                        expand="block"
-                        [disabled]="!f.valid"
+                    <ion-button
+                      type="submit"
+                      color="warning"
+                      expand="block"
+                      [disabled]="!f.valid"
                       >Update User</ion-button
                     >
-                  <ion-button (click)="clearState()" color="danger">Cancel</ion-button></ion-input>
+                    <ion-button (click)="clearState()" color="danger"
+                      >Cancel</ion-button
+                    >
                   </ion-item>
                 </ion-list>
               </form>

@@ -6,6 +6,7 @@ import { User } from './user.model';
 import { map, tap } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
 import { stringify } from '@angular/core/src/render3/util';
+import { Users } from '../users/users.model';
 
 export interface AuthResponseData {
   kind: string;
