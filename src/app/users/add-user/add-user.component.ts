@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UsersService } from 'src/app/users/users.service';
 import { Users } from 'src/app/users/users.model';
+import { Room } from '../room.model';
 
 @Component({
   selector: 'app-add-user',
@@ -16,7 +17,14 @@ export class AddUserComponent implements OnInit {
     userId: ''
   };
 
+  roomsList: Room[];
+
   constructor(private usersService: UsersService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.usersService.getRooms().subscribe(rooms => {
+      this.roomsList = rooms;
+      console.log('happened');
+    });
+  }
 }

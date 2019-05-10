@@ -73,8 +73,11 @@
                   required
                   #roomCtrl="ngModel"
                 >
-                  <ion-select-option value="100">100</ion-select-option>
-                  <ion-select-option value="101">101</ion-select-option>
+                <ion-select-option
+                *ngFor="let room of roomsList"
+                value="{{ room.roomNum }}"
+                >{{ room.roomNum }}
+              </ion-select-option>
                 </ion-select>
               </ion-item>
             </ion-list>

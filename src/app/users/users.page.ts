@@ -6,6 +6,7 @@ import { LoadingController, AlertController } from '@ionic/angular';
 import { Observable, Subscription } from 'rxjs';
 import { UsersService } from './users.service';
 import { Users } from './users.model';
+import { Room } from './room.model';
 
 @Component({
   selector: 'app-users',
@@ -16,6 +17,8 @@ export class UsersPage implements OnInit, OnDestroy {
   isLoading = false;
   usersSub: Subscription;
   usersList: Users[];
+  roomsList: Room[];
+
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -27,6 +30,10 @@ export class UsersPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.usersSub = this.usersService.getUsers().subscribe(users => {
       this.usersList = users;
+    });
+    this.usersService.getRooms().subscribe(rooms => {
+      this.roomsList = rooms;
+      console.log(this.roomsList);
     });
   }
 
