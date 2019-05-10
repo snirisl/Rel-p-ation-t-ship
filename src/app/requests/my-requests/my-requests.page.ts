@@ -7,7 +7,8 @@ import { Observable, Subscription } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import {
   AngularFirestore,
-  AngularFirestoreDocument
+  AngularFirestoreDocument,
+  AngularFirestoreCollection
 } from '@angular/fire/firestore';
 import { Users } from 'src/app/users/users.model';
 import { map, take, switchMap } from 'rxjs/operators';
@@ -22,6 +23,8 @@ export class MyRequestsPage implements OnInit, OnDestroy {
   status = 'progress';
   isLoading = false;
   currUser: AngularFirestoreDocument<Users>;
+  userRef: AngularFirestoreCollection<Users>;
+  user$: Observable<Users[]>;
 
   @ViewChild(IonSegment) segment: IonSegment;
   requestsObs: Observable<any>;
@@ -35,6 +38,7 @@ export class MyRequestsPage implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    console.log('ngOnInit');
     this.segment.value = 'progress';
     this.requestSubscription = this.requestsService
       .getRequests()
@@ -48,16 +52,6 @@ export class MyRequestsPage implements OnInit, OnDestroy {
     if (this.requestSubscription) {
       this.requestSubscription.unsubscribe();
     }
-  }
-
-  ionViewWillEnter() {
-    this.isLoading = true;
-    this.requestSubscription = this.requestsService
-      .getRequests()
-      .subscribe(requests => {
-        this.requestsList = requests;
-        this.isLoading = false;
-      });
   }
 
   onFilterUpdate(event: any) {
