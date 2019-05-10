@@ -1,21 +1,27 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { Request } from '../request.model';
-import { RequestsService } from '../requests.service';
+import { RequestsService, RequestData } from '../requests.service';
 import { IonItemSliding, IonSegment, LoadingController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
-
+import {
+  AngularFirestore,
+  AngularFirestoreDocument
+} from '@angular/fire/firestore';
+import { Users } from 'src/app/users/users.model';
+import { map, take, switchMap } from 'rxjs/operators';
 @Component({
   selector: 'app-my-requests',
   templateUrl: './my-requests.page.html',
   styleUrls: ['./my-requests.page.scss']
 })
 export class MyRequestsPage implements OnInit, OnDestroy {
-  myRequests: Request[];
-  requestsSub: Subscription;
+  requestsList: RequestData[];
+  requestSubscription: Subscription;
   status = 'progress';
   isLoading = false;
+  currUser: AngularFirestoreDocument<Users>;
 
   @ViewChild(IonSegment) segment: IonSegment;
   requestsObs: Observable<any>;
@@ -24,28 +30,34 @@ export class MyRequestsPage implements OnInit, OnDestroy {
     private requestsService: RequestsService,
     private router: Router,
     private loadingCtrl: LoadingController,
-    public authService: AuthService
+    public authService: AuthService,
+    public firestore: AngularFirestore
   ) {}
 
   ngOnInit() {
     this.segment.value = 'progress';
-    this.requestsSub = this.requestsService.requests.subscribe(requests => {
-      this.myRequests = requests;
-    });
+    this.requestSubscription = this.requestsService
+      .getRequests()
+      .subscribe(requests => {
+        this.requestsList = requests;
+      });
     console.log('type is', this.authService.userType);
   }
 
   ngOnDestroy() {
-    if (this.requestsSub) {
-      this.requestsSub.unsubscribe();
+    if (this.requestSubscription) {
+      this.requestSubscription.unsubscribe();
     }
   }
 
   ionViewWillEnter() {
     this.isLoading = true;
-    this.requestsService.fetchRequests().subscribe(() => {
-      this.isLoading = false;
-    });
+    this.requestSubscription = this.requestsService
+      .getRequests()
+      .subscribe(requests => {
+        this.requestsList = requests;
+        this.isLoading = false;
+      });
   }
 
   onFilterUpdate(event: any) {
@@ -53,13 +65,7 @@ export class MyRequestsPage implements OnInit, OnDestroy {
     this.status = filteredOption;
   }
 
-  doRefresh(event: any) {
-    this.requestsService.fetchRequests().subscribe(() => {
-      event.target.complete();
-    });
-  }
-
-  setAsCompleted(id: string, slidingItem: IonItemSliding) {
+  setAsCompleted(slidingItem: IonItemSliding, request: RequestData) {
     slidingItem.close();
     this.loadingCtrl
       .create({
@@ -67,7 +73,7 @@ export class MyRequestsPage implements OnInit, OnDestroy {
       })
       .then(loadingEl => {
         loadingEl.present();
-        this.requestsService.setRequestAsCompleted(id).subscribe(() => {
+        this.requestsService.updateRequest(request).then(() => {
           loadingEl.dismiss();
         });
       });

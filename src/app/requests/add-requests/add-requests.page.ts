@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { RequestsService } from '../requests.service';
+import { RequestsService, RequestData } from '../requests.service';
 import { Request } from '../request.model';
 import {
   ActionSheetController,
@@ -21,6 +21,7 @@ export class AddRequestsPage implements OnInit, OnDestroy {
   loadedRequests: StaticRequest[];
   requestsSub: Subscription;
   request: Request;
+  newRequest: RequestData;
   constructor(
     private requestsService: RequestsService,
     private departmentRequestsService: DepartmentRequestsService,
@@ -43,7 +44,7 @@ export class AddRequestsPage implements OnInit, OnDestroy {
     }
   }
 
-  addRequest(request: Request) {
+  addRequest(request: StaticRequest) {
     this.actionSheetCtrl
       .create({
         header: 'Send this Request?',
@@ -65,7 +66,7 @@ export class AddRequestsPage implements OnInit, OnDestroy {
       });
   }
 
-  async presentAlert(request: Request) {
+  async presentAlert(request: StaticRequest) {
     const alert = await this.alertController.create({
       header: 'Request Sent',
       message:
@@ -74,7 +75,7 @@ export class AddRequestsPage implements OnInit, OnDestroy {
         {
           text: 'Close',
           handler: () => {
-            this.requestsService.add(request).subscribe(() => {
+            this.requestsService.addRequest(request).then(() => {
               this.router.navigateByUrl('/requests/tabs/my-requests');
             });
           }

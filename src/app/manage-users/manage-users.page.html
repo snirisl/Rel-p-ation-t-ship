@@ -28,24 +28,6 @@
                     <ion-input
                       type="string"
                       ngModel
-                      name="uid"
-                      required
-                      #uidCtrl="ngModel"
-                      [(ngModel)]="user.id"
-                    ></ion-input>
-                  </ion-item>
-                  <ion-item
-                    *ngIf="!uidCtrl.valid && uidCtrl.touched"
-                    lines="none"
-                  >
-                    <ion-label>
-                      Should be at least 8 characters long.
-                    </ion-label>
-                  </ion-item>
-                  <ion-item>
-                    <ion-input
-                      type="string"
-                      ngModel
                       name="name"
                       required
                       #uidCtrl="ngModel"
@@ -91,7 +73,7 @@
                       [disabled]="!f.valid"
                       >Update User</ion-button
                     >
-                    <ion-button (click)="clearState()" color="danger"
+                    <ion-button (click)="clearState()" color="dark"
                       >Cancel</ion-button
                     >
                   </ion-item>

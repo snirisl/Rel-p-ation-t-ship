@@ -7,7 +7,9 @@ export class FilterPipe implements PipeTransform {
     // if (text === '') {
     //   return arrangement;
     // }
-
+    if (!arrangement) {
+      return arrangement;
+    }
     text = text.toLowerCase();
 
     return arrangement.filter(item => {

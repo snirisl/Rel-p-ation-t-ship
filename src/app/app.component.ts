@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-
 import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
@@ -20,7 +19,7 @@ export class AppComponent implements OnInit, OnDestroy{
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     public authService: AuthService,
-    private router: Router
+    private router: Router,
   ) {
     this.initializeApp();
   }
