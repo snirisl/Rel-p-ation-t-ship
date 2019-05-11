@@ -12,6 +12,8 @@ import {
 } from '@angular/fire/firestore';
 import { Users } from 'src/app/users/users.model';
 import { map, take, switchMap } from 'rxjs/operators';
+import { UserStateService } from 'src/app/auth/user-state.service';
+
 @Component({
   selector: 'app-my-requests',
   templateUrl: './my-requests.page.html',
@@ -34,7 +36,8 @@ export class MyRequestsPage implements OnInit, OnDestroy {
     private router: Router,
     private loadingCtrl: LoadingController,
     public authService: AuthService,
-    public firestore: AngularFirestore
+    public firestore: AngularFirestore,
+    private userStateService: UserStateService
   ) {}
 
   ngOnInit() {

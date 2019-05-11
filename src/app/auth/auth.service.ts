@@ -11,6 +11,7 @@ import {
   AngularFirestoreDocument,
   AngularFirestore
 } from '@angular/fire/firestore';
+import { UserStateService } from './user-state.service';
 
 export interface AuthResponseData {
   kind: string;
@@ -32,24 +33,37 @@ export class AuthService {
   private user: AngularFirestoreDocument<Users>;
   private userFetched: Observable<Users[]>;
 
-  constructor(private http: HttpClient, private firestore: AngularFirestore) {
-    // let fetchedUser: Users;
-    // this._userType = addedUserId.type;
-    // console.log('user type is: ' + this._userType);
+  constructor(
+    private http: HttpClient,
+    private firestore: AngularFirestore,
+    private userStateService: UserStateService
+  ) {
+    from(Plugins.Storage.get({ key: 'authData' })).pipe(
+      map(storedData => {
+        if (!storedData || !storedData.value) {
+          return null;
+        }
+        const parsedData = JSON.parse(storedData.value) as {
+          token: string;
+          tokenExpirationDate: string;
+          userId: string;
+          email: string;
+          userType: string;
+          userName: string;
+        };
+        console.log('in auth constructor');
+        this._userName = parsedData.userName;
+        this._userType = parsedData.userType;
+      })
+    ).subscribe();
   }
 
   get userName() {
     return this._userName;
   }
 
-  setUserType() {
-    let userId: string;
-    this.userId.subscribe(x => {
-      userId = x;
-      console.log('x is ' + x + ' and userId is' + userId);
-    });
+  getUserType(userId: string) {
     const userQuery = this.firestore.doc<Users>(`added-users/${userId}`);
-    console.log('added-users/' + userId);
     userQuery.valueChanges().subscribe(x => {
       this._userType = x.type;
       this._userName = x.name;
@@ -106,6 +120,8 @@ export class AuthService {
           tokenExpirationDate: string;
           userId: string;
           email: string;
+          userType: string;
+          userName: string;
         };
         const expirationTime = new Date(parsedData.tokenExpirationDate);
         if (expirationTime <= new Date()) {
@@ -115,14 +131,15 @@ export class AuthService {
           parsedData.userId,
           parsedData.email,
           parsedData.token,
-          expirationTime
+          expirationTime,
+          parsedData.userName,
+          parsedData.userType
         );
         return user;
       }),
       tap(user => {
         if (user) {
           this._user.next(user);
-          this.setUserType();
         }
       }),
       map(user => {
@@ -159,11 +176,14 @@ export class AuthService {
         expirationTime
       )
     );
+    this.getUserType(userData.localId);
     this.storeAuthData(
       userData.localId,
       userData.idToken,
       expirationTime.toISOString(),
-      userData.email
+      userData.email,
+      this.userType,
+      this.userName
     );
   }
 
@@ -171,13 +191,17 @@ export class AuthService {
     userId: string,
     token: string,
     tokenExpirationDate: string,
-    email: string
+    email: string,
+    userType: string,
+    userName: string
   ) {
     const data = JSON.stringify({
       userId: userId,
       token: token,
       tokenExpirationDate: tokenExpirationDate,
-      email: email
+      email: email,
+      userType: userType,
+      userName: userName
     });
     Plugins.Storage.set({ key: 'authData', value: data });
   }

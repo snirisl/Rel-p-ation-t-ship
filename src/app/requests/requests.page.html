@@ -1,13 +1,17 @@
 <ion-tabs>
   <ion-tab-bar slot="bottom" color="primary">
-    <ion-tab-button tab="add-requests">
+    <ion-tab-button
+      tab="add-requests"
+      *ngIf="this.authService.userType === 'p'"
+    >
       <ion-label>Add Requests</ion-label>
       <ion-icon name="add-circle"></ion-icon>
     </ion-tab-button>
     <ion-tab-button tab="my-requests">
-      <ion-label>My Requests</ion-label>
+      <ion-label>{{
+        this.authService.userType === 'p' ? 'My Requests' : 'All Requests'
+      }}</ion-label>
       <ion-icon name="checkbox"></ion-icon>
     </ion-tab-button>
-
   </ion-tab-bar>
 </ion-tabs>

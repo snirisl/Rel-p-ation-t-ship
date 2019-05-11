@@ -37,25 +37,27 @@ export class AuthPage implements OnInit {
         } else {
           authObs = this.authService.signup(email, password);
         }
-        authObs.subscribe(resData => {
-          console.log(resData);
-          this.isLoading = false;
-          loadingEl.dismiss();
-          this.authService.setUserType();
-          this.router.navigateByUrl('/requests/tabs/add-requests');
-        }, errRes => {
-          loadingEl.dismiss();
-          const code = errRes.error.error.message;
-          let message = 'Could not sign you up, please try again.';
-          if (code === 'EMAIL_EXISTS') {
-            message = 'This Id exists already!';
-          } else if (code === 'EMAIL_NOT_FOUND') {
-            message = 'No such user.';
-          } else if (code === 'INVALID_PASSWORD') {
-            message = 'Could not log you in, please try again.';
+        authObs.subscribe(
+          resData => {
+            console.log(resData);
+            this.isLoading = false;
+            loadingEl.dismiss();
+            this.router.navigateByUrl('/requests/tabs/my-requests');
+          },
+          errRes => {
+            loadingEl.dismiss();
+            const code = errRes.error.error.message;
+            let message = 'Could not sign you up, please try again.';
+            if (code === 'EMAIL_EXISTS') {
+              message = 'This Id exists already!';
+            } else if (code === 'EMAIL_NOT_FOUND') {
+              message = 'No such user.';
+            } else if (code === 'INVALID_PASSWORD') {
+              message = 'Could not log you in, please try again.';
+            }
+            this.showAlert(message);
           }
-          this.showAlert(message);
-        });
+        );
       });
   }
   onSubmit(form: NgForm) {
@@ -76,9 +78,5 @@ export class AuthPage implements OnInit {
         buttons: ['Okay']
       })
       .then(alertEl => alertEl.present());
-  }
-
-  onSwitchAuthMode() {
-    this.isLogin = !this.isLogin;
   }
 }

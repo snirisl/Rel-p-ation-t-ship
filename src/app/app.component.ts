@@ -37,6 +37,9 @@ export class AppComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl('/auth');
       }
       this.previousAuthState = isAuth;
+      this.authService.userId.subscribe(x => {
+        this.authService.getUserType(x);
+      });
     });
   }
 
