@@ -88,6 +88,5 @@ export class MyRequestsPage implements OnInit, OnDestroy {
           loadingEl.dismiss();
         });
       });
-      console.log('after delete should occured');
   }
 }
