@@ -38,14 +38,12 @@ export class MyRequestsPage implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    console.log('ngOnInit');
     this.segment.value = 'progress';
     this.requestSubscription = this.requestsService
       .getRequests()
       .subscribe(requests => {
         this.requestsList = requests;
       });
-    console.log('type is', this.authService.userType);
   }
 
   ngOnDestroy() {

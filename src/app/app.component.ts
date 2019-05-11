@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
   selector: 'app-root',
   templateUrl: 'app.component.html'
 })
-export class AppComponent implements OnInit, OnDestroy{
+export class AppComponent implements OnInit, OnDestroy {
   private authSub: Subscription;
   private previousAuthState = false;
 
@@ -19,7 +19,7 @@ export class AppComponent implements OnInit, OnDestroy{
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     public authService: AuthService,
-    private router: Router,
+    private router: Router
   ) {
     this.initializeApp();
   }
@@ -41,7 +41,7 @@ export class AppComponent implements OnInit, OnDestroy{
   }
 
   ngOnDestroy() {
-    if(this.authSub ) {
+    if (this.authSub) {
       this.authSub.unsubscribe();
     }
   }

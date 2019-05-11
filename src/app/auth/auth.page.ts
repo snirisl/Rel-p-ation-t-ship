@@ -41,6 +41,7 @@ export class AuthPage implements OnInit {
           console.log(resData);
           this.isLoading = false;
           loadingEl.dismiss();
+          this.authService.setUserType();
           this.router.navigateByUrl('/requests/tabs/add-requests');
         }, errRes => {
           loadingEl.dismiss();
@@ -63,7 +64,6 @@ export class AuthPage implements OnInit {
     }
     const uid = form.value.pid + '@test.com';
     const password = form.value.password;
-    console.log(uid, password);
     this.authenticate(uid, password);
     form.reset();
   }

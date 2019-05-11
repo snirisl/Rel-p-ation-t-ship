@@ -1,12 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { BehaviorSubject, from } from 'rxjs';
+import { BehaviorSubject, from, Observable } from 'rxjs';
 import { User } from './user.model';
 import { map, tap } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
 import { stringify } from '@angular/core/src/render3/util';
 import { Users } from '../users/users.model';
+import {
+  AngularFirestoreDocument,
+  AngularFirestore
+} from '@angular/fire/firestore';
 
 export interface AuthResponseData {
   kind: string;
@@ -17,23 +21,40 @@ export interface AuthResponseData {
   expiresIn: string;
   registered?: boolean;
 }
-interface UserData {
-  id: string;
-  name: string;
-  type: string;
-  room: string;
-  userId: string;
-}
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private _user = new BehaviorSubject<User>(null);
-  private _roomNumber = '100';
-  private _userType = 'n';
+  private _userType: string;
+  private _userName: string;
+  private user: AngularFirestoreDocument<Users>;
+  private userFetched: Observable<Users[]>;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private firestore: AngularFirestore) {
+    // let fetchedUser: Users;
+    // this._userType = addedUserId.type;
+    // console.log('user type is: ' + this._userType);
+  }
+
+  get userName() {
+    return this._userName;
+  }
+
+  setUserType() {
+    let userId: string;
+    this.userId.subscribe(x => {
+      userId = x;
+      console.log('x is ' + x + ' and userId is' + userId);
+    });
+    const userQuery = this.firestore.doc<Users>(`added-users/${userId}`);
+    console.log('added-users/' + userId);
+    userQuery.valueChanges().subscribe(x => {
+      this._userType = x.type;
+      this._userName = x.name;
+    });
+  }
 
   get userIsAuthenticated() {
     return this._user.asObservable().pipe(
@@ -51,17 +72,12 @@ export class AuthService {
     return this._user.asObservable().pipe(
       map(user => {
         if (user) {
-          console.log(user.id);
           return user.id;
         } else {
           return null;
         }
       })
     );
-  }
-
-  get patientRoomNumber() {
-    return this._roomNumber;
   }
 
   get userType() {
@@ -106,6 +122,7 @@ export class AuthService {
       tap(user => {
         if (user) {
           this._user.next(user);
+          this.setUserType();
         }
       }),
       map(user => {
