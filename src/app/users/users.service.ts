@@ -82,7 +82,7 @@ export class UsersService {
   add(newAddedUser: Users) {
     return this.firestore
       .collection('added-users')
-      .doc(newAddedUser.id)
+      .doc(newAddedUser.userId)
       .set({
         id: newAddedUser.id,
         name: newAddedUser.name,
