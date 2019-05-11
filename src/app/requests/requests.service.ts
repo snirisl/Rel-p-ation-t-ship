@@ -10,8 +10,6 @@ import {
   AngularFirestoreDocument
 } from '@angular/fire/firestore';
 import { StaticRequest } from './static-requests.model';
-import { Users } from '../users/users.model';
-import { stringify } from '@angular/compiler/src/util';
 
 export interface RequestData {
   date: Date;
@@ -23,7 +21,6 @@ export interface RequestData {
   nurseId: string;
   room: string;
   id?: string;
-  nurseName?: string;
 }
 
 @Injectable({
@@ -166,13 +163,9 @@ export class RequestsService {
   }
 
   updateRequest(request: RequestData) {
-    let currentNurseId: string;
-    this.authService.userId.subscribe(x => {
-      currentNurseId = x;
-    });
-    const currentNurseName: string = this.authService.userName;
+    console.log(request.id);
     this.requestDoc = this.firestore.doc(`requests/${request.id}`);
-    return this.requestDoc.update({ status: 'Completed', nurseId: currentNurseId, nurseName: currentNurseName });
+    return this.requestDoc.update({ status: 'Completed' });
   }
 
   deleteRequest(request: RequestData) {
@@ -185,14 +178,6 @@ export class RequestsService {
     this.authService.userId.subscribe(userId => {
       this.currentUser = userId;
     });
-    let roomNum: string;
-    this.firestore
-      .doc<Users>('added-users/' + this.currentUser)
-      .valueChanges()
-      .subscribe(x => {
-        roomNum = x.room;
-      });
-
     const id = this.firestore.createId();
     return this.firestore
       .collection('requests')
@@ -205,16 +190,11 @@ export class RequestsService {
         title: newAddedRequest.title,
         patientId: this.currentUser,
         nurseId: '',
-        room: roomNum
+        room: '103'
       });
   }
 
   setRequestAsCompleted(requestId: string) {
-    let currentNurseId: string;
-    this.authService.userId.subscribe(x => {
-      currentNurseId = x;
-    });
-    const currentNurseName: string = this.authService.userName;
     let updatedRequests: Request[];
     return this.requests.pipe(
       take(1),
@@ -238,7 +218,7 @@ export class RequestsService {
         );
         return this.http.put(
           `https://relpationtship-test.firebaseio.com/added-requests/${requestId}.json`,
-          { ...updatedRequests[updatedRequestIndex], id: null, nurseId: currentNurseId, nurseName: currentNurseName }
+          { ...updatedRequests[updatedRequestIndex], id: null }
         );
       }),
       tap(() => {

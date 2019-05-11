@@ -1,0 +1,108 @@
+<ion-header>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-menu-button menu="m1"></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Add a New User</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content padding>
+    <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+      <ion-grid>
+        <ion-row>
+          <ion-col size-sm="6" offset-sm="3">
+            <ion-list>
+              <ion-item>
+                <ion-label position="floating">ID (without opening 0)</ion-label>
+                <ion-input
+                  type="string"
+                  ngModel
+                  name="uid"
+                  required
+                  #uidCtrl="ngModel"
+                ></ion-input>
+              </ion-item>
+              <ion-item *ngIf="!uidCtrl.valid && uidCtrl.touched" lines="none">
+                <ion-label>
+                  Should be at least 8 characters long.
+                </ion-label>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating">Name</ion-label>
+                <ion-input
+                  type="text"
+                  ngModel
+                  name="name"
+                  required
+                  minlength="2"
+                  #nameCtrl="ngModel"
+                ></ion-input>
+              </ion-item>
+              <ion-item *ngIf="!nameCtrl.valid && nameCtrl.touched" lines="none">
+                <ion-label>
+                  Should be at least 2 characters long.
+                </ion-label>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating">Type</ion-label>
+                <ion-select
+                  placeholder="Select Type"
+                  interface="popover"
+                  ngModel
+                  name="type"
+                  required
+                  #typeCtrl="ngModel"
+                >
+                  <ion-select-option value="p">Patient</ion-select-option>
+                  <ion-select-option value="n">Nurse</ion-select-option>
+                </ion-select>
+              </ion-item>
+              <ion-item *ngIf="!typeCtrl.valid && typeCtrl.touched" lines="none">
+                <ion-label>
+                  You must choose a user type.
+                </ion-label>
+              </ion-item>
+              <ion-item *ngIf="typeCtrl.value == 'p'">
+                <ion-label position="floating">Room Number</ion-label>
+                <ion-select
+                  placeholder="Select Room Number"
+                  interface="popover"
+                  ngModel
+                  name="room"
+                  required
+                  #roomCtrl="ngModel"
+                >
+                <ion-select-option
+                *ngFor="let room of roomsList"
+                value="{{ room.roomNum }}"
+                >{{ room.roomNum }}
+              </ion-select-option>
+                </ion-select>
+              </ion-item>
+            </ion-list>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size-sm="6" offset-sm="3">
+            <div text-center>
+              <ion-button
+                type="submit"
+                color="primary"
+                expand="block"
+                [disabled]="!f.valid"
+              >
+                Create
+              </ion-button>
+              <p text-center>OR</p>
+              <ion-button type="submit" color="primary" expand="block">
+                <ion-icon name="camera"></ion-icon>
+                Take a Picture of the Patient Sticker
+              </ion-button>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </form>
+  </ion-content>
+  
