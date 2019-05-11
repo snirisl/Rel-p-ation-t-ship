@@ -33,7 +33,6 @@ export class UsersPage implements OnInit, OnDestroy {
     });
     this.usersService.getRooms().subscribe(rooms => {
       this.roomsList = rooms;
-      console.log(this.roomsList);
     });
   }
 
@@ -59,7 +58,6 @@ export class UsersPage implements OnInit, OnDestroy {
     const name = form.value.name;
     const type = form.value.type;
     const room = form.value.room ? form.value.room : '0';
-    console.log(uid, password, name, type, room);
     this.createUser(uid, password, name, type, room);
     form.reset();
   }

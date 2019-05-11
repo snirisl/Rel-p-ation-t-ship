@@ -73,4 +73,21 @@ export class MyRequestsPage implements OnInit, OnDestroy {
         });
       });
   }
+
+  deleteRequest(slidingItem: IonItemSliding, request: RequestData) {
+    console.log('in delete');
+    slidingItem.close();
+    this.loadingCtrl
+      .create({
+        message: 'Deleting Request...'
+      })
+      .then(loadingEl => {
+        loadingEl.present();
+        console.log('in delete 2');
+        this.requestsService.deleteRequest(request).then(() => {
+          loadingEl.dismiss();
+        });
+      });
+      console.log('after delete should occured');
+  }
 }

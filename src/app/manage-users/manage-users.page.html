@@ -17,8 +17,10 @@
           ></ion-avatar>
           <ion-label>
             <h5>{{ user.name }}:</h5>
+            <p *ngIf="user.type == 'p'">
+              Room Number: {{ user.room }}
+            </p>
             <p>
-              Room Number: {{ user.room }},
               {{ user.type == 'p' ? 'Patient' : 'Nurse' }}
             </p>
             <div *ngIf="editState && userToEdit.id == user.id">

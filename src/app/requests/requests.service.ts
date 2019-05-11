@@ -62,7 +62,6 @@ export class RequestsService {
   }
 
   updateRequest(request: RequestData) {
-    console.log(request.id);
     let nurseId: string;
     this.authService.userId.subscribe(x => {
       nurseId = x;
@@ -74,7 +73,7 @@ export class RequestsService {
   deleteRequest(request: RequestData) {
     this.requestDoc = this.firestore.doc(`requests/${request.id}
     `);
-    this.requestDoc.delete();
+    return this.requestDoc.delete();
   }
 
   addRequest(newAddedRequest: StaticRequest) {

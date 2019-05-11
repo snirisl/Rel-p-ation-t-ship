@@ -51,7 +51,6 @@ export class AuthService {
           userType: string;
           userName: string;
         };
-        console.log('in auth constructor');
         this._userName = parsedData.userName;
         this._userType = parsedData.userType;
       })
