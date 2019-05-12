@@ -83,7 +83,7 @@
                 >
               </ion-label>
             </ion-item>
-            <div>
+            <div *ngIf="request.status !== 'Completed'">
               <ion-item-options
                 side="end"
                 *ngIf="this.authService.userType !== 'p'"
@@ -94,12 +94,6 @@
                 >
                   <ion-icon name="done-all" slot="icon-only"></ion-icon>
                 </ion-item-option>
-                <ion-item-option
-                color="danger"
-                (click)="deleteRequest(slidingItem, request)" *ngIf="request.status !== 'In progress'"
-              >
-                <ion-icon name="trash" slot="icon-only"></ion-icon>
-              </ion-item-option>
               </ion-item-options>
             </div>
           </ion-item-sliding>
