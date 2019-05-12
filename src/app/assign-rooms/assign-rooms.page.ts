@@ -47,7 +47,6 @@ export class AssignRoomsPage implements OnInit {
       this.roomDoc.update({ assignedNurse: nurseId });
     });
     this.assignRoomsVar = [];
-    //  this.requestService.updateRequestRooms();
   }
   unassignRooms() {
     let nurseId: string;
@@ -60,6 +59,5 @@ export class AssignRoomsPage implements OnInit {
       this.roomDoc.update({ assignedNurse: '' });
     });
     this.unassignRoomsVar = [];
-    //  this.requestService.updateRequestRooms();
   }
 }
