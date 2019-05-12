@@ -27,14 +27,6 @@ export class ManageUsersPage implements OnInit {
     this.usersService.getRooms().subscribe(rooms => {
       this.roomsList = rooms;
     });
-    // this.addPatientService.getUsers().subscribe(data => {
-    //   this.addedUsers = data.map(e => {
-    //     return {
-    //       id: e.payload.doc.id,
-    //       ...e.payload.doc.data()
-    //     } as Users;
-    //   });
-    // });
   }
 
   create(user: Users) {

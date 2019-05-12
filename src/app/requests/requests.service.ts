@@ -28,11 +28,13 @@ export interface RequestData {
   providedIn: 'root'
 })
 export class RequestsService {
+ 
   private _requests = new BehaviorSubject<Request[]>([]);
   requestCollection: AngularFirestoreCollection<RequestData>;
   patientsRequests: Observable<any[]>;
   requestDoc: AngularFirestoreDocument<RequestData>;
   currentUser: string;
+  roomsUpdateRequestsCollection: AngularFirestoreCollection<RequestData>;
 
   get requests() {
     return this._requests.asObservable();
@@ -68,6 +70,10 @@ export class RequestsService {
     });
     this.requestDoc = this.firestore.doc(`requests/${request.id}`);
     return this.requestDoc.update({ status: 'Completed', nurseId: nurseId, nurseName: this.authService.userName });
+  }
+
+  updateRequestRooms(element: any) {
+
   }
 
   deleteRequest(request: RequestData) {

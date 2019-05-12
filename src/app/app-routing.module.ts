@@ -23,6 +23,11 @@ const routes: Routes = [
   {
     path: 'manage-users',
     loadChildren: './manage-users/manage-users.module#ManageUsersPageModule'
+  },
+  {
+    path: 'assign-rooms',
+    loadChildren: './assign-rooms/assign-rooms.module#AssignRoomsPageModule',
+    canLoad: [AuthGuard]
   }
 ];
 

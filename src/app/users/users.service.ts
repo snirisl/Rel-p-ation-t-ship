@@ -29,13 +29,18 @@ export class UsersService {
   userDoc: AngularFirestoreDocument<Users>;
   roomCollection: AngularFirestoreCollection<Room>;
   rooms: Observable<any[]>;
+  assignedRoomsCollection: AngularFirestoreCollection<Room>;
+  assignedRooms: Observable<any[]>;
 
   constructor(
     private authService: AuthService,
     private http: HttpClient,
     public firestore: AngularFirestore
   ) {
-    // this.users = this.firestore.collection('added-users').valueChanges();
+    let nurseId: string;
+    this.authService.userId.subscribe(x => {
+      nurseId = x;
+    });
     this.usersCollection = this.firestore.collection('added-users', ref =>
       ref.orderBy('name', 'asc')
     );
@@ -59,6 +64,15 @@ export class UsersService {
         });
       })
     );
+    this.assignedRoomsCollection = this.firestore.collection('rooms', ref => ref.where('assignedNurse', '==', nurseId));
+    this.assignedRooms = this.assignedRoomsCollection.snapshotChanges().pipe(
+      map(changes => {
+        return changes.map(a => {
+          const data = a.payload.doc.data() as Room;
+          return data;
+        });
+      })
+    );
   }
 
   getUsers() {
@@ -67,6 +81,10 @@ export class UsersService {
 
   getRooms() {
     return this.rooms;
+  }
+
+  getRoomsAssigned() {
+    return this.assignedRooms;
   }
 
   updateAddedUser(addedUser: Users) {
