@@ -96,6 +96,7 @@ export class RequestsService {
         status: 'In progress',
         title: newAddedRequest.title,
         patientId: this.currentUser,
+        patientName: this.authService.userName,
         nurseId: '',
         room: '103'
       });

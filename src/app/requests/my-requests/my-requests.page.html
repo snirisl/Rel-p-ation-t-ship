@@ -57,10 +57,18 @@
               </ion-thumbnail>
               <ion-label>
                 <h2>{{ request.title }}</h2>
-                <p>{{ request.description }}</p>
+                <h5>{{ request.description }}</h5>
                 <p *ngIf="request.data !== ''">
                   {{ request.date.toDate() | date: 'dd/MM/yyyy HH:mm':'+3' }}
                 </p>
+                <ion-text *ngIf="request.status === 'In progress' &&
+                this.segment.value === 'progress'" color="primary">
+                  {{ request.patientName }}
+              </ion-text>
+                <ion-text *ngIf="request.status === 'Completed' &&
+                this.segment.value === 'completed'" color="primary">
+                  {{ request.nurseName }}
+                </ion-text>
                 <ion-label
                   slot="start"
                   text-right
