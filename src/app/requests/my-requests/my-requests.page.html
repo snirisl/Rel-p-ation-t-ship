@@ -51,7 +51,13 @@
             *ngFor="let request of requestsList | filter: status:'status'"
             #slidingItem
           >
-            <ion-item>
+            <ion-item
+              *ngIf="
+                (this.authService.userType === 'p' &&
+                  request.patientName === this.authService.userName) ||
+                this.authService.userType === 'n'
+              "
+            >
               <ion-thumbnail slot="start">
                 <ion-img [src]="request.imgUrl"></ion-img>
               </ion-thumbnail>
@@ -61,12 +67,22 @@
                 <p *ngIf="request.data !== ''">
                   {{ request.date.toDate() | date: 'dd/MM/yyyy HH:mm':'+3' }}
                 </p>
-                <ion-text *ngIf="request.status === 'In progress' &&
-                this.segment.value === 'progress'" color="primary">
+                <ion-text
+                  *ngIf="
+                    request.status === 'In progress' &&
+                    this.segment.value === 'progress'
+                  "
+                  color="primary"
+                >
                   {{ request.patientName }}
-              </ion-text>
-                <ion-text *ngIf="request.status === 'Completed' &&
-                this.segment.value === 'completed'" color="primary">
+                </ion-text>
+                <ion-text
+                  *ngIf="
+                    request.status === 'Completed' &&
+                    this.segment.value === 'completed'
+                  "
+                  color="primary"
+                >
                   {{ request.nurseName }}
                 </ion-text>
                 <ion-label
@@ -98,7 +114,8 @@
               >
                 <ion-item-option
                   color="secondary"
-                  (click)="setAsCompleted(slidingItem, request)" *ngIf="request.status !== 'Completed'"
+                  (click)="setAsCompleted(slidingItem, request)"
+                  *ngIf="request.status !== 'Completed'"
                 >
                   <ion-icon name="done-all" slot="icon-only"></ion-icon>
                 </ion-item-option>
