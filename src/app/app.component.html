@@ -2,7 +2,7 @@
   <ion-menu slot="start" menuId="m1">
     <ion-header>
       <ion-toolbar>
-        <ion-title text-wrap>Hello, {{ this.authService.userName}}</ion-title>
+        <ion-title text-wrap>Hello, {{ this.authService.userName ? this.authService.userName.split(" ")[0] : '' }}</ion-title>
         <!-- code here the real patient name -->
       </ion-toolbar>
     </ion-header>
