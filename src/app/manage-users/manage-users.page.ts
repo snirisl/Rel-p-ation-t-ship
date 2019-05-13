@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Users } from '../users/users.model';
 import { UsersService } from '../users/users.service';
-import { User } from '../auth/user.model';
-import { UsersPageModule } from '../users/users.module';
 import { IonItemSliding } from '@ionic/angular';
 import { Room } from '../users/room.model';
-
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-manage-users',
@@ -13,35 +11,31 @@ import { Room } from '../users/room.model';
   styleUrls: ['./manage-users.page.scss']
 })
 export class ManageUsersPage implements OnInit {
-  usersList: Users[];
   editState: Boolean = false;
   userToEdit: Users;
-  roomsList: Room[];
 
-  constructor(private usersService: UsersService) {}
+  roomsList$: Observable<Room[]>;
+  usersList$: Observable<Users[]>;
+
+  constructor(private userService: UsersService) {}
 
   ngOnInit() {
-    this.usersService.getUsers().subscribe(users => {
-      this.usersList = users;
-    });
-    this.usersService.getRooms().subscribe(rooms => {
-      this.roomsList = rooms;
-    });
+    this.usersList$ = this.userService.getUsers();
+    this.roomsList$ = this.userService.getRooms();
   }
 
   create(user: Users) {
-    this.usersService.add(user);
+    this.userService.add(user);
   }
 
   update(user: Users) {
-    console.log('in update');
-    this.usersService.updateAddedUser(user);
+    this.userService.updateAddedUser(user);
     this.clearState();
   }
 
   delete(user: Users) {
     this.clearState();
-    this.usersService.deleteUser(user);
+    this.userService.deleteUser(user);
   }
 
   editUser(event, user: Users, itemSliding: IonItemSliding) {

@@ -8,8 +8,8 @@
 </ion-header>
 
 <ion-content padding>
-  <div *ngIf="usersList?.length > 0; else noUsers">
-    <ion-list *ngFor="let user of usersList">
+  <div *ngIf="(usersList$ | async) as list; else noUsers">
+    <ion-list *ngFor="let user of list">
       <ion-item-sliding #slidingItem>
         <ion-item text-wrap color="{{ user.type == 'p' ? 'light' : 'dark' }}"
           ><ion-avatar
@@ -61,7 +61,7 @@
                       [(ngModel)]="user.room"
                     >
                       <ion-select-option
-                        *ngFor="let room of roomsList"
+                        *ngFor="let room of roomsList$ | async"
                         value="{{ room.roomNum }}"
                         >{{ room.roomNum }}
                       </ion-select-option>
@@ -102,6 +102,7 @@
 
   <ng-template #noUsers>
     <hr />
-    <h5>There are no users yet.</h5>
+    <ion-spinner></ion-spinner>
+    <h5 text-center>There are no users yet.</h5>
   </ng-template>
 </ion-content>

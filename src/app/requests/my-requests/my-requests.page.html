@@ -24,7 +24,7 @@
         <div
           text-center
           *ngIf="
-            (requestsList | filter: status:'status')?.length <= 0 &&
+            !((requests$ | async) | filter: status:'status') &&
             status === 'progress'
           "
         >
@@ -38,7 +38,7 @@
         <div
           text-center
           *ngIf="
-            (requestsList | filter: status:'status')?.length <= 0 &&
+            !((requests$ | async) | filter: status:'status') &&
             status === 'completed'
           "
         >
@@ -46,9 +46,9 @@
             No Completed Requests yet...
           </p>
         </div>
-        <ion-list *ngIf="!isLoading || requestsList?.length > 0">
+        <ion-list *ngIf="(requests$ | async) as reqList">
           <ion-item-sliding
-            *ngFor="let request of requestsList | filter: status:'status'"
+            *ngFor="let request of reqList | filter: status:'status'"
             #slidingItem
           >
             <ion-item

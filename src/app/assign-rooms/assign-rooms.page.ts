@@ -1,13 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UsersService } from '../users/users.service';
 import { Room } from '../users/room.model';
 import { AuthService } from '../auth/auth.service';
-import { NgForm } from '@angular/forms';
-import { RequestsService } from '../requests/requests.service';
 import {
   AngularFirestoreDocument,
   AngularFirestore
 } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-assign-rooms',
@@ -15,33 +14,31 @@ import {
   styleUrls: ['./assign-rooms.page.scss']
 })
 export class AssignRoomsPage implements OnInit {
-  roomsList: Room[];
-  allRooms: Room[];
   assignRoomsVar: any;
   unassignRoomsVar: any;
   roomDoc: AngularFirestoreDocument<Room>;
+
+  allRooms$: Observable<Room[]>;
+  roomList$: Observable<Room[]>;
+  nurseId$: Observable<string>;
+
   constructor(
     private userService: UsersService,
     private authService: AuthService,
-    private requestService: RequestsService,
     private firestore: AngularFirestore
   ) {}
 
   ngOnInit() {
-    this.userService.getRooms().subscribe(rooms => {
-      this.allRooms = rooms;
-    });
-    this.userService.getRoomsAssigned().subscribe(assignedRooms => {
-      this.roomsList = assignedRooms;
-    });
+    this.allRooms$ = this.userService.getRooms();
+    this.roomList$ = this.userService.getRoomsAssigned();
+    this.nurseId$ = this.authService.userId;
   }
 
   assignRooms() {
     let nurseId: string;
-    this.authService.userId.subscribe(x => {
+    this.nurseId$.subscribe(x => {
       nurseId = x;
     });
-    console.log(this.assignRoomsVar);
     this.assignRoomsVar.forEach(element => {
       this.roomDoc = this.firestore.doc('rooms/' + element);
       this.roomDoc.update({ assignedNurse: nurseId });
@@ -50,7 +47,7 @@ export class AssignRoomsPage implements OnInit {
   }
   unassignRooms() {
     let nurseId: string;
-    this.authService.userId.subscribe(x => {
+    this.nurseId$.subscribe(x => {
       nurseId = x;
     });
     console.log(this.unassignRoomsVar);

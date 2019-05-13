@@ -36,7 +36,9 @@ export class UsersService {
     private authService: AuthService,
     private http: HttpClient,
     public firestore: AngularFirestore
-  ) {
+  ) {}
+
+  getUsers() {
     let nurseId: string;
     this.authService.userId.subscribe(x => {
       nurseId = x;
@@ -44,47 +46,25 @@ export class UsersService {
     this.usersCollection = this.firestore.collection('added-users', ref =>
       ref.orderBy('name', 'asc')
     );
-    this.users = this.usersCollection.snapshotChanges().pipe(
-      map(changes => {
-        return changes.map(a => {
-          const data = a.payload.doc.data() as Users;
-          data.id = a.payload.doc.id;
-          return data;
-        });
-      })
-    );
-    this.roomCollection = this.firestore.collection('rooms', ref =>
-      ref.orderBy('roomNum', 'asc')
-    );
-    this.rooms = this.roomCollection.snapshotChanges().pipe(
-      map(changes => {
-        return changes.map(a => {
-          const data = a.payload.doc.data() as Room;
-          return data;
-        });
-      })
-    );
-    this.assignedRoomsCollection = this.firestore.collection('rooms', ref => ref.where('assignedNurse', '==', nurseId));
-    this.assignedRooms = this.assignedRoomsCollection.snapshotChanges().pipe(
-      map(changes => {
-        return changes.map(a => {
-          const data = a.payload.doc.data() as Room;
-          return data;
-        });
-      })
-    );
-  }
-
-  getUsers() {
-    return this.users;
+    return this.usersCollection.valueChanges();
   }
 
   getRooms() {
-    return this.rooms;
+    this.roomCollection = this.firestore.collection('rooms', ref =>
+      ref.orderBy('roomNum', 'asc')
+    );
+    return this.roomCollection.valueChanges();
   }
 
   getRoomsAssigned() {
-    return this.assignedRooms;
+    let nurseId: string;
+    this.authService.userId.subscribe(x => {
+      nurseId = x;
+    });
+    this.assignedRoomsCollection = this.firestore.collection('rooms', ref =>
+      ref.where('assignedNurse', '==', nurseId)
+    );
+    return this.assignedRoomsCollection.valueChanges();
   }
 
   updateAddedUser(addedUser: Users) {

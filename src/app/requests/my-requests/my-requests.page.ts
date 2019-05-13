@@ -1,8 +1,6 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { Request } from '../request.model';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { RequestsService, RequestData } from '../requests.service';
 import { IonItemSliding, IonSegment, LoadingController } from '@ionic/angular';
-import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import {
@@ -11,48 +9,29 @@ import {
   AngularFirestoreCollection
 } from '@angular/fire/firestore';
 import { Users } from 'src/app/users/users.model';
-import { map, take, switchMap } from 'rxjs/operators';
-import { UserStateService } from 'src/app/auth/user-state.service';
 
 @Component({
   selector: 'app-my-requests',
   templateUrl: './my-requests.page.html',
   styleUrls: ['./my-requests.page.scss']
 })
-export class MyRequestsPage implements OnInit, OnDestroy {
-  requestsList: RequestData[];
-  requestSubscription: Subscription;
+export class MyRequestsPage implements OnInit {
   status = 'progress';
-  isLoading = false;
-  currUser: AngularFirestoreDocument<Users>;
-  userRef: AngularFirestoreCollection<Users>;
-  user$: Observable<Users[]>;
+  requests$: Observable<RequestData[]>;
 
   @ViewChild(IonSegment) segment: IonSegment;
-  requestsObs: Observable<any>;
 
   constructor(
     private requestsService: RequestsService,
-    private router: Router,
     private loadingCtrl: LoadingController,
     public authService: AuthService,
-    public firestore: AngularFirestore,
-    private userStateService: UserStateService
+    public firestore: AngularFirestore
   ) {}
 
   ngOnInit() {
+    console.log('in ngOnInit');
     this.segment.value = 'progress';
-    this.requestSubscription = this.requestsService
-      .getRequests()
-      .subscribe(requests => {
-        this.requestsList = requests;
-      });
-  }
-
-  ngOnDestroy() {
-    if (this.requestSubscription) {
-      this.requestSubscription.unsubscribe();
-    }
+    this.requests$ = this.requestsService.getRequests();
   }
 
   onFilterUpdate(event: any) {

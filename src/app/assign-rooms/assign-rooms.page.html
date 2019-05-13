@@ -14,7 +14,7 @@
         <ion-card>
           <ion-card-title text-center>Your assigned rooms</ion-card-title>
           <ion-card-content>
-            <ion-list *ngFor="let assignedRoom of roomsList">
+            <ion-list *ngFor="let assignedRoom of roomList$| async">
               <ion-item>
                 {{ assignedRoom.roomNum }}
               </ion-item>
@@ -36,7 +36,7 @@
               multiple="true"
             >
               <ion-select-option
-                *ngFor="let room of allRooms"
+                *ngFor="let room of allRooms$ | async"
                 [value]="room.roomNum"
               >
                 {{ room.roomNum }}
@@ -66,7 +66,7 @@
               multiple="true"
             >
               <ion-select-option
-                *ngFor="let room of roomsList"
+                *ngFor="let room of roomList$ | async"
                 [value]="room.roomNum"
               >
                 {{ room.roomNum }}
