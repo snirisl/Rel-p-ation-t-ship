@@ -13,19 +13,19 @@
   <ion-card-subtitle text-center>You can only edit patients by swiping</ion-card-subtitle>
   <br>
   <div *ngIf="(usersList$ | async) as list; else noUsers">
-    <ion-list *ngFor="let user of list">
+    <ion-list *ngFor="let user of list" lines="full">
       <ion-item-sliding #slidingItem>
         <ion-item text-wrap  lines="inset"
           ><ion-avatar
             ><ion-icon name="contact" size="large"></ion-icon
           ></ion-avatar>
           <ion-label>
-            <h5>{{ user.name }}:</h5>
-            <p *ngIf="user.type == 'p'">
-              Room Number: {{ user.room }}
+            <h5>{{ user.name }}</h5>
+            <p>
+              Room Number: {{ user.type == 'p' ? user.room : 'N/A' }}
             </p>
             <p>
-              {{ user.type == 'p' ? 'Patient' : 'Nurse' }}
+              User Type: {{ user.type == 'p' ? 'Patient' : 'Nurse' }}
             </p>
             <div *ngIf="editState && userToEdit.id == user.id">
               <form #f="ngForm" (ngSubmit)="update(user)">

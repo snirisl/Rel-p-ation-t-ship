@@ -11,22 +11,20 @@
   <ion-grid>
     <ion-row>
       <ion-col *ngFor="let request of loadedRequests" size="6" no-padding>
-        <ion-card style="min-height: 250px" (click)="addRequest(request)">
-          <ion-card-header>
-            <ion-card-subtitle>{{ request.title }}</ion-card-subtitle>
-          </ion-card-header>
-          <ion-img [src]="request.imgUrl"></ion-img>
-          <ion-card-content>
+        <ion-card  (click)="addRequest(request)">
+          <ion-card-title style="padding-left: 1em">{{ request.title }}</ion-card-title>
+          <ion-card-subtitle text-center>
             <p>{{ request.description }}</p>
-          </ion-card-content>
+          </ion-card-subtitle>
+          <ion-img [src]="request.imgUrl"></ion-img>
         </ion-card>
       </ion-col>
     </ion-row>
   </ion-grid>
   <ion-text color="primary" text-center padding>
     <h5>
-      <ion-icon name="help-circle-outline" color="secondary"></ion-icon> Tap on one of the
-      requests, to send it to the medical stuff.
+      <ion-icon name="help-circle-outline" color="secondary"></ion-icon> Tap on
+      one of the requests, to send it to the medical stuff.
     </h5>
   </ion-text>
 </ion-content>

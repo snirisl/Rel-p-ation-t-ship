@@ -16,7 +16,9 @@
       <ion-col size-sm="6" offset-sm="3">
         <ion-card *ngIf="roomList$ | async as roomList">
           <ion-card-title text-center>Your assigned rooms</ion-card-title>
-          <ion-card-header *ngIf="! (roomList$ | async)">No rooms assigned yet</ion-card-header>
+          <ion-card-header *ngIf="(roomList$ | async)?.length <= 0"
+            >No rooms assigned yet</ion-card-header
+          >
           <ion-card-content>
             <ion-list *ngFor="let assignedRoom of roomList">
               <ion-item>

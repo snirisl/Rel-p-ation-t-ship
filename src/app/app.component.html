@@ -11,7 +11,7 @@
         <ion-menu-toggle menu="m1">
           <ion-item lines="none" routerLink="/requests" button>
             <ion-icon name="paper-plane"></ion-icon>
-            <ion-label>Requests</ion-label>
+            <ion-text>Requests</ion-text>
           </ion-item>
         </ion-menu-toggle>
         <ion-menu-toggle menu="m1" *ngIf="this.authService.userType !== 'p'">
@@ -52,5 +52,5 @@
         </ion-toolbar>
       </ion-footer>
   </ion-menu>
-  <ion-router-outlet main></ion-router-outlet>
+  <ion-router-outlet main [swipeGesture]="false"></ion-router-outlet>
 </ion-app>

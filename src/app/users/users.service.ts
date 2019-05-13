@@ -6,7 +6,13 @@ import {
   AngularFirestoreCollection
 } from '@angular/fire/firestore';
 import { AuthService } from '../auth/auth.service';
-import { map, tap } from 'rxjs/operators';
+import {
+  map,
+  tap,
+  publishBehavior,
+  publishReplay,
+  refCount
+} from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Room } from './room.model';
@@ -53,7 +59,10 @@ export class UsersService {
     this.roomCollection = this.firestore.collection('rooms', ref =>
       ref.orderBy('roomNum', 'asc')
     );
-    return this.roomCollection.valueChanges();
+    return this.roomCollection.valueChanges().pipe(
+      publishReplay(1),
+      refCount()
+    );
   }
 
   getRoomsAssigned() {
@@ -64,7 +73,10 @@ export class UsersService {
     this.assignedRoomsCollection = this.firestore.collection('rooms', ref =>
       ref.where('assignedNurse', '==', nurseId)
     );
-    return this.assignedRoomsCollection.valueChanges();
+    return this.assignedRoomsCollection.valueChanges().pipe(
+      publishReplay(1),
+      refCount()
+    );
   }
 
   updateAddedUser(addedUser: Users) {
