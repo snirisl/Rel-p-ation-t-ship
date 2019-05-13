@@ -846,9 +846,18 @@ var map = {
 		"common",
 		"add-requests-add-requests-module"
 	],
+	"./assign-rooms/assign-rooms.module": [
+		"./src/app/assign-rooms/assign-rooms.module.ts",
+		"common",
+		"assign-rooms-assign-rooms-module"
+	],
 	"./auth/auth.module": [
 		"./src/app/auth/auth.module.ts",
 		"auth-auth-module"
+	],
+	"./manage-users/manage-users.module": [
+		"./src/app/manage-users/manage-users.module.ts",
+		"manage-users-manage-users-module"
 	],
 	"./my-requests/my-requests.module": [
 		"./src/app/requests/my-requests/my-requests.module.ts",
@@ -858,6 +867,10 @@ var map = {
 	"./requests/requests.module": [
 		"./src/app/requests/requests.module.ts",
 		"requests-requests-module"
+	],
+	"./users/users.module": [
+		"./src/app/users/users.module.ts",
+		"users-users-module"
 	]
 };
 function webpackAsyncContext(req) {
@@ -912,6 +925,20 @@ var routes = [
         path: 'about',
         loadChildren: './about/about.module#AboutPageModule',
         canLoad: [_auth_auth_guard__WEBPACK_IMPORTED_MODULE_3__["AuthGuard"]]
+    },
+    {
+        path: 'users',
+        loadChildren: './users/users.module#UsersPageModule',
+        canLoad: [_auth_auth_guard__WEBPACK_IMPORTED_MODULE_3__["AuthGuard"]]
+    },
+    {
+        path: 'manage-users',
+        loadChildren: './manage-users/manage-users.module#ManageUsersPageModule'
+    },
+    {
+        path: 'assign-rooms',
+        loadChildren: './assign-rooms/assign-rooms.module#AssignRoomsPageModule',
+        canLoad: [_auth_auth_guard__WEBPACK_IMPORTED_MODULE_3__["AuthGuard"]]
     }
 ];
 var AppRoutingModule = /** @class */ (function () {
@@ -939,7 +966,7 @@ var AppRoutingModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-app>\n  <ion-menu slot=\"start\" menuId=\"m1\">\n    <ion-header>\n      <ion-toolbar>\n        <ion-title>Hello, Snir</ion-title>\n        <!-- code here the real patient name -->\n      </ion-toolbar>\n    </ion-header>\n    <ion-content>\n      <ion-list>\n        <ion-menu-toggle menu=\"m1\">\n          <ion-item lines=\"none\" routerLink=\"/requests\" button>\n            <ion-icon name=\"paper-plane\"></ion-icon>\n            <ion-label>Requests</ion-label>\n          </ion-item>\n        </ion-menu-toggle>\n        <ion-menu-toggle menu=\"m1\">\n          <ion-item lines=\"none\" (click)=\"onLogout()\" button>\n            <ion-icon name=\"exit\"></ion-icon>\n            <ion-label>Logout</ion-label>\n          </ion-item>\n        </ion-menu-toggle>\n        <ion-menu-toggle menu=\"m1\">\n          <ion-item lines=\"none\" routerLink=\"/about\" button>\n            <ion-icon name=\"information-circle-outline\"></ion-icon>\n            <ion-label>About</ion-label>\n          </ion-item>\n        </ion-menu-toggle>\n      </ion-list>\n    </ion-content>\n    <ion-footer>\n        <ion-toolbar>\n          <ion-title>Relpationtship</ion-title>\n        </ion-toolbar>\n      </ion-footer>\n  </ion-menu>\n  <ion-router-outlet main></ion-router-outlet>\n</ion-app>\n"
+module.exports = "<ion-app>\n  <ion-menu slot=\"start\" menuId=\"m1\">\n    <ion-header>\n      <ion-toolbar>\n        <ion-title text-wrap>Hello, {{ this.authService.userName ? this.authService.userName.split(\" \")[0] : '' }}</ion-title>\n        <!-- code here the real patient name -->\n      </ion-toolbar>\n    </ion-header>\n    <ion-content>\n      <ion-list>\n        <ion-menu-toggle menu=\"m1\">\n          <ion-item lines=\"none\" routerLink=\"/requests\" button>\n            <ion-icon name=\"paper-plane\"></ion-icon>\n            <ion-label>Requests</ion-label>\n          </ion-item>\n        </ion-menu-toggle>\n        <ion-menu-toggle menu=\"m1\" *ngIf=\"this.authService.userType !== 'p'\">\n          <ion-item lines=\"none\" routerLink=\"/users\" button>\n            <ion-icon name=\"person-add\"></ion-icon>\n            <ion-label>Add User (Patient/Nurse)</ion-label>\n          </ion-item>\n        </ion-menu-toggle>\n        <ion-menu-toggle menu=\"m1\" *ngIf=\"this.authService.userType !== 'p'\">\n          <ion-item lines=\"none\" routerLink=\"/manage-users\" button>\n            <ion-icon name=\"person-add\"></ion-icon>\n            <ion-label>Manage Users</ion-label>\n          </ion-item>\n        </ion-menu-toggle>\n        <ion-menu-toggle menu=\"m1\" *ngIf=\"this.authService.userType !== 'p'\">\n          <ion-item lines=\"none\" routerLink=\"/assign-rooms\" button>\n            <ion-icon name=\"list\"></ion-icon>\n            <ion-label>Assign Rooms</ion-label>\n          </ion-item>\n        </ion-menu-toggle>\n        <ion-menu-toggle menu=\"m1\">\n          <ion-item lines=\"none\" (click)=\"onLogout()\" button>\n            <ion-icon name=\"exit\"></ion-icon>\n            <ion-label>Logout</ion-label>\n          </ion-item>\n        </ion-menu-toggle>\n        <ion-menu-toggle menu=\"m1\">\n          <ion-item lines=\"none\" routerLink=\"/about\" button>\n            <ion-icon name=\"information-circle-outline\"></ion-icon>\n            <ion-label>About</ion-label>\n          </ion-item>\n        </ion-menu-toggle>\n      </ion-list>\n    </ion-content>\n    <ion-footer>\n        <ion-toolbar>\n          <ion-title>Relpationtship</ion-title>\n        </ion-toolbar>\n      </ion-footer>\n  </ion-menu>\n  <ion-router-outlet main></ion-router-outlet>\n</ion-app>\n"
 
 /***/ }),
 
@@ -956,11 +983,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
-/* harmony import */ var _ionic_native_splash_screen_ngx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @ionic-native/splash-screen/ngx */ "./node_modules/@ionic-native/splash-screen/ngx/index.js");
-/* harmony import */ var _ionic_native_status_bar_ngx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ionic-native/status-bar/ngx */ "./node_modules/@ionic-native/status-bar/ngx/index.js");
-/* harmony import */ var _auth_auth_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./auth/auth.service */ "./src/app/auth/auth.service.ts");
-/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
-
+/* harmony import */ var _capacitor_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @capacitor/core */ "./node_modules/@capacitor/core/dist/esm/index.js");
+/* harmony import */ var _auth_auth_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./auth/auth.service */ "./src/app/auth/auth.service.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 
 
 
@@ -968,24 +993,39 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var AppComponent = /** @class */ (function () {
-    function AppComponent(platform, splashScreen, statusBar, authService, router) {
+    function AppComponent(platform, authService, router) {
         this.platform = platform;
-        this.splashScreen = splashScreen;
-        this.statusBar = statusBar;
         this.authService = authService;
         this.router = router;
+        this.previousAuthState = false;
         this.initializeApp();
     }
     AppComponent.prototype.initializeApp = function () {
-        var _this = this;
         this.platform.ready().then(function () {
-            _this.statusBar.styleDefault();
-            _this.splashScreen.hide();
+            if (_capacitor_core__WEBPACK_IMPORTED_MODULE_3__["Capacitor"].isPluginAvailable('SplashScreen')) {
+                _capacitor_core__WEBPACK_IMPORTED_MODULE_3__["Plugins"].SplashScreen.hide();
+            }
         });
+    };
+    AppComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.authSub = this.authService.userIsAuthenticated.subscribe(function (isAuth) {
+            if (!isAuth && _this.previousAuthState !== isAuth) {
+                _this.router.navigateByUrl('/auth');
+            }
+            _this.previousAuthState = isAuth;
+            _this.authService.userId.subscribe(function (x) {
+                _this.authService.getUserType(x);
+            });
+        });
+    };
+    AppComponent.prototype.ngOnDestroy = function () {
+        if (this.authSub) {
+            this.authSub.unsubscribe();
+        }
     };
     AppComponent.prototype.onLogout = function () {
         this.authService.logout();
-        this.router.navigateByUrl('/auth');
     };
     AppComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -993,10 +1033,8 @@ var AppComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./app.component.html */ "./src/app/app.component.html")
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_angular__WEBPACK_IMPORTED_MODULE_2__["Platform"],
-            _ionic_native_splash_screen_ngx__WEBPACK_IMPORTED_MODULE_3__["SplashScreen"],
-            _ionic_native_status_bar_ngx__WEBPACK_IMPORTED_MODULE_4__["StatusBar"],
-            _auth_auth_service__WEBPACK_IMPORTED_MODULE_5__["AuthService"],
-            _angular_router__WEBPACK_IMPORTED_MODULE_6__["Router"]])
+            _auth_auth_service__WEBPACK_IMPORTED_MODULE_4__["AuthService"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"]])
     ], AppComponent);
     return AppComponent;
 }());
@@ -1023,9 +1061,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
 /* harmony import */ var _ionic_native_splash_screen_ngx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @ionic-native/splash-screen/ngx */ "./node_modules/@ionic-native/splash-screen/ngx/index.js");
 /* harmony import */ var _ionic_native_status_bar_ngx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ionic-native/status-bar/ngx */ "./node_modules/@ionic-native/status-bar/ngx/index.js");
-/* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
-/* harmony import */ var _app_routing_module__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./app-routing.module */ "./src/app/app-routing.module.ts");
-/* harmony import */ var _requests_add_requests_request_message_request_message_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./requests/add-requests/request-message/request-message.component */ "./src/app/requests/add-requests/request-message/request-message.component.ts");
+/* harmony import */ var _angular_fire__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/fire */ "./node_modules/@angular/fire/index.js");
+/* harmony import */ var _angular_fire_auth__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @angular/fire/auth */ "./node_modules/@angular/fire/auth/index.js");
+/* harmony import */ var _angular_fire_database__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/fire/database */ "./node_modules/@angular/fire/database/index.js");
+/* harmony import */ var _angular_fire_firestore__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/fire/firestore */ "./node_modules/@angular/fire/firestore/index.js");
+/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../environments/environment */ "./src/environments/environment.ts");
+/* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
+/* harmony import */ var _app_routing_module__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./app-routing.module */ "./src/app/app-routing.module.ts");
+/* harmony import */ var _requests_add_requests_request_message_request_message_component__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./requests/add-requests/request-message/request-message.component */ "./src/app/requests/add-requests/request-message/request-message.component.ts");
+/* harmony import */ var _users_users_service__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./users/users.service */ "./src/app/users/users.service.ts");
+
+
+
+
+
+
 
 
 
@@ -1042,16 +1092,27 @@ var AppModule = /** @class */ (function () {
     }
     AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgModule"])({
-            declarations: [_app_component__WEBPACK_IMPORTED_MODULE_8__["AppComponent"], _requests_add_requests_request_message_request_message_component__WEBPACK_IMPORTED_MODULE_10__["RequestMessageComponent"]],
-            entryComponents: [_requests_add_requests_request_message_request_message_component__WEBPACK_IMPORTED_MODULE_10__["RequestMessageComponent"]],
-            imports: [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_2__["BrowserModule"], _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpClientModule"], _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["IonicModule"].forRoot(), _app_routing_module__WEBPACK_IMPORTED_MODULE_9__["AppRoutingModule"]],
+            declarations: [_app_component__WEBPACK_IMPORTED_MODULE_13__["AppComponent"], _requests_add_requests_request_message_request_message_component__WEBPACK_IMPORTED_MODULE_15__["RequestMessageComponent"]],
+            entryComponents: [_requests_add_requests_request_message_request_message_component__WEBPACK_IMPORTED_MODULE_15__["RequestMessageComponent"]],
+            imports: [
+                _angular_platform_browser__WEBPACK_IMPORTED_MODULE_2__["BrowserModule"],
+                _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpClientModule"],
+                _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["IonicModule"].forRoot(),
+                _app_routing_module__WEBPACK_IMPORTED_MODULE_14__["AppRoutingModule"],
+                _angular_fire__WEBPACK_IMPORTED_MODULE_8__["AngularFireModule"].initializeApp(_environments_environment__WEBPACK_IMPORTED_MODULE_12__["environment"].firebaseConfig),
+                _angular_fire_database__WEBPACK_IMPORTED_MODULE_10__["AngularFireDatabaseModule"],
+                _angular_fire_auth__WEBPACK_IMPORTED_MODULE_9__["AngularFireAuthModule"],
+                _angular_fire_firestore__WEBPACK_IMPORTED_MODULE_11__["AngularFirestoreModule"]
+            ],
             providers: [
                 _ionic_native_status_bar_ngx__WEBPACK_IMPORTED_MODULE_7__["StatusBar"],
                 _ionic_native_splash_screen_ngx__WEBPACK_IMPORTED_MODULE_6__["SplashScreen"],
+                _angular_fire_firestore__WEBPACK_IMPORTED_MODULE_11__["AngularFirestore"],
+                _users_users_service__WEBPACK_IMPORTED_MODULE_16__["UsersService"],
                 { provide: _angular_router__WEBPACK_IMPORTED_MODULE_3__["RouteReuseStrategy"], useClass: _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["IonicRouteStrategy"] }
             ],
-            bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_8__["AppComponent"]],
-            exports: [_requests_add_requests_request_message_request_message_component__WEBPACK_IMPORTED_MODULE_10__["RequestMessageComponent"]]
+            bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_13__["AppComponent"]],
+            exports: [_requests_add_requests_request_message_request_message_component__WEBPACK_IMPORTED_MODULE_15__["RequestMessageComponent"]]
         })
     ], AppModule);
     return AppModule;
@@ -1074,8 +1135,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
-/* harmony import */ var _auth_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./auth.service */ "./src/app/auth/auth.service.ts");
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var _auth_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./auth.service */ "./src/app/auth/auth.service.ts");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+
 
 
 
@@ -1088,7 +1151,14 @@ var AuthGuard = /** @class */ (function () {
     }
     AuthGuard.prototype.canLoad = function (route, segments) {
         var _this = this;
-        return this.authService.userIsAuthenticated.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["take"])(1), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["tap"])(function (isAuthenticated) {
+        return this.authService.userIsAuthenticated.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["take"])(1), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["switchMap"])(function (isAuthenticated) {
+            if (!isAuthenticated) {
+                return _this.authService.autoLogin();
+            }
+            else {
+                return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["of"])(isAuthenticated);
+            }
+        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["tap"])(function (isAuthenticated) {
             if (!isAuthenticated) {
                 _this.router.navigateByUrl('/auth');
             }
@@ -1098,7 +1168,7 @@ var AuthGuard = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
             providedIn: 'root'
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_auth_service__WEBPACK_IMPORTED_MODULE_3__["AuthService"], _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_auth_service__WEBPACK_IMPORTED_MODULE_4__["AuthService"], _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"]])
     ], AuthGuard);
     return AuthGuard;
 }());
@@ -1124,6 +1194,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
 /* harmony import */ var _user_model__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./user.model */ "./src/app/auth/user.model.ts");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var _capacitor_core__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @capacitor/core */ "./node_modules/@capacitor/core/dist/esm/index.js");
+/* harmony import */ var _angular_fire_firestore__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/fire/firestore */ "./node_modules/@angular/fire/firestore/index.js");
+/* harmony import */ var _user_state_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./user-state.service */ "./src/app/auth/user-state.service.ts");
+
+
+
 
 
 
@@ -1132,12 +1208,41 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var AuthService = /** @class */ (function () {
-    function AuthService(http) {
+    function AuthService(http, firestore, userStateService) {
+        var _this = this;
         this.http = http;
+        this.firestore = firestore;
+        this.userStateService = userStateService;
         this._user = new rxjs__WEBPACK_IMPORTED_MODULE_4__["BehaviorSubject"](null);
-        this._roomNumber = '100';
-        this._userType = 'p';
+        Object(rxjs__WEBPACK_IMPORTED_MODULE_4__["from"])(_capacitor_core__WEBPACK_IMPORTED_MODULE_7__["Plugins"].Storage.get({ key: 'authData' }))
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["map"])(function (storedData) {
+            if (!storedData || !storedData.value) {
+                return null;
+            }
+            var parsedData = JSON.parse(storedData.value);
+            _this._userName = parsedData.userName;
+            _this._userType = parsedData.userType;
+        }))
+            .subscribe();
     }
+    Object.defineProperty(AuthService.prototype, "userName", {
+        get: function () {
+            return this._userName;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    AuthService.prototype.getUserType = function (userId) {
+        var _this = this;
+        var userQuery = this.firestore.doc("added-users/" + userId);
+        userQuery.valueChanges().subscribe(function (x) {
+            if (!x) {
+                return;
+            }
+            _this._userType = x.type;
+            _this._userName = x.name;
+        });
+    };
     Object.defineProperty(AuthService.prototype, "userIsAuthenticated", {
         get: function () {
             return this._user.asObservable().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["map"])(function (user) {
@@ -1156,20 +1261,12 @@ var AuthService = /** @class */ (function () {
         get: function () {
             return this._user.asObservable().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["map"])(function (user) {
                 if (user) {
-                    console.log(user.id);
                     return user.id;
                 }
                 else {
                     return null;
                 }
             }));
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(AuthService.prototype, "patientRoomNumber", {
-        get: function () {
-            return this._roomNumber;
         },
         enumerable: true,
         configurable: true
@@ -1183,8 +1280,29 @@ var AuthService = /** @class */ (function () {
     });
     AuthService.prototype.login = function (email, password) {
         return this.http
-            .post("https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=" + src_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].firebaseAPIKey, { email: email, password: password })
+            .post("https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=" + src_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].firebaseAPIKey, { email: email, password: password, returnSecureToken: true })
             .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["tap"])(this.setUserData.bind(this)));
+    };
+    AuthService.prototype.autoLogin = function () {
+        var _this = this;
+        return Object(rxjs__WEBPACK_IMPORTED_MODULE_4__["from"])(_capacitor_core__WEBPACK_IMPORTED_MODULE_7__["Plugins"].Storage.get({ key: 'authData' })).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["map"])(function (storedData) {
+            if (!storedData || !storedData.value) {
+                return null;
+            }
+            var parsedData = JSON.parse(storedData.value);
+            var expirationTime = new Date(parsedData.tokenExpirationDate);
+            if (expirationTime <= new Date()) {
+                return null;
+            }
+            var user = new _user_model__WEBPACK_IMPORTED_MODULE_5__["User"](parsedData.userId, parsedData.email, parsedData.token, expirationTime, parsedData.userName, parsedData.userType);
+            return user;
+        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["tap"])(function (user) {
+            if (user) {
+                _this._user.next(user);
+            }
+        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["map"])(function (user) {
+            return !!user;
+        }));
     };
     AuthService.prototype.signup = function (email, password) {
         return this.http
@@ -1193,19 +1311,76 @@ var AuthService = /** @class */ (function () {
     };
     AuthService.prototype.logout = function () {
         this._user.next(null);
+        _capacitor_core__WEBPACK_IMPORTED_MODULE_7__["Plugins"].Storage.remove({ key: 'authData' });
     };
     AuthService.prototype.setUserData = function (userData) {
         var expirationTime = new Date(new Date().getTime() + +userData.expiresIn * 1000);
         this._user.next(new _user_model__WEBPACK_IMPORTED_MODULE_5__["User"](userData.localId, userData.email, userData.idToken, expirationTime));
+        this.getUserType(userData.localId);
+        this.storeAuthData(userData.localId, userData.idToken, expirationTime.toISOString(), userData.email, this.userType, this.userName);
     };
-    AuthService.prototype.storeAuthData = function (userId, token, tokenExpirationDate) { };
+    AuthService.prototype.storeAuthData = function (userId, token, tokenExpirationDate, email, userType, userName) {
+        var data = JSON.stringify({
+            userId: userId,
+            token: token,
+            tokenExpirationDate: tokenExpirationDate,
+            email: email,
+            userType: userType,
+            userName: userName
+        });
+        _capacitor_core__WEBPACK_IMPORTED_MODULE_7__["Plugins"].Storage.set({ key: 'authData', value: data });
+    };
     AuthService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
             providedIn: 'root'
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"],
+            _angular_fire_firestore__WEBPACK_IMPORTED_MODULE_8__["AngularFirestore"],
+            _user_state_service__WEBPACK_IMPORTED_MODULE_9__["UserStateService"]])
     ], AuthService);
     return AuthService;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/auth/user-state.service.ts":
+/*!********************************************!*\
+  !*** ./src/app/auth/user-state.service.ts ***!
+  \********************************************/
+/*! exports provided: UserStateService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UserStateService", function() { return UserStateService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+
+
+
+var UserStateService = /** @class */ (function () {
+    function UserStateService() {
+        this.user = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"]({
+            isLoggedIn: false,
+            userType: null
+        });
+    }
+    UserStateService.prototype.setUser = function (user) {
+        this.user.next(user);
+    };
+    UserStateService.prototype.getUser = function () {
+        return this.user;
+    };
+    UserStateService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+            providedIn: 'root'
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+    ], UserStateService);
+    return UserStateService;
 }());
 
 
@@ -1223,11 +1398,13 @@ var AuthService = /** @class */ (function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "User", function() { return User; });
 var User = /** @class */ (function () {
-    function User(id, email, _token, tokenExpirationDate) {
+    function User(id, email, _token, tokenExpirationDate, userName, userType) {
         this.id = id;
         this.email = email;
         this._token = _token;
         this.tokenExpirationDate = tokenExpirationDate;
+        this.userName = userName;
+        this.userType = userType;
     }
     Object.defineProperty(User.prototype, "token", {
         get: function () {
@@ -1307,6 +1484,161 @@ var RequestMessageComponent = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/users/users.model.ts":
+/*!**************************************!*\
+  !*** ./src/app/users/users.model.ts ***!
+  \**************************************/
+/*! exports provided: Users */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Users", function() { return Users; });
+var Users = /** @class */ (function () {
+    function Users(id, name, type, room, userId) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.room = room;
+        this.userId = userId;
+    }
+    return Users;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/users/users.service.ts":
+/*!****************************************!*\
+  !*** ./src/app/users/users.service.ts ***!
+  \****************************************/
+/*! exports provided: UsersService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UsersService", function() { return UsersService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _users_model__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./users.model */ "./src/app/users/users.model.ts");
+/* harmony import */ var _angular_fire_firestore__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/fire/firestore */ "./node_modules/@angular/fire/firestore/index.js");
+/* harmony import */ var _auth_auth_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../auth/auth.service */ "./src/app/auth/auth.service.ts");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+
+
+
+
+
+
+
+
+var UsersService = /** @class */ (function () {
+    function UsersService(authService, http, firestore) {
+        this.authService = authService;
+        this.http = http;
+        this.firestore = firestore;
+        this._users = new rxjs__WEBPACK_IMPORTED_MODULE_7__["BehaviorSubject"]([]);
+        var nurseId;
+        this.authService.userId.subscribe(function (x) {
+            nurseId = x;
+        });
+        this.usersCollection = this.firestore.collection('added-users', function (ref) {
+            return ref.orderBy('name', 'asc');
+        });
+        this.users = this.usersCollection.snapshotChanges().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["map"])(function (changes) {
+            return changes.map(function (a) {
+                var data = a.payload.doc.data();
+                data.id = a.payload.doc.id;
+                return data;
+            });
+        }));
+        this.roomCollection = this.firestore.collection('rooms', function (ref) {
+            return ref.orderBy('roomNum', 'asc');
+        });
+        this.rooms = this.roomCollection.snapshotChanges().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["map"])(function (changes) {
+            return changes.map(function (a) {
+                var data = a.payload.doc.data();
+                return data;
+            });
+        }));
+        this.assignedRoomsCollection = this.firestore.collection('rooms', function (ref) { return ref.where('assignedNurse', '==', nurseId); });
+        this.assignedRooms = this.assignedRoomsCollection.snapshotChanges().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["map"])(function (changes) {
+            return changes.map(function (a) {
+                var data = a.payload.doc.data();
+                return data;
+            });
+        }));
+    }
+    UsersService.prototype.getUsers = function () {
+        return this.users;
+    };
+    UsersService.prototype.getRooms = function () {
+        return this.rooms;
+    };
+    UsersService.prototype.getRoomsAssigned = function () {
+        return this.assignedRooms;
+    };
+    UsersService.prototype.updateAddedUser = function (addedUser) {
+        this.userDoc = this.firestore.doc("added-users/" + addedUser.id);
+        this.userDoc.update(addedUser);
+    };
+    UsersService.prototype.deleteUser = function (deletedUser) {
+        this.userDoc = this.firestore.doc("added-users/" + deletedUser.id);
+        this.userDoc.delete();
+    };
+    UsersService.prototype.add = function (newAddedUser) {
+        return this.firestore
+            .collection('added-users')
+            .doc(newAddedUser.userId)
+            .set({
+            id: newAddedUser.id,
+            name: newAddedUser.name,
+            room: newAddedUser.room,
+            type: newAddedUser.type,
+            userId: newAddedUser.userId
+        });
+    };
+    UsersService.prototype.fetchUsers = function () {
+        var _this = this;
+        return this.http
+            .get("https://relpationtship-test.firebaseio.com/added-users.json")
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["map"])(function (usersData) {
+            var users = [];
+            for (var key in usersData) {
+                if (usersData.hasOwnProperty(key)) {
+                    users.push(new _users_model__WEBPACK_IMPORTED_MODULE_2__["Users"](usersData[key].id, usersData[key].name, usersData[key].type, usersData[key].room, key));
+                }
+            }
+            return users;
+        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["tap"])(function (AddedUsers) {
+            _this._users.next(AddedUsers);
+        }));
+    };
+    Object.defineProperty(UsersService.prototype, "addedPatient", {
+        get: function () {
+            return this._users.asObservable();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    UsersService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+            providedIn: 'root'
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_auth_auth_service__WEBPACK_IMPORTED_MODULE_4__["AuthService"],
+            _angular_common_http__WEBPACK_IMPORTED_MODULE_6__["HttpClient"],
+            _angular_fire_firestore__WEBPACK_IMPORTED_MODULE_3__["AngularFirestore"]])
+    ], UsersService);
+    return UsersService;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/environments/environment.ts":
 /*!*****************************************!*\
   !*** ./src/environments/environment.ts ***!
@@ -1322,7 +1654,16 @@ __webpack_require__.r(__webpack_exports__);
 // The list of file replacements can be found in `angular.json`.
 var environment = {
     production: false,
-    firebaseAPIKey: 'AIzaSyDxB9qFFGqx2l9fKBo7JXghIyYFVdDMuGY'
+    firebaseAPIKey: 'AIzaSyDxB9qFFGqx2l9fKBo7JXghIyYFVdDMuGY',
+    firebaseConfig: {
+        apiKey: 'AIzaSyDxB9qFFGqx2l9fKBo7JXghIyYFVdDMuGY',
+        authDomain: 'relpationtship-test.firebaseapp.com',
+        databaseURL: 'https://relpationtship-test.firebaseio.com',
+        projectId: 'relpationtship-test',
+        storageBucket: 'relpationtship-test.appspot.com',
+        messagingSenderId: '1066699177314',
+        appId: '1:1066699177314:web:7627248b081a56c4'
+    }
 };
 /*
  * For easier debugging in development mode, you can import the following file

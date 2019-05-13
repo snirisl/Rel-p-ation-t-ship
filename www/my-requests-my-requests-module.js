@@ -103,6 +103,9 @@ var FilterPipe = /** @class */ (function () {
         // if (text === '') {
         //   return arrangement;
         // }
+        if (!arrangement) {
+            return arrangement;
+        }
         text = text.toLowerCase();
         return arrangement.filter(function (item) {
             return item.status.toLowerCase().includes(text);
@@ -181,7 +184,7 @@ var MyRequestsPageModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header>\n  <ion-toolbar color=\"primary\">\n    <ion-buttons slot=\"start\">\n      <ion-menu-button menu=\"m1\"></ion-menu-button>\n    </ion-buttons>\n    <ion-title>My Requests</ion-title>\n  </ion-toolbar>\n</ion-header>\n<ion-content>\n  <ion-refresher slot=\"fixed\" (ionRefresh)=\"doRefresh($event)\">\n    <ion-refresher-content\n      pullingIcon=\"arrow-dropdown\"\n      pullingText=\"Pull to refresh\"\n      refreshingSpinner=\"circles\"\n      refreshingText=\"Refreshing...\"\n    >\n    </ion-refresher-content>\n  </ion-refresher>\n  <ion-segment mode=\"md\" (ionChange)=\"onFilterUpdate($event)\" color=\"tertiary\">\n    <ion-segment-button value=\"progress\" mode=\"md\"\n      ><ion-label>Pending Requests</ion-label></ion-segment-button\n    >\n    <ion-segment-button value=\"completed\" mode=\"md\"\n      ><ion-label>Completed Requests</ion-label></ion-segment-button\n    >\n  </ion-segment>\n  <ion-grid>\n    <ion-row>\n      <ion-col size=\"12\" size-sm=\"8\" offset-sm=\"2\" text-center>\n        <div *ngIf=\"isLoading\" text-center>\n          <ion-spinner color=\"primary\"></ion-spinner>\n        </div>\n        <div text-center *ngIf=\"((myRequests | filter: status:'status').length <= 0 && status=== 'progress')\">\n          <p>\n            No Requests found! Please create one first!\n          </p>\n          <ion-button color=\"primary\" routerLink=\"/requests/tabs/add-requests\"\n            >Add Request</ion-button\n          >\n        </div>\n        <div text-center *ngIf=\"((myRequests | filter: status:'status').length <= 0 && status=== 'completed')\">\n            <p>\n              No Completed Requests yet...\n            </p>\n          </div>\n        <ion-list *ngIf=\"!isLoading || myRequests.length > 0\">\n          <ion-item-sliding\n            *ngFor=\"\n              let request of (myRequests | filter: status:'status' | sortArray)\n            \"\n            #slidingItem\n          >\n            <ion-item>\n              <ion-thumbnail slot=\"start\">\n                <ion-img [src]=\"request.imgUrl\"></ion-img>\n              </ion-thumbnail>\n              <ion-label>\n                <h2>{{ request.title }}</h2>\n                <p>{{ request.description }}</p>\n                <p *ngIf=\"request.data !== ''\">\n                  {{ request.date | date: 'dd/MM/yyyy HH:mm':'+3' }}\n                </p>\n                <ion-label\n                  slot=\"start\"\n                  text-right\n                  *ngIf=\"\n                    request.status === 'In progress' &&\n                    this.segment.value === 'progress'\n                  \"\n                  color=\"secondary\"\n                  >In progress</ion-label\n                >\n                <ion-label\n                  *ngIf=\"\n                    request.status === 'Completed' &&\n                    this.segment.value === 'completed'\n                  \"\n                  color=\"success\"\n                  slot=\"start\"\n                  text-right\n                  >Completed</ion-label\n                >\n              </ion-label>\n            </ion-item>\n            <div *ngIf=\"request.status !== 'Completed'\">\n              <ion-item-options side=\"end\" *ngIf=\"this.authService.userType !== 'p'\">\n                <ion-item-option\n                  color=\"secondary\"\n                  (click)=\"setAsCompleted(request.id, slidingItem)\"\n                >\n                  <ion-icon name=\"archive\" slot=\"icon-only\"></ion-icon>\n                </ion-item-option>\n              </ion-item-options>\n            </div>\n          </ion-item-sliding>\n        </ion-list>\n      </ion-col>\n    </ion-row>\n  </ion-grid>\n</ion-content>\n"
+module.exports = "<ion-header>\n  <ion-toolbar color=\"primary\">\n    <ion-buttons slot=\"start\">\n      <ion-menu-button menu=\"m1\"></ion-menu-button>\n    </ion-buttons>\n    <ion-title>My Requests</ion-title>\n  </ion-toolbar>\n</ion-header>\n<ion-content>\n  <ion-segment mode=\"md\" (ionChange)=\"onFilterUpdate($event)\" color=\"tertiary\">\n    <ion-segment-button value=\"progress\" mode=\"md\"\n      ><ion-label>Pending Requests</ion-label></ion-segment-button\n    >\n    <ion-segment-button value=\"completed\" mode=\"md\"\n      ><ion-label>Completed Requests</ion-label></ion-segment-button\n    >\n  </ion-segment>\n  <ion-grid>\n    <ion-row>\n      <ion-col size=\"12\" size-sm=\"8\" offset-sm=\"2\" text-center>\n        <div *ngIf=\"isLoading\" text-center>\n          <ion-spinner color=\"primary\"></ion-spinner>\n        </div>\n        <div\n          text-center\n          *ngIf=\"\n            (requestsList | filter: status:'status')?.length <= 0 &&\n            status === 'progress'\n          \"\n        >\n          <p>\n            No Requests found! Please create one first!\n          </p>\n          <ion-button color=\"primary\" routerLink=\"/requests/tabs/add-requests\"\n            >Add Request</ion-button\n          >\n        </div>\n        <div\n          text-center\n          *ngIf=\"\n            (requestsList | filter: status:'status')?.length <= 0 &&\n            status === 'completed'\n          \"\n        >\n          <p>\n            No Completed Requests yet...\n          </p>\n        </div>\n        <ion-list *ngIf=\"!isLoading || requestsList?.length > 0\">\n          <ion-item-sliding\n            *ngFor=\"let request of requestsList | filter: status:'status'\"\n            #slidingItem\n          >\n            <ion-item\n              *ngIf=\"\n                (this.authService.userType === 'p' &&\n                  request.patientName === this.authService.userName) ||\n                this.authService.userType === 'n'\n              \"\n            >\n              <ion-thumbnail slot=\"start\">\n                <ion-img [src]=\"request.imgUrl\"></ion-img>\n              </ion-thumbnail>\n              <ion-label>\n                <h2>{{ request.title }}</h2>\n                <h5>{{ request.description }}</h5>\n                <p *ngIf=\"request.data !== ''\">\n                  {{ request.date.toDate() | date: 'dd/MM/yyyy HH:mm':'+3' }}\n                </p>\n                <ion-text\n                  *ngIf=\"\n                    request.status === 'In progress' &&\n                    this.segment.value === 'progress'\n                  \"\n                  color=\"primary\"\n                >\n                  {{ request.patientName }}\n                </ion-text>\n                <ion-text\n                  *ngIf=\"\n                    request.status === 'Completed' &&\n                    this.segment.value === 'completed'\n                  \"\n                  color=\"primary\"\n                >\n                  {{ request.nurseName }}\n                </ion-text>\n                <ion-label\n                  slot=\"start\"\n                  text-right\n                  *ngIf=\"\n                    request.status === 'In progress' &&\n                    this.segment.value === 'progress'\n                  \"\n                  color=\"secondary\"\n                  >In progress</ion-label\n                >\n                <ion-label\n                  *ngIf=\"\n                    request.status === 'Completed' &&\n                    this.segment.value === 'completed'\n                  \"\n                  color=\"success\"\n                  slot=\"start\"\n                  text-right\n                  >Completed</ion-label\n                >\n              </ion-label>\n            </ion-item>\n            <div *ngIf=\"request.status !== 'Completed'\">\n              <ion-item-options\n                side=\"end\"\n                *ngIf=\"this.authService.userType !== 'p'\"\n              >\n                <ion-item-option\n                  color=\"secondary\"\n                  (click)=\"setAsCompleted(slidingItem, request)\"\n                  *ngIf=\"request.status !== 'Completed'\"\n                >\n                  <ion-icon name=\"done-all\" slot=\"icon-only\"></ion-icon>\n                </ion-item-option>\n              </ion-item-options>\n            </div>\n          </ion-item-sliding>\n        </ion-list>\n      </ion-col>\n    </ion-row>\n  </ion-grid>\n</ion-content>\n"
 
 /***/ }),
 
@@ -212,6 +215,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 /* harmony import */ var src_app_auth_auth_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! src/app/auth/auth.service */ "./src/app/auth/auth.service.ts");
+/* harmony import */ var _angular_fire_firestore__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/fire/firestore */ "./node_modules/@angular/fire/firestore/index.js");
+/* harmony import */ var src_app_auth_user_state_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! src/app/auth/user-state.service */ "./src/app/auth/user-state.service.ts");
+
+
 
 
 
@@ -219,50 +226,60 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var MyRequestsPage = /** @class */ (function () {
-    function MyRequestsPage(requestsService, router, loadingCtrl, authService) {
+    function MyRequestsPage(requestsService, router, loadingCtrl, authService, firestore, userStateService) {
         this.requestsService = requestsService;
         this.router = router;
         this.loadingCtrl = loadingCtrl;
         this.authService = authService;
+        this.firestore = firestore;
+        this.userStateService = userStateService;
         this.status = 'progress';
         this.isLoading = false;
     }
     MyRequestsPage.prototype.ngOnInit = function () {
         var _this = this;
         this.segment.value = 'progress';
-        this.requestsSub = this.requestsService.requests.subscribe(function (requests) {
-            _this.myRequests = requests;
-        });
-    };
-    MyRequestsPage.prototype.ionViewWillEnter = function () {
-        var _this = this;
-        this.isLoading = true;
-        this.requestsService.fetchRequests().subscribe(function () {
-            _this.isLoading = false;
+        this.requestSubscription = this.requestsService
+            .getRequests()
+            .subscribe(function (requests) {
+            _this.requestsList = requests;
         });
     };
     MyRequestsPage.prototype.ngOnDestroy = function () {
-        if (this.requestsSub) {
-            this.requestsSub.unsubscribe();
+        if (this.requestSubscription) {
+            this.requestSubscription.unsubscribe();
         }
     };
     MyRequestsPage.prototype.onFilterUpdate = function (event) {
         var filteredOption = event.detail.value;
         this.status = filteredOption;
     };
-    MyRequestsPage.prototype.doRefresh = function (event) {
-        this.requestsService.fetchRequests().subscribe(function () {
-            event.target.complete();
-        });
-    };
-    MyRequestsPage.prototype.setAsCompleted = function (id, slidingItem) {
+    MyRequestsPage.prototype.setAsCompleted = function (slidingItem, request) {
         var _this = this;
         slidingItem.close();
-        this.loadingCtrl.create({
+        this.loadingCtrl
+            .create({
             message: 'Setting Request as Completed...'
-        }).then(function (loadingEl) {
+        })
+            .then(function (loadingEl) {
             loadingEl.present();
-            _this.requestsService.setRequestAsCompleted(id).subscribe(function () {
+            _this.requestsService.updateRequest(request).then(function () {
+                loadingEl.dismiss();
+            });
+        });
+    };
+    MyRequestsPage.prototype.deleteRequest = function (slidingItem, request) {
+        var _this = this;
+        console.log('in delete');
+        slidingItem.close();
+        this.loadingCtrl
+            .create({
+            message: 'Deleting Request...'
+        })
+            .then(function (loadingEl) {
+            loadingEl.present();
+            console.log('in delete 2');
+            _this.requestsService.deleteRequest(request).then(function () {
                 loadingEl.dismiss();
             });
         });
@@ -280,7 +297,9 @@ var MyRequestsPage = /** @class */ (function () {
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_requests_service__WEBPACK_IMPORTED_MODULE_2__["RequestsService"],
             _angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"],
             _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["LoadingController"],
-            src_app_auth_auth_service__WEBPACK_IMPORTED_MODULE_5__["AuthService"]])
+            src_app_auth_auth_service__WEBPACK_IMPORTED_MODULE_5__["AuthService"],
+            _angular_fire_firestore__WEBPACK_IMPORTED_MODULE_6__["AngularFirestore"],
+            src_app_auth_user_state_service__WEBPACK_IMPORTED_MODULE_7__["UserStateService"]])
     ], MyRequestsPage);
     return MyRequestsPage;
 }());

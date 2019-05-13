@@ -149,7 +149,7 @@ var AddRequestsPage = /** @class */ (function () {
                                 {
                                     text: 'Close',
                                     handler: function () {
-                                        _this.requestsService.add(request).subscribe(function () {
+                                        _this.requestsService.addRequest(request).then(function () {
                                             _this.router.navigateByUrl('/requests/tabs/my-requests');
                                         });
                                     }

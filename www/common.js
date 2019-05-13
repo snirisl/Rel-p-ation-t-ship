@@ -129,6 +129,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
 /* harmony import */ var _auth_auth_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../auth/auth.service */ "./src/app/auth/auth.service.ts");
+/* harmony import */ var _angular_fire_firestore__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/fire/firestore */ "./node_modules/@angular/fire/firestore/index.js");
+
 
 
 
@@ -137,10 +139,21 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var RequestsService = /** @class */ (function () {
-    function RequestsService(http, authService) {
+    function RequestsService(http, authService, firestore) {
         this.http = http;
         this.authService = authService;
+        this.firestore = firestore;
         this._requests = new rxjs__WEBPACK_IMPORTED_MODULE_3__["BehaviorSubject"]([]);
+        this.requestCollection = this.firestore.collection('requests', function (ref) {
+            return ref.orderBy('date', 'desc');
+        });
+        this.patientsRequests = this.requestCollection.snapshotChanges().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["map"])(function (changes) {
+            return changes.map(function (a) {
+                var data = a.payload.doc.data();
+                data.id = a.payload.doc.id;
+                return data;
+            });
+        }));
     }
     Object.defineProperty(RequestsService.prototype, "requests", {
         get: function () {
@@ -149,62 +162,45 @@ var RequestsService = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    RequestsService.prototype.fetchRequests = function () {
-        var _this = this;
-        if (this.authService.userType === 'p') {
-            return this.authService.userId.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["switchMap"])(function (userId) {
-                if (!userId) {
-                    throw new Error('User not found');
-                }
-                return _this.http.get("https://relpationtship-test.firebaseio.com/added-requests.json?orderBy=\"patientId\"&equalTo=\"" + userId + "\"");
-            }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["map"])(function (patientRequestsData) {
-                console.log(patientRequestsData);
-                var patientRequests = [];
-                for (var key in patientRequestsData) {
-                    if (patientRequestsData.hasOwnProperty(key)) {
-                        patientRequests.push(new _request_model__WEBPACK_IMPORTED_MODULE_2__["Request"](key, patientRequestsData[key].title, patientRequestsData[key].description, patientRequestsData[key].imgUrl, patientRequestsData[key].status, new Date(patientRequestsData[key].date), patientRequestsData[key].patientId));
-                    }
-                }
-                return patientRequests;
-            }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["tap"])(function (patientRequests) {
-                _this._requests.next(patientRequests);
-            }));
-        }
-        else {
-            return this.http
-                .get("https://relpationtship-test.firebaseio.com/added-requests.json")
-                .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["map"])(function (patientRequestsData) {
-                console.log(patientRequestsData);
-                var patientRequests = [];
-                for (var key in patientRequestsData) {
-                    if (patientRequestsData.hasOwnProperty(key)) {
-                        patientRequests.push(new _request_model__WEBPACK_IMPORTED_MODULE_2__["Request"](key, patientRequestsData[key].title, patientRequestsData[key].description, patientRequestsData[key].imgUrl, patientRequestsData[key].status, new Date(patientRequestsData[key].date), patientRequestsData[key].patientId));
-                    }
-                }
-                return patientRequests;
-            }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["tap"])(function (patientRequests) {
-                _this._requests.next(patientRequests);
-            }));
-        }
+    RequestsService.prototype.getRequests = function () {
+        return this.patientsRequests;
     };
-    RequestsService.prototype.add = function (request) {
+    RequestsService.prototype.updateRequest = function (request) {
+        var nurseId;
+        this.authService.userId.subscribe(function (x) {
+            nurseId = x;
+        });
+        this.requestDoc = this.firestore.doc("requests/" + request.id);
+        return this.requestDoc.update({
+            status: 'Completed',
+            nurseId: nurseId,
+            nurseName: this.authService.userName
+        });
+    };
+    RequestsService.prototype.deleteRequest = function (request) {
+        this.requestDoc = this.firestore.doc("requests/" + request.id + "\n    ");
+        return this.requestDoc.delete();
+    };
+    RequestsService.prototype.addRequest = function (newAddedRequest) {
         var _this = this;
-        var generatedId;
-        var newRequest;
-        return this.authService.userId.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["take"])(1), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["switchMap"])(function (userId) {
-            if (!userId) {
-                throw new Error('No user id found!');
-            }
-            newRequest = new _request_model__WEBPACK_IMPORTED_MODULE_2__["Request"](request.id, request.title, request.description, request.imgUrl, 'In progress', new Date(), userId);
-            return _this.http.post('https://relpationtship-test.firebaseio.com/added-requests.json', tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, newRequest, { id: null }));
-        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["switchMap"])(function (resData) {
-            generatedId = resData.name;
-            return _this.requests;
-        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["take"])(1), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["tap"])(function (requests) {
-            newRequest.id = generatedId;
-            _this._requests.next(requests.concat(newRequest));
-        }));
-        // this._requests.push(newRequest);
+        this.authService.userId.subscribe(function (userId) {
+            _this.currentUser = userId;
+        });
+        var id = this.firestore.createId();
+        return this.firestore
+            .collection('requests')
+            .doc(id)
+            .set({
+            date: new Date(),
+            description: newAddedRequest.description,
+            imgUrl: newAddedRequest.imgUrl,
+            status: 'In progress',
+            title: newAddedRequest.title,
+            patientId: this.currentUser,
+            patientName: this.authService.userName,
+            nurseId: '',
+            room: '103'
+        });
     };
     RequestsService.prototype.setRequestAsCompleted = function (requestId) {
         var _this = this;
@@ -224,7 +220,9 @@ var RequestsService = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
             providedIn: 'root'
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpClient"], _auth_auth_service__WEBPACK_IMPORTED_MODULE_6__["AuthService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpClient"],
+            _auth_auth_service__WEBPACK_IMPORTED_MODULE_6__["AuthService"],
+            _angular_fire_firestore__WEBPACK_IMPORTED_MODULE_7__["AngularFirestore"]])
     ], RequestsService);
     return RequestsService;
 }());

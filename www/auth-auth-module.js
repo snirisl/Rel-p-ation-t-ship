@@ -58,7 +58,7 @@ var AuthPageModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header>\n  <ion-toolbar>\n    <ion-title>{{ isLogin ? 'Login' : 'Signup' }}</ion-title>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content padding>\n  <form #f=\"ngForm\" (ngSubmit)=\"onSubmit(f)\">\n    <ion-grid>\n      <ion-row>\n        <ion-col size-sm=\"6\" offset-sm=\"3\">\n          <ion-list>\n            <ion-item>\n              <ion-label position=\"floating\">Patient / Nurse ID</ion-label>\n              <ion-input\n                type=\"number\"\n                ngModel\n                name=\"pid\"\n                required\n                #pidCtrl=\"ngModel\"\n              ></ion-input>\n            </ion-item>\n            <ion-item *ngIf=\"!pidCtrl.valid && pidCtrl.touched\" lines=\"none\">\n              <ion-label>\n                Should be at least 9 characters long.\n              </ion-label>\n            </ion-item>\n            <ion-item>\n              <ion-label position=\"floating\">Password</ion-label>\n              <ion-input\n                type=\"password\"\n                ngModel\n                name=\"password\"\n                required\n                minlength=\"9\"\n                #passwordCtrl=\"ngModel\"\n              ></ion-input>\n            </ion-item>\n            <ion-item\n              *ngIf=\"!passwordCtrl.valid && passwordCtrl.touched\"\n              lines=\"none\"\n            >\n              <ion-label>\n                Should be at least 9 characters long.\n              </ion-label>\n            </ion-item>\n          </ion-list>\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col size-sm=\"6\" offset-sm=\"3\">\n          <div text-center>\n            <ion-button\n              type=\"button\"\n              color=\"primary\"\n              fill=\"clear\"\n              expand=\"block\"\n              (click)=\"onSwitchAuthMode()\"\n            >\n              Switch to {{ isLogin ? 'Signup' : 'Login' }}\n            </ion-button>\n            <ion-button\n            type=\"submit\"\n            color=\"primary\"\n            expand=\"block\"\n            [disabled]=\"!f.valid\"\n          >\n            {{ isLogin ? 'Login' : 'Signup'}}\n          </ion-button>\n          </div>\n        </ion-col>\n      </ion-row>\n    </ion-grid>\n  </form>\n</ion-content>\n"
+module.exports = "<ion-header>\n  <ion-toolbar>\n    <ion-title>{{ isLogin ? 'Login' : 'Signup' }}</ion-title>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content padding>\n  <form #f=\"ngForm\" (ngSubmit)=\"onSubmit(f)\">\n    <ion-grid>\n      <ion-row>\n        <ion-col size-sm=\"6\" offset-sm=\"3\">\n          <ion-list>\n            <ion-item>\n              <ion-label position=\"floating\"\n                >User ID (Without opening 0)</ion-label\n              >\n              <ion-input\n                type=\"number\"\n                ngModel\n                name=\"pid\"\n                required\n                #pidCtrl=\"ngModel\"\n              ></ion-input>\n            </ion-item>\n            <ion-item *ngIf=\"!pidCtrl.valid && pidCtrl.touched\" lines=\"none\">\n              <ion-label>\n                Should be at least 8 characters long.\n              </ion-label>\n            </ion-item>\n            <ion-item>\n              <ion-label position=\"floating\">Password</ion-label>\n              <ion-input\n                type=\"password\"\n                ngModel\n                name=\"password\"\n                required\n                minlength=\"8\"\n                #passwordCtrl=\"ngModel\"\n              ></ion-input>\n            </ion-item>\n            <ion-item\n              *ngIf=\"!passwordCtrl.valid && passwordCtrl.touched\"\n              lines=\"none\"\n            >\n              <ion-label>\n                Should be at least 8 characters long.\n              </ion-label>\n            </ion-item>\n          </ion-list>\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col size-sm=\"6\" offset-sm=\"3\">\n          <div text-center>\n            <ion-button\n              type=\"submit\"\n              color=\"primary\"\n              expand=\"block\"\n              [disabled]=\"!f.valid\"\n            >\n              Login\n            </ion-button>\n          </div>\n        </ion-col>\n      </ion-row>\n    </ion-grid>\n  </form>\n</ion-content>\n"
 
 /***/ }),
 
@@ -121,10 +121,9 @@ var AuthPage = /** @class */ (function () {
                 authObs = _this.authService.signup(email, password);
             }
             authObs.subscribe(function (resData) {
-                console.log(resData);
                 _this.isLoading = false;
                 loadingEl.dismiss();
-                _this.router.navigateByUrl('/requests/tabs/add-requests');
+                _this.router.navigateByUrl('/requests/tabs/my-requests');
             }, function (errRes) {
                 loadingEl.dismiss();
                 var code = errRes.error.error.message;
@@ -148,8 +147,8 @@ var AuthPage = /** @class */ (function () {
         }
         var uid = form.value.pid + '@test.com';
         var password = form.value.password;
-        console.log(uid, password);
         this.authenticate(uid, password);
+        form.reset();
     };
     AuthPage.prototype.showAlert = function (message) {
         this.alertCtrl
@@ -159,9 +158,6 @@ var AuthPage = /** @class */ (function () {
             buttons: ['Okay']
         })
             .then(function (alertEl) { return alertEl.present(); });
-    };
-    AuthPage.prototype.onSwitchAuthMode = function () {
-        this.isLogin = !this.isLogin;
     };
     AuthPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({

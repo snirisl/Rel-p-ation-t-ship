@@ -122,7 +122,7 @@ var RequestsPageModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-tabs>\n  <ion-tab-bar slot=\"bottom\" color=\"primary\">\n    <ion-tab-button tab=\"add-requests\">\n      <ion-label>Add Requests</ion-label>\n      <ion-icon name=\"add-circle\"></ion-icon>\n    </ion-tab-button>\n    <ion-tab-button tab=\"my-requests\">\n      <ion-label>My Requests</ion-label>\n      <ion-icon name=\"checkbox\"></ion-icon>\n    </ion-tab-button>\n\n  </ion-tab-bar>\n</ion-tabs>\n"
+module.exports = "<ion-tabs>\n  <ion-tab-bar slot=\"bottom\" color=\"primary\">\n    <ion-tab-button\n      tab=\"add-requests\"\n      *ngIf=\"this.authService.userType === 'p'\"\n    >\n      <ion-label>Add Requests</ion-label>\n      <ion-icon name=\"add-circle\"></ion-icon>\n    </ion-tab-button>\n    <ion-tab-button tab=\"my-requests\">\n      <ion-label>{{\n        this.authService.userType === 'p' ? 'My Requests' : 'All Requests'\n      }}</ion-label>\n      <ion-icon name=\"checkbox\"></ion-icon>\n    </ion-tab-button>\n  </ion-tab-bar>\n</ion-tabs>\n"
 
 /***/ }),
 
@@ -149,10 +149,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RequestsPage", function() { return RequestsPage; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _auth_auth_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../auth/auth.service */ "./src/app/auth/auth.service.ts");
+
 
 
 var RequestsPage = /** @class */ (function () {
-    function RequestsPage() {
+    function RequestsPage(authService) {
+        this.authService = authService;
     }
     RequestsPage.prototype.ngOnInit = function () { };
     RequestsPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
@@ -161,7 +164,7 @@ var RequestsPage = /** @class */ (function () {
             template: __webpack_require__(/*! ./requests.page.html */ "./src/app/requests/requests.page.html"),
             styles: [__webpack_require__(/*! ./requests.page.scss */ "./src/app/requests/requests.page.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_auth_auth_service__WEBPACK_IMPORTED_MODULE_2__["AuthService"]])
     ], RequestsPage);
     return RequestsPage;
 }());

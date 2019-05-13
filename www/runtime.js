@@ -63,7 +63,7 @@
 /******/
 /******/ 	// script path function
 /******/ 	function jsonpScriptSrc(chunkId) {
-/******/ 		return __webpack_require__.p + "" + ({"common":"common","about-about-module":"about-about-module","auth-auth-module":"auth-auth-module","add-requests-add-requests-module":"add-requests-add-requests-module","my-requests-my-requests-module":"my-requests-my-requests-module","requests-requests-module":"requests-requests-module"}[chunkId]||chunkId) + ".js"
+/******/ 		return __webpack_require__.p + "" + ({"common":"common","about-about-module":"about-about-module","auth-auth-module":"auth-auth-module","add-requests-add-requests-module":"add-requests-add-requests-module","assign-rooms-assign-rooms-module":"assign-rooms-assign-rooms-module","my-requests-my-requests-module":"my-requests-my-requests-module","manage-users-manage-users-module":"manage-users-manage-users-module","requests-requests-module":"requests-requests-module","users-users-module":"users-users-module"}[chunkId]||chunkId) + ".js"
 /******/ 	}
 /******/
 /******/ 	// The require function
