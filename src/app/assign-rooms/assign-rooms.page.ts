@@ -34,6 +34,12 @@ export class AssignRoomsPage implements OnInit {
     this.nurseId$ = this.authService.userId;
   }
 
+  ionViewWillEnter() {
+    this.allRooms$ = this.userService.getRooms();
+    this.roomList$ = this.userService.getRoomsAssigned();
+    this.nurseId$ = this.authService.userId;
+  }
+
   assignRooms() {
     let nurseId: string;
     this.nurseId$.subscribe(x => {
@@ -57,4 +63,13 @@ export class AssignRoomsPage implements OnInit {
     });
     this.unassignRoomsVar = [];
   }
+
+  // doRefresh(event) {
+  //   console.log('Begin async operation');
+
+  //   setTimeout(() => {
+  //     this.ngOnInit();
+  //     event.target.complete();
+  //   }, 2000);
+  // }
 }

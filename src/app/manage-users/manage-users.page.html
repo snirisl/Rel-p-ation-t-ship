@@ -7,11 +7,15 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content>
+    <br>
+  <ion-card-title text-center>Users List</ion-card-title>
+  <ion-card-subtitle text-center>You can only edit patients by swiping</ion-card-subtitle>
+  <br>
   <div *ngIf="(usersList$ | async) as list; else noUsers">
     <ion-list *ngFor="let user of list">
       <ion-item-sliding #slidingItem>
-        <ion-item text-wrap color="{{ user.type == 'p' ? 'light' : 'dark' }}"
+        <ion-item text-wrap  lines="inset"
           ><ion-avatar
             ><ion-icon name="contact" size="large"></ion-icon
           ></ion-avatar>

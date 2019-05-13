@@ -18,13 +18,10 @@
   <ion-grid>
     <ion-row>
       <ion-col size="12" size-sm="8" offset-sm="2" text-center>
-        <div *ngIf="isLoading" text-center>
-          <ion-spinner color="primary"></ion-spinner>
-        </div>
         <div
           text-center
           *ngIf="
-            !((requests$ | async) | filter: status:'status') &&
+            !(requests$ | async | filter: status:'status') &&
             status === 'progress'
           "
         >
@@ -38,7 +35,7 @@
         <div
           text-center
           *ngIf="
-            !((requests$ | async) | filter: status:'status') &&
+            !(requests$ | async | filter: status:'status') &&
             status === 'completed'
           "
         >
@@ -46,7 +43,7 @@
             No Completed Requests yet...
           </p>
         </div>
-        <ion-list *ngIf="(requests$ | async) as reqList">
+        <ion-list *ngIf="requests$ | async as reqList">
           <ion-item-sliding
             *ngFor="let request of reqList | filter: status:'status'"
             #slidingItem
@@ -64,8 +61,20 @@
               <ion-label>
                 <h2>{{ request.title }}</h2>
                 <h5>{{ request.description }}</h5>
-                <p *ngIf="request.data !== ''">
+                <p
+                  *ngIf="
+                    request.data !== '' && request.status === 'In progress'
+                  "
+                >
+                  Requested on:
                   {{ request.date.toDate() | date: 'dd/MM/yyyy HH:mm':'+3' }}
+                </p>
+                <p *ngIf="request.status === 'Completed'">
+                  Completed on:
+                  {{
+                    request.completionDate.toDate()
+                      | date: 'dd/MM/yyyy HH:mm':'+3'
+                  }}
                 </p>
                 <ion-text
                   *ngIf="
@@ -74,7 +83,7 @@
                   "
                   color="primary"
                 >
-                  {{ request.patientName }}
+                  By {{ request.patientName }}
                 </ion-text>
                 <ion-text
                   *ngIf="
@@ -83,7 +92,7 @@
                   "
                   color="primary"
                 >
-                  {{ request.nurseName }}
+                  By {{ request.nurseName }}
                 </ion-text>
                 <ion-label
                   slot="start"

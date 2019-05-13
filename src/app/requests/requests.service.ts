@@ -21,6 +21,7 @@ export interface RequestData {
   nurseName?: string;
   room: string;
   id?: string;
+  completionDate?: Date;
 }
 
 @Injectable({
@@ -39,7 +40,6 @@ export class RequestsService {
   ) {}
 
   getRequests() {
-    console.log('in getRequests');
     this.requestCollection = this.firestore.collection('requests', ref =>
       ref.orderBy('date', 'desc')
     );
@@ -55,7 +55,8 @@ export class RequestsService {
     return this.requestDoc.update({
       status: 'Completed',
       nurseId: nurseId,
-      nurseName: this.authService.userName
+      nurseName: this.authService.userName,
+      completionDate: new Date()
     });
   }
 
@@ -82,7 +83,8 @@ export class RequestsService {
         patientId: this.currentUser,
         patientName: this.authService.userName,
         nurseId: '',
-        room: '103'
+        room: '103',
+        id: id
       });
   }
 }
