@@ -30,6 +30,7 @@ export class AuthService {
   private _user = new BehaviorSubject<User>(null);
   private _userType: string;
   private _userName: string;
+  private _userObsv: Observable<any>;
   private user: AngularFirestoreDocument<Users>;
   private userFetched: Observable<Users[]>;
 
@@ -38,23 +39,25 @@ export class AuthService {
     private firestore: AngularFirestore,
     private userStateService: UserStateService
   ) {
-    from(Plugins.Storage.get({ key: 'authData' })).pipe(
-      map(storedData => {
-        if (!storedData || !storedData.value) {
-          return null;
-        }
-        const parsedData = JSON.parse(storedData.value) as {
-          token: string;
-          tokenExpirationDate: string;
-          userId: string;
-          email: string;
-          userType: string;
-          userName: string;
-        };
-        this._userName = parsedData.userName;
-        this._userType = parsedData.userType;
-      })
-    ).subscribe();
+    from(Plugins.Storage.get({ key: 'authData' }))
+      .pipe(
+        map(storedData => {
+          if (!storedData || !storedData.value) {
+            return null;
+          }
+          const parsedData = JSON.parse(storedData.value) as {
+            token: string;
+            tokenExpirationDate: string;
+            userId: string;
+            email: string;
+            userType: string;
+            userName: string;
+          };
+          this._userName = parsedData.userName;
+          this._userType = parsedData.userType;
+        })
+      )
+      .subscribe();
   }
 
   get userName() {
@@ -64,6 +67,9 @@ export class AuthService {
   getUserType(userId: string) {
     const userQuery = this.firestore.doc<Users>(`added-users/${userId}`);
     userQuery.valueChanges().subscribe(x => {
+      if (!x) {
+        return;
+      }
       this._userType = x.type;
       this._userName = x.name;
     });
