@@ -85,33 +85,6 @@ var _sPassive,GestureController=function(){function t(t){this.doc=t,this.gesture
 
 /***/ }),
 
-/***/ "./src/app/requests/request.model.ts":
-/*!*******************************************!*\
-  !*** ./src/app/requests/request.model.ts ***!
-  \*******************************************/
-/*! exports provided: Request */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Request", function() { return Request; });
-var Request = /** @class */ (function () {
-    function Request(id, title, description, imgUrl, status, date, patientId) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.imgUrl = imgUrl;
-        this.status = status;
-        this.date = date;
-        this.patientId = patientId;
-    }
-    return Request;
-}());
-
-
-
-/***/ }),
-
 /***/ "./src/app/requests/requests.service.ts":
 /*!**********************************************!*\
   !*** ./src/app/requests/requests.service.ts ***!
@@ -124,46 +97,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RequestsService", function() { return RequestsService; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _request_model__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./request.model */ "./src/app/requests/request.model.ts");
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
-/* harmony import */ var _auth_auth_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../auth/auth.service */ "./src/app/auth/auth.service.ts");
-/* harmony import */ var _angular_fire_firestore__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/fire/firestore */ "./node_modules/@angular/fire/firestore/index.js");
-
-
-
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var _auth_auth_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../auth/auth.service */ "./src/app/auth/auth.service.ts");
+/* harmony import */ var _angular_fire_firestore__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/fire/firestore */ "./node_modules/@angular/fire/firestore/index.js");
 
 
 
 
 
 var RequestsService = /** @class */ (function () {
-    function RequestsService(http, authService, firestore) {
-        this.http = http;
+    function RequestsService(authService, firestore) {
         this.authService = authService;
         this.firestore = firestore;
-        this._requests = new rxjs__WEBPACK_IMPORTED_MODULE_3__["BehaviorSubject"]([]);
+        this._requests = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"]([]);
+    }
+    RequestsService.prototype.getRequests = function () {
         this.requestCollection = this.firestore.collection('requests', function (ref) {
             return ref.orderBy('date', 'desc');
         });
-        this.patientsRequests = this.requestCollection.snapshotChanges().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["map"])(function (changes) {
-            return changes.map(function (a) {
-                var data = a.payload.doc.data();
-                data.id = a.payload.doc.id;
-                return data;
-            });
-        }));
-    }
-    Object.defineProperty(RequestsService.prototype, "requests", {
-        get: function () {
-            return this._requests.asObservable();
-        },
-        enumerable: true,
-        configurable: true
-    });
-    RequestsService.prototype.getRequests = function () {
-        return this.patientsRequests;
+        return this.requestCollection.valueChanges();
     };
     RequestsService.prototype.updateRequest = function (request) {
         var nurseId;
@@ -174,7 +126,8 @@ var RequestsService = /** @class */ (function () {
         return this.requestDoc.update({
             status: 'Completed',
             nurseId: nurseId,
-            nurseName: this.authService.userName
+            nurseName: this.authService.userName,
+            completionDate: new Date()
         });
     };
     RequestsService.prototype.deleteRequest = function (request) {
@@ -199,30 +152,16 @@ var RequestsService = /** @class */ (function () {
             patientId: this.currentUser,
             patientName: this.authService.userName,
             nurseId: '',
-            room: '103'
+            room: '103',
+            id: id
         });
-    };
-    RequestsService.prototype.setRequestAsCompleted = function (requestId) {
-        var _this = this;
-        var updatedRequests;
-        return this.requests.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["take"])(1), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["switchMap"])(function (requests) {
-            var updatedRequestIndex = requests.findIndex(function (req) { return req.id === requestId; });
-            updatedRequests = requests.slice();
-            var oldRequest = updatedRequests[updatedRequestIndex];
-            updatedRequests[updatedRequestIndex] = new _request_model__WEBPACK_IMPORTED_MODULE_2__["Request"](oldRequest.id, oldRequest.title, oldRequest.description, oldRequest.imgUrl, 'Completed', oldRequest.date, oldRequest.patientId);
-            console.log("https://relpationtship-test.firebaseio.com/added-requests/" + requestId + ".json");
-            return _this.http.put("https://relpationtship-test.firebaseio.com/added-requests/" + requestId + ".json", tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, updatedRequests[updatedRequestIndex], { id: null }));
-        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["tap"])(function () {
-            _this._requests.next(updatedRequests);
-        }));
     };
     RequestsService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
             providedIn: 'root'
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpClient"],
-            _auth_auth_service__WEBPACK_IMPORTED_MODULE_6__["AuthService"],
-            _angular_fire_firestore__WEBPACK_IMPORTED_MODULE_7__["AngularFirestore"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_auth_auth_service__WEBPACK_IMPORTED_MODULE_3__["AuthService"],
+            _angular_fire_firestore__WEBPACK_IMPORTED_MODULE_4__["AngularFirestore"]])
     ], RequestsService);
     return RequestsService;
 }());

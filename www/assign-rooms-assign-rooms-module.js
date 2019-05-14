@@ -58,7 +58,7 @@ var AssignRoomsPageModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header>\n  <ion-toolbar color=\"primary\">\n    <ion-buttons slot=\"start\">\n      <ion-menu-button menu=\"m1\"></ion-menu-button>\n    </ion-buttons>\n    <ion-title>Assign Rooms</ion-title>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content padding>\n  <ion-grid>\n    <ion-row>\n      <ion-col size-sm=\"6\" offset-sm=\"3\">\n        <ion-card>\n          <ion-card-title text-center>Your assigned rooms</ion-card-title>\n          <ion-card-content>\n            <ion-list *ngFor=\"let assignedRoom of roomsList\">\n              <ion-item>\n                {{ assignedRoom.roomNum }}\n              </ion-item>\n            </ion-list>\n          </ion-card-content>\n        </ion-card>\n      </ion-col>\n    </ion-row>\n    <form #f=\"ngForm\" (ngSubmit)=\"assignRooms()\">\n      <ion-row>\n        <ion-col size-sm=\"6\" offset-sm=\"3\">\n          <ion-list>\n            <ion-label position=\"floating\">Choose rooms to assign:</ion-label>\n            <ion-select\n              placeholder=\"Select Rooms\"\n              [(ngModel)] = \"assignRoomsVar\"\n              name=\"rooms\"\n              required\n              multiple=\"true\"\n            >\n              <ion-select-option\n                *ngFor=\"let room of allRooms\"\n                [value]=\"room.roomNum\"\n              >\n                {{ room.roomNum }}\n              </ion-select-option>\n            </ion-select>\n          </ion-list>\n          <ion-button\n            type=\"submit\"\n            color=\"primary\"\n            expand=\"block\"\n            [disabled]=\"!f.valid\"\n            >Assign</ion-button\n          >\n        </ion-col>\n      </ion-row>\n    </form>\n    <form #f2=\"ngForm\" (ngSubmit)=\"unassignRooms()\">\n      <ion-row>\n        <ion-col size-sm=\"6\" offset-sm=\"3\">\n          <ion-list>\n            <ion-label position=\"floating\">Choose rooms to unassign:</ion-label>\n            <ion-select\n              placeholder=\"Select Rooms\"\n              [(ngModel)] = \"unassignRoomsVar\"\n              name=\"rooms\"\n              required\n              multiple=\"true\"\n            >\n              <ion-select-option\n                *ngFor=\"let room of roomsList\"\n                [value]=\"room.roomNum\"\n              >\n                {{ room.roomNum }}\n              </ion-select-option>\n            </ion-select>\n          </ion-list>\n          <ion-button\n            type=\"submit\"\n            color=\"primary\"\n            expand=\"block\"\n            [disabled]=\"!f2.valid\"\n            >UnAssign</ion-button\n          >\n        </ion-col>\n      </ion-row>\n    </form>\n  </ion-grid>\n</ion-content>\n"
+module.exports = "<ion-header>\n  <ion-toolbar color=\"primary\">\n    <ion-buttons slot=\"start\">\n      <ion-menu-button menu=\"m1\"></ion-menu-button>\n    </ion-buttons>\n    <ion-title>Assign Rooms</ion-title>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content padding>\n  <!-- <ion-refresher slot=\"fixed\" (ionRefresh)=\"doRefresh($event)\">\n    <ion-refresher-content></ion-refresher-content>\n  </ion-refresher> -->\n  <ion-grid>\n    <ion-row>\n      <ion-col size-sm=\"6\" offset-sm=\"3\">\n        <ion-card *ngIf=\"roomList$ | async as roomList\">\n          <ion-card-title text-center>Your assigned rooms</ion-card-title>\n          <ion-card-header *ngIf=\"(roomList$ | async)?.length <= 0\"\n            >No rooms assigned yet</ion-card-header\n          >\n          <ion-card-content>\n            <ion-list *ngFor=\"let assignedRoom of roomList\">\n              <ion-item>\n                {{ assignedRoom.roomNum }}\n              </ion-item>\n            </ion-list>\n          </ion-card-content>\n        </ion-card>\n      </ion-col>\n    </ion-row>\n    <form #f=\"ngForm\" (ngSubmit)=\"assignRooms()\">\n      <ion-row>\n        <ion-col size-sm=\"6\" offset-sm=\"3\">\n          <ion-list>\n            <ion-label position=\"floating\">Choose rooms to assign:</ion-label>\n            <ion-select\n              placeholder=\"Select Rooms\"\n              [(ngModel)]=\"assignRoomsVar\"\n              name=\"rooms\"\n              required\n              multiple=\"true\"\n            >\n              <ion-select-option\n                *ngFor=\"let room of allRooms$ | async\"\n                [value]=\"room.roomNum\"\n              >\n                {{ room.roomNum }}\n              </ion-select-option>\n            </ion-select>\n          </ion-list>\n          <ion-button\n            type=\"submit\"\n            color=\"primary\"\n            expand=\"block\"\n            [disabled]=\"!f.valid\"\n            >Assign</ion-button\n          >\n        </ion-col>\n      </ion-row>\n    </form>\n    <form #f2=\"ngForm\" (ngSubmit)=\"unassignRooms()\">\n      <ion-row>\n        <ion-col size-sm=\"6\" offset-sm=\"3\">\n          <ion-list>\n            <ion-label position=\"floating\">Choose rooms to unassign:</ion-label>\n            <ion-select\n              placeholder=\"Select Rooms\"\n              [(ngModel)]=\"unassignRoomsVar\"\n              name=\"rooms\"\n              required\n              multiple=\"true\"\n            >\n              <ion-select-option\n                *ngFor=\"let room of roomList$ | async\"\n                [value]=\"room.roomNum\"\n              >\n                {{ room.roomNum }}\n              </ion-select-option>\n            </ion-select>\n          </ion-list>\n          <ion-button\n            type=\"submit\"\n            color=\"primary\"\n            expand=\"block\"\n            [disabled]=\"!f2.valid\"\n            >UnAssign</ion-button\n          >\n        </ion-col>\n      </ion-row>\n    </form>\n  </ion-grid>\n</ion-content>\n"
 
 /***/ }),
 
@@ -87,37 +87,34 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _users_users_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../users/users.service */ "./src/app/users/users.service.ts");
 /* harmony import */ var _auth_auth_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../auth/auth.service */ "./src/app/auth/auth.service.ts");
-/* harmony import */ var _requests_requests_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../requests/requests.service */ "./src/app/requests/requests.service.ts");
-/* harmony import */ var _angular_fire_firestore__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/fire/firestore */ "./node_modules/@angular/fire/firestore/index.js");
-
+/* harmony import */ var _angular_fire_firestore__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/fire/firestore */ "./node_modules/@angular/fire/firestore/index.js");
 
 
 
 
 
 var AssignRoomsPage = /** @class */ (function () {
-    function AssignRoomsPage(userService, authService, requestService, firestore) {
+    function AssignRoomsPage(userService, authService, firestore) {
         this.userService = userService;
         this.authService = authService;
-        this.requestService = requestService;
         this.firestore = firestore;
     }
     AssignRoomsPage.prototype.ngOnInit = function () {
-        var _this = this;
-        this.userService.getRooms().subscribe(function (rooms) {
-            _this.allRooms = rooms;
-        });
-        this.userService.getRoomsAssigned().subscribe(function (assignedRooms) {
-            _this.roomsList = assignedRooms;
-        });
+        this.allRooms$ = this.userService.getRooms();
+        this.roomList$ = this.userService.getRoomsAssigned();
+        this.nurseId$ = this.authService.userId;
+    };
+    AssignRoomsPage.prototype.ionViewWillEnter = function () {
+        this.allRooms$ = this.userService.getRooms();
+        this.roomList$ = this.userService.getRoomsAssigned();
+        this.nurseId$ = this.authService.userId;
     };
     AssignRoomsPage.prototype.assignRooms = function () {
         var _this = this;
         var nurseId;
-        this.authService.userId.subscribe(function (x) {
+        this.nurseId$.subscribe(function (x) {
             nurseId = x;
         });
-        console.log(this.assignRoomsVar);
         this.assignRoomsVar.forEach(function (element) {
             _this.roomDoc = _this.firestore.doc('rooms/' + element);
             _this.roomDoc.update({ assignedNurse: nurseId });
@@ -127,7 +124,7 @@ var AssignRoomsPage = /** @class */ (function () {
     AssignRoomsPage.prototype.unassignRooms = function () {
         var _this = this;
         var nurseId;
-        this.authService.userId.subscribe(function (x) {
+        this.nurseId$.subscribe(function (x) {
             nurseId = x;
         });
         console.log(this.unassignRoomsVar);
@@ -145,8 +142,7 @@ var AssignRoomsPage = /** @class */ (function () {
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_users_users_service__WEBPACK_IMPORTED_MODULE_2__["UsersService"],
             _auth_auth_service__WEBPACK_IMPORTED_MODULE_3__["AuthService"],
-            _requests_requests_service__WEBPACK_IMPORTED_MODULE_4__["RequestsService"],
-            _angular_fire_firestore__WEBPACK_IMPORTED_MODULE_5__["AngularFirestore"]])
+            _angular_fire_firestore__WEBPACK_IMPORTED_MODULE_4__["AngularFirestore"]])
     ], AssignRoomsPage);
     return AssignRoomsPage;
 }());

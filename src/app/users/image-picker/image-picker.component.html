@@ -1,0 +1,25 @@
+<div>
+  <ion-button color="secondary" (click)="onPickImage()" *ngIf="!selectedImage" expand="block">
+    <ion-icon name="camera" slot="start"></ion-icon>
+    <ion-label>Open Camera</ion-label>
+  </ion-button>
+</div>
+<input
+  type="file"
+  *ngIf="usePicker"
+  #filepicker
+  (change)="onFileChosen($event)"
+/>
+<ion-button
+    (click)="recognizeImage()"
+    expand="block"
+    [disabled]="!selectedImage"
+    color="tertiary"
+    >Recognize Text</ion-button
+  >
+<ion-card *ngIf="imageText">
+    <ion-card-header>Image Text</ion-card-header>
+    <ion-card-content>
+      ID: {{ this.id }}, Name: {{ this.name }}
+    </ion-card-content>
+  </ion-card>

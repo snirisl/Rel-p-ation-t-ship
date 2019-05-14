@@ -1,5 +1,88 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([["users-users-module"],{
 
+/***/ "./src/app/users/image-picker/image-picker.component.html":
+/*!****************************************************************!*\
+  !*** ./src/app/users/image-picker/image-picker.component.html ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"picker\">\n  <ion-img\n    role=\"button\"\n    class=\"image\"\n    (click)=\"onPickImage()\"\n    [src]=\"selectedImage\"\n    *ngIf=\"selectedImage\"\n  ></ion-img>\n  <ion-button color=\"primary\" (click)=\"onPickImage()\" *ngIf=\"!selectedImage\">\n    <ion-icon name=\"camera\" slot=\"start\"></ion-icon>\n      <ion-label>Take Picture</ion-label>\n  </ion-button>\n</div>\n"
+
+/***/ }),
+
+/***/ "./src/app/users/image-picker/image-picker.component.scss":
+/*!****************************************************************!*\
+  !*** ./src/app/users/image-picker/image-picker.component.scss ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL3VzZXJzL2ltYWdlLXBpY2tlci9pbWFnZS1waWNrZXIuY29tcG9uZW50LnNjc3MifQ== */"
+
+/***/ }),
+
+/***/ "./src/app/users/image-picker/image-picker.component.ts":
+/*!**************************************************************!*\
+  !*** ./src/app/users/image-picker/image-picker.component.ts ***!
+  \**************************************************************/
+/*! exports provided: ImagePickerComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ImagePickerComponent", function() { return ImagePickerComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _capacitor_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @capacitor/core */ "./node_modules/@capacitor/core/dist/esm/index.js");
+
+
+
+var ImagePickerComponent = /** @class */ (function () {
+    function ImagePickerComponent() {
+        this.imagePick = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
+    }
+    ImagePickerComponent.prototype.ngOnInit = function () { };
+    ImagePickerComponent.prototype.onPickImage = function () {
+        var _this = this;
+        if (!_capacitor_core__WEBPACK_IMPORTED_MODULE_2__["Capacitor"].isPluginAvailable('Camera')) {
+            this.isAvailable = false;
+            return;
+        }
+        _capacitor_core__WEBPACK_IMPORTED_MODULE_2__["Plugins"].Camera.getPhoto({
+            quality: 50,
+            source: _capacitor_core__WEBPACK_IMPORTED_MODULE_2__["CameraSource"].Camera,
+            correctOrientation: true,
+            height: 320,
+            width: 200,
+            resultType: _capacitor_core__WEBPACK_IMPORTED_MODULE_2__["CameraResultType"].Base64
+        }).then(function (image) {
+            _this.selectedImage = image.base64String;
+            _this.imagePick.emit(image.base64String);
+        }).catch(function (error) {
+            console.log(error);
+            return false;
+        });
+    };
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+    ], ImagePickerComponent.prototype, "imagePick", void 0);
+    ImagePickerComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'app-image-picker',
+            template: __webpack_require__(/*! ./image-picker.component.html */ "./src/app/users/image-picker/image-picker.component.html"),
+            styles: [__webpack_require__(/*! ./image-picker.component.scss */ "./src/app/users/image-picker/image-picker.component.scss")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+    ], ImagePickerComponent);
+    return ImagePickerComponent;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/users/users.module.ts":
 /*!***************************************!*\
   !*** ./src/app/users/users.module.ts ***!
@@ -17,6 +100,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 /* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
 /* harmony import */ var _users_page__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./users.page */ "./src/app/users/users.page.ts");
+/* harmony import */ var _image_picker_image_picker_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./image-picker/image-picker.component */ "./src/app/users/image-picker/image-picker.component.ts");
+
 
 
 
@@ -41,7 +126,9 @@ var UsersPageModule = /** @class */ (function () {
                 _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["IonicModule"],
                 _angular_router__WEBPACK_IMPORTED_MODULE_4__["RouterModule"].forChild(routes)
             ],
-            declarations: [_users_page__WEBPACK_IMPORTED_MODULE_6__["UsersPage"]]
+            declarations: [_users_page__WEBPACK_IMPORTED_MODULE_6__["UsersPage"], _image_picker_image_picker_component__WEBPACK_IMPORTED_MODULE_7__["ImagePickerComponent"]],
+            exports: [_image_picker_image_picker_component__WEBPACK_IMPORTED_MODULE_7__["ImagePickerComponent"]],
+            entryComponents: [_image_picker_image_picker_component__WEBPACK_IMPORTED_MODULE_7__["ImagePickerComponent"]]
         })
     ], UsersPageModule);
     return UsersPageModule;
@@ -58,7 +145,7 @@ var UsersPageModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header>\n  <ion-toolbar color=\"primary\">\n    <ion-buttons slot=\"start\">\n      <ion-menu-button menu=\"m1\"></ion-menu-button>\n    </ion-buttons>\n    <ion-title>Add a New User</ion-title>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content padding>\n  <form #f=\"ngForm\" (ngSubmit)=\"onSubmit(f)\">\n    <ion-grid>\n      <ion-row>\n        <ion-col size-sm=\"6\" offset-sm=\"3\">\n          <ion-list>\n            <ion-item>\n              <ion-label position=\"floating\">ID (without opening 0)</ion-label>\n              <ion-input\n                type=\"string\"\n                ngModel\n                name=\"uid\"\n                required\n                #uidCtrl=\"ngModel\"\n              ></ion-input>\n            </ion-item>\n            <ion-item *ngIf=\"!uidCtrl.valid && uidCtrl.touched\" lines=\"none\">\n              <ion-label>\n                Should be at least 8 characters long.\n              </ion-label>\n            </ion-item>\n            <ion-item>\n              <ion-label position=\"floating\">Name</ion-label>\n              <ion-input\n                type=\"text\"\n                ngModel\n                name=\"name\"\n                required\n                minlength=\"2\"\n                #nameCtrl=\"ngModel\"\n              ></ion-input>\n            </ion-item>\n            <ion-item *ngIf=\"!nameCtrl.valid && nameCtrl.touched\" lines=\"none\">\n              <ion-label>\n                Should be at least 2 characters long.\n              </ion-label>\n            </ion-item>\n            <ion-item>\n              <ion-label position=\"floating\">Type</ion-label>\n              <ion-select\n                placeholder=\"Select Type\"\n                interface=\"popover\"\n                ngModel\n                name=\"type\"\n                required\n                #typeCtrl=\"ngModel\"\n              >\n                <ion-select-option value=\"p\">Patient</ion-select-option>\n                <ion-select-option value=\"n\">Nurse</ion-select-option>\n              </ion-select>\n            </ion-item>\n            <ion-item *ngIf=\"!typeCtrl.valid && typeCtrl.touched\" lines=\"none\">\n              <ion-label>\n                You must choose a user type.\n              </ion-label>\n            </ion-item>\n            <ion-item *ngIf=\"typeCtrl.value == 'p'\">\n              <ion-label position=\"floating\">Room Number</ion-label>\n              <ion-select\n                placeholder=\"Select Room Number\"\n                interface=\"popover\"\n                ngModel\n                name=\"room\"\n                required\n                #roomCtrl=\"ngModel\"\n              >\n              <ion-select-option\n              *ngFor=\"let room of roomsList\"\n              value=\"{{ room.roomNum }}\"\n              >{{ room.roomNum }}\n            </ion-select-option>\n              </ion-select>\n            </ion-item>\n          </ion-list>\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col size-sm=\"6\" offset-sm=\"3\">\n          <div text-center>\n            <ion-button\n              type=\"submit\"\n              color=\"primary\"\n              expand=\"block\"\n              [disabled]=\"!f.valid\"\n            >\n              Create\n            </ion-button>\n            <p text-center>OR</p>\n            <ion-button type=\"submit\" color=\"primary\" expand=\"block\">\n              <ion-icon name=\"camera\"></ion-icon>\n              Take a Picture of the Patient Sticker\n            </ion-button>\n          </div>\n        </ion-col>\n      </ion-row>\n    </ion-grid>\n  </form>\n</ion-content>\n"
+module.exports = "<ion-header>\n  <ion-toolbar color=\"primary\">\n    <ion-buttons slot=\"start\">\n      <ion-menu-button menu=\"m1\"></ion-menu-button>\n    </ion-buttons>\n    <ion-title>Add a New User</ion-title>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content padding>\n  <form #f=\"ngForm\" (ngSubmit)=\"onSubmit(f)\">\n    <ion-grid>\n      <ion-row>\n        <ion-col size-sm=\"6\" offset-sm=\"3\">\n          <ion-list>\n            <ion-item>\n              <ion-label position=\"floating\">ID (without opening 0)</ion-label>\n              <ion-input\n                type=\"string\"\n                ngModel\n                name=\"uid\"\n                required\n                #uidCtrl=\"ngModel\"\n              ></ion-input>\n            </ion-item>\n            <ion-item *ngIf=\"!uidCtrl.valid && uidCtrl.touched\" lines=\"none\">\n              <ion-label>\n                Should be at least 8 characters long.\n              </ion-label>\n            </ion-item>\n            <ion-item>\n              <ion-label position=\"floating\">Name</ion-label>\n              <ion-input\n                type=\"text\"\n                ngModel\n                name=\"name\"\n                required\n                minlength=\"2\"\n                #nameCtrl=\"ngModel\"\n              ></ion-input>\n            </ion-item>\n            <ion-item *ngIf=\"!nameCtrl.valid && nameCtrl.touched\" lines=\"none\">\n              <ion-label>\n                Should be at least 2 characters long.\n              </ion-label>\n            </ion-item>\n            <ion-item>\n              <ion-label position=\"floating\">Type</ion-label>\n              <ion-select\n                placeholder=\"Select Type\"\n                interface=\"popover\"\n                ngModel\n                name=\"type\"\n                required\n                #typeCtrl=\"ngModel\"\n              >\n                <ion-select-option value=\"p\">Patient</ion-select-option>\n                <ion-select-option value=\"n\">Nurse</ion-select-option>\n              </ion-select>\n            </ion-item>\n            <ion-item *ngIf=\"!typeCtrl.valid && typeCtrl.touched\" lines=\"none\">\n              <ion-label>\n                You must choose a user type.\n              </ion-label>\n            </ion-item>\n            <ion-item *ngIf=\"typeCtrl.value == 'p'\">\n              <ion-label position=\"floating\">Room Number</ion-label>\n              <ion-select\n                placeholder=\"Select Room Number\"\n                interface=\"popover\"\n                ngModel\n                name=\"room\"\n                required\n                #roomCtrl=\"ngModel\"\n              >\n                <ion-select-option\n                  *ngFor=\"let room of roomsList\"\n                  value=\"{{ room.roomNum }}\"\n                  >{{ room.roomNum }}\n                </ion-select-option>\n              </ion-select>\n            </ion-item>\n          </ion-list>\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col size-sm=\"6\" offset-sm=\"3\">\n          <div text-center>\n            <ion-button\n              type=\"submit\"\n              color=\"primary\"\n              expand=\"block\"\n              [disabled]=\"!f.valid\"\n            >\n              Create\n            </ion-button>\n            <p text-center>OR</p>\n            <ion-button type=\"submit\" color=\"primary\" expand=\"block\">\n              <ion-icon name=\"camera\"></ion-icon>\n              Take a Picture of the Patient Sticker\n            </ion-button>\n          </div>\n        </ion-col>\n        <ion-col size-sm=\"3\" offset-sm=\"3\">\n          <app-image-picker\n            (imagePick)=\"onImagePicked($event)\"\n          ></app-image-picker>\n        </ion-col>\n      </ion-row>\n    </ion-grid>\n  </form>\n</ion-content>\n"
 
 /***/ }),
 
@@ -175,6 +262,8 @@ var UsersPage = /** @class */ (function () {
             buttons: ['Okay']
         })
             .then(function (alertEl) { return alertEl.present(); });
+    };
+    UsersPage.prototype.onImagePicked = function (imageData) {
     };
     UsersPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({

@@ -38,6 +38,9 @@ export class UsersService {
   assignedRoomsCollection: AngularFirestoreCollection<Room>;
   assignedRooms: Observable<any[]>;
 
+  formIdFromOCR: string;
+  formNameFromOCR: string;
+
   constructor(
     private authService: AuthService,
     private http: HttpClient,

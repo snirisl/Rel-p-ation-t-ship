@@ -848,7 +848,6 @@ var map = {
 	],
 	"./assign-rooms/assign-rooms.module": [
 		"./src/app/assign-rooms/assign-rooms.module.ts",
-		"common",
 		"assign-rooms-assign-rooms-module"
 	],
 	"./auth/auth.module": [
@@ -966,7 +965,7 @@ var AppRoutingModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-app>\n  <ion-menu slot=\"start\" menuId=\"m1\">\n    <ion-header>\n      <ion-toolbar>\n        <ion-title text-wrap>Hello, {{ this.authService.userName ? this.authService.userName.split(\" \")[0] : '' }}</ion-title>\n        <!-- code here the real patient name -->\n      </ion-toolbar>\n    </ion-header>\n    <ion-content>\n      <ion-list>\n        <ion-menu-toggle menu=\"m1\">\n          <ion-item lines=\"none\" routerLink=\"/requests\" button>\n            <ion-icon name=\"paper-plane\"></ion-icon>\n            <ion-label>Requests</ion-label>\n          </ion-item>\n        </ion-menu-toggle>\n        <ion-menu-toggle menu=\"m1\" *ngIf=\"this.authService.userType !== 'p'\">\n          <ion-item lines=\"none\" routerLink=\"/users\" button>\n            <ion-icon name=\"person-add\"></ion-icon>\n            <ion-label>Add User (Patient/Nurse)</ion-label>\n          </ion-item>\n        </ion-menu-toggle>\n        <ion-menu-toggle menu=\"m1\" *ngIf=\"this.authService.userType !== 'p'\">\n          <ion-item lines=\"none\" routerLink=\"/manage-users\" button>\n            <ion-icon name=\"person-add\"></ion-icon>\n            <ion-label>Manage Users</ion-label>\n          </ion-item>\n        </ion-menu-toggle>\n        <ion-menu-toggle menu=\"m1\" *ngIf=\"this.authService.userType !== 'p'\">\n          <ion-item lines=\"none\" routerLink=\"/assign-rooms\" button>\n            <ion-icon name=\"list\"></ion-icon>\n            <ion-label>Assign Rooms</ion-label>\n          </ion-item>\n        </ion-menu-toggle>\n        <ion-menu-toggle menu=\"m1\">\n          <ion-item lines=\"none\" (click)=\"onLogout()\" button>\n            <ion-icon name=\"exit\"></ion-icon>\n            <ion-label>Logout</ion-label>\n          </ion-item>\n        </ion-menu-toggle>\n        <ion-menu-toggle menu=\"m1\">\n          <ion-item lines=\"none\" routerLink=\"/about\" button>\n            <ion-icon name=\"information-circle-outline\"></ion-icon>\n            <ion-label>About</ion-label>\n          </ion-item>\n        </ion-menu-toggle>\n      </ion-list>\n    </ion-content>\n    <ion-footer>\n        <ion-toolbar>\n          <ion-title>Relpationtship</ion-title>\n        </ion-toolbar>\n      </ion-footer>\n  </ion-menu>\n  <ion-router-outlet main></ion-router-outlet>\n</ion-app>\n"
+module.exports = "<ion-app>\n  <ion-menu slot=\"start\" menuId=\"m1\">\n    <ion-header>\n      <ion-toolbar>\n        <ion-title text-wrap>Hello, {{ this.authService.userName ? this.authService.userName.split(\" \")[0] : '' }}</ion-title>\n        <!-- code here the real patient name -->\n      </ion-toolbar>\n    </ion-header>\n    <ion-content>\n      <ion-list>\n        <ion-menu-toggle menu=\"m1\">\n          <ion-item lines=\"none\" routerLink=\"/requests\" button>\n            <ion-icon name=\"paper-plane\"></ion-icon>\n            <ion-text>Requests</ion-text>\n          </ion-item>\n        </ion-menu-toggle>\n        <ion-menu-toggle menu=\"m1\" *ngIf=\"this.authService.userType !== 'p'\">\n          <ion-item lines=\"none\" routerLink=\"/users\" button>\n            <ion-icon name=\"person-add\"></ion-icon>\n            <ion-label>Add User (Patient/Nurse)</ion-label>\n          </ion-item>\n        </ion-menu-toggle>\n        <ion-menu-toggle menu=\"m1\" *ngIf=\"this.authService.userType !== 'p'\">\n          <ion-item lines=\"none\" routerLink=\"/manage-users\" button>\n            <ion-icon name=\"person-add\"></ion-icon>\n            <ion-label>Manage Users</ion-label>\n          </ion-item>\n        </ion-menu-toggle>\n        <ion-menu-toggle menu=\"m1\" *ngIf=\"this.authService.userType !== 'p'\">\n          <ion-item lines=\"none\" routerLink=\"/assign-rooms\" button>\n            <ion-icon name=\"list\"></ion-icon>\n            <ion-label>Assign Rooms</ion-label>\n          </ion-item>\n        </ion-menu-toggle>\n        <ion-menu-toggle menu=\"m1\">\n          <ion-item lines=\"none\" (click)=\"onLogout()\" button>\n            <ion-icon name=\"exit\"></ion-icon>\n            <ion-label>Logout</ion-label>\n          </ion-item>\n        </ion-menu-toggle>\n        <ion-menu-toggle menu=\"m1\">\n          <ion-item lines=\"none\" routerLink=\"/about\" button>\n            <ion-icon name=\"information-circle-outline\"></ion-icon>\n            <ion-label>About</ion-label>\n          </ion-item>\n        </ion-menu-toggle>\n      </ion-list>\n    </ion-content>\n    <ion-footer>\n        <ion-toolbar>\n          <ion-title>Relpationtship</ion-title>\n        </ion-toolbar>\n      </ion-footer>\n  </ion-menu>\n  <ion-router-outlet main [swipeGesture]=\"false\"></ion-router-outlet>\n</ion-app>\n"
 
 /***/ }),
 
@@ -1102,7 +1101,7 @@ var AppModule = /** @class */ (function () {
                 _angular_fire__WEBPACK_IMPORTED_MODULE_8__["AngularFireModule"].initializeApp(_environments_environment__WEBPACK_IMPORTED_MODULE_12__["environment"].firebaseConfig),
                 _angular_fire_database__WEBPACK_IMPORTED_MODULE_10__["AngularFireDatabaseModule"],
                 _angular_fire_auth__WEBPACK_IMPORTED_MODULE_9__["AngularFireAuthModule"],
-                _angular_fire_firestore__WEBPACK_IMPORTED_MODULE_11__["AngularFirestoreModule"]
+                _angular_fire_firestore__WEBPACK_IMPORTED_MODULE_11__["AngularFirestoreModule"],
             ],
             providers: [
                 _ionic_native_status_bar_ngx__WEBPACK_IMPORTED_MODULE_7__["StatusBar"],
@@ -1541,6 +1540,8 @@ var UsersService = /** @class */ (function () {
         this.http = http;
         this.firestore = firestore;
         this._users = new rxjs__WEBPACK_IMPORTED_MODULE_7__["BehaviorSubject"]([]);
+    }
+    UsersService.prototype.getUsers = function () {
         var nurseId;
         this.authService.userId.subscribe(function (x) {
             nurseId = x;
@@ -1548,38 +1549,23 @@ var UsersService = /** @class */ (function () {
         this.usersCollection = this.firestore.collection('added-users', function (ref) {
             return ref.orderBy('name', 'asc');
         });
-        this.users = this.usersCollection.snapshotChanges().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["map"])(function (changes) {
-            return changes.map(function (a) {
-                var data = a.payload.doc.data();
-                data.id = a.payload.doc.id;
-                return data;
-            });
-        }));
+        return this.usersCollection.valueChanges();
+    };
+    UsersService.prototype.getRooms = function () {
         this.roomCollection = this.firestore.collection('rooms', function (ref) {
             return ref.orderBy('roomNum', 'asc');
         });
-        this.rooms = this.roomCollection.snapshotChanges().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["map"])(function (changes) {
-            return changes.map(function (a) {
-                var data = a.payload.doc.data();
-                return data;
-            });
-        }));
-        this.assignedRoomsCollection = this.firestore.collection('rooms', function (ref) { return ref.where('assignedNurse', '==', nurseId); });
-        this.assignedRooms = this.assignedRoomsCollection.snapshotChanges().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["map"])(function (changes) {
-            return changes.map(function (a) {
-                var data = a.payload.doc.data();
-                return data;
-            });
-        }));
-    }
-    UsersService.prototype.getUsers = function () {
-        return this.users;
-    };
-    UsersService.prototype.getRooms = function () {
-        return this.rooms;
+        return this.roomCollection.valueChanges().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["publishReplay"])(1), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["refCount"])());
     };
     UsersService.prototype.getRoomsAssigned = function () {
-        return this.assignedRooms;
+        var nurseId;
+        this.authService.userId.subscribe(function (x) {
+            nurseId = x;
+        });
+        this.assignedRoomsCollection = this.firestore.collection('rooms', function (ref) {
+            return ref.where('assignedNurse', '==', nurseId);
+        });
+        return this.assignedRoomsCollection.valueChanges().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["publishReplay"])(1), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["refCount"])());
     };
     UsersService.prototype.updateAddedUser = function (addedUser) {
         this.userDoc = this.firestore.doc("added-users/" + addedUser.id);

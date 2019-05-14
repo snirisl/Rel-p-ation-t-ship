@@ -19,12 +19,14 @@ export class UsersPage implements OnInit, OnDestroy {
   usersList: Users[];
   roomsList: Room[];
 
+  useOcrFlag: boolean;
+
   constructor(
     private authService: AuthService,
     private router: Router,
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
-    private usersService: UsersService
+    public usersService: UsersService
   ) {}
 
   ngOnInit() {
@@ -40,6 +42,7 @@ export class UsersPage implements OnInit, OnDestroy {
     if (this.usersSub) {
       this.usersSub.unsubscribe();
     }
+    this.useOcrFlag = false;
   }
 
   ionViewWillEnter() {
@@ -107,5 +110,13 @@ export class UsersPage implements OnInit, OnDestroy {
         buttons: ['Okay']
       })
       .then(alertEl => alertEl.present());
+  }
+
+  onImagePicked(imageData: string) {
+
+  }
+
+  changeOcrFlag() {
+    this.useOcrFlag = !this.useOcrFlag;
   }
 }
