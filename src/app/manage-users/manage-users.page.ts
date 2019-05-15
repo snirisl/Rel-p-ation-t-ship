@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Users } from '../users/users.model';
 import { UsersService } from '../users/users.service';
-import { IonItemSliding } from '@ionic/angular';
+import { IonItemSliding, AlertController } from '@ionic/angular';
 import { Room } from '../users/room.model';
 import { Observable } from 'rxjs';
 
@@ -17,7 +17,10 @@ export class ManageUsersPage implements OnInit {
   roomsList$: Observable<Room[]>;
   usersList$: Observable<Users[]>;
 
-  constructor(private userService: UsersService) {}
+  constructor(
+    private userService: UsersService,
+    private alertCtrl: AlertController
+  ) {}
 
   ngOnInit() {
     this.usersList$ = this.userService.getUsers();
@@ -36,6 +39,16 @@ export class ManageUsersPage implements OnInit {
   delete(user: Users) {
     this.clearState();
     this.userService.deleteUser(user);
+    this.alertCtrl
+      .create({
+        header: 'Patient record deleted.',
+        message:
+          'Please contact the software admin to remove authentication for that user.',
+        buttons: ['Okay']
+      })
+      .then(alertEl => {
+        alertEl.present();
+      });
   }
 
   editUser(event, user: Users, itemSliding: IonItemSliding) {

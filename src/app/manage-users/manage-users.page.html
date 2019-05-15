@@ -17,7 +17,7 @@
       <ion-item-sliding #slidingItem>
         <ion-item text-wrap  lines="inset"
           ><ion-avatar
-            ><ion-icon name="contact" size="large"></ion-icon
+            ><ion-icon name="contact" size="large" color="{{user.type == 'p' ? 'secondary' : ''}}"></ion-icon
           ></ion-avatar>
           <ion-label>
             <h5>{{ user.name }}</h5>

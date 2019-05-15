@@ -88,7 +88,8 @@ export class UsersService {
   }
 
   deleteUser(deletedUser: Users) {
-    this.userDoc = this.firestore.doc(`added-users/${deletedUser.id}`);
+    console.log('inside deleteUser', deletedUser.userId);
+    this.userDoc = this.firestore.doc(`added-users/${deletedUser.userId}`);
     this.userDoc.delete();
   }
 
