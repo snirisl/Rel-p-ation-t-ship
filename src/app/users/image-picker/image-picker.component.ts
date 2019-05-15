@@ -55,6 +55,7 @@ export class ImagePickerComponent implements OnInit {
       this.filepickerRef.nativeElement.click();
       return;
     }
+    console.log('get to step of getting an image');
     Plugins.Camera.getPhoto({
       quality: 50,
       source: CameraSource.Camera,
@@ -65,9 +66,10 @@ export class ImagePickerComponent implements OnInit {
       .then(image => {
         this.selectedImage = image.base64String;
         this.imagePick.emit(image.base64String);
+        console.log('success here');
       })
       .catch(error => {
-        console.log(error);
+        console.log('this is error');
         return false;
       });
   }

@@ -22,6 +22,7 @@
                 required
                 #uidCtrl="ngModel"
                 [value]="this.usersService.formIdFromOCR"
+                clearInput
               ></ion-input>
             </ion-item>
             <ion-item *ngIf="!uidCtrl.valid && uidCtrl.touched" lines="none">
@@ -38,6 +39,7 @@
                 required
                 minlength="2"
                 #nameCtrl="ngModel"
+                clearInput
                 [value]="this.usersService.formNameFromOCR"
               ></ion-input>
             </ion-item>
@@ -97,7 +99,11 @@
               Create
             </ion-button>
             <p text-center>OR</p>
-            <ion-button (click)="changeOcrFlag()" color="primary" expand="block">
+            <ion-button
+              (click)="changeOcrFlag()"
+              color="primary"
+              expand="block"
+            >
               <ion-icon name="camera"></ion-icon>
               Take a Picture of the Patient Sticker
             </ion-button>
@@ -105,7 +111,8 @@
         </ion-col>
         <ion-col size-sm="3" offset-sm="3">
           <app-image-picker
-            (imagePick)="onImagePicked($event)" *ngIf="this.useOcrFlag"
+            (imagePick)="onImagePicked($event)"
+            *ngIf="this.useOcrFlag"
           ></app-image-picker>
         </ion-col>
       </ion-row>
