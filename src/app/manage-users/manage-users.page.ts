@@ -41,9 +41,9 @@ export class ManageUsersPage implements OnInit {
     this.userService.deleteUser(user);
     this.alertCtrl
       .create({
-        header: 'Patient record deleted.',
+        header: 'Delete',
         message:
-          'Please contact the software admin to remove authentication for that user.',
+          'Patient record successfully deleted.',
         buttons: ['Okay']
       })
       .then(alertEl => {
