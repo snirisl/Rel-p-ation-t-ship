@@ -69,7 +69,7 @@ module.exports = "<ion-header>\n  <ion-toolbar color=\"primary\">\n    <ion-butt
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL3JlcXVlc3RzL2FkZC1yZXF1ZXN0cy9hZGQtcmVxdWVzdHMucGFnZS5zY3NzIn0= */"
+module.exports = "ion-card {\n  height: 200px; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Wb2x1bWVzL2hkZDIvVWRlbXkgSW9uaWNfQW5ndWxhci9pb25pYzRfY291cnNlL1JlbC1wLWF0aW9uLXQtc2hpcC9zcmMvYXBwL3JlcXVlc3RzL2FkZC1yZXF1ZXN0cy9hZGQtcmVxdWVzdHMucGFnZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0ksYUFBYSxFQUFBIiwiZmlsZSI6InNyYy9hcHAvcmVxdWVzdHMvYWRkLXJlcXVlc3RzL2FkZC1yZXF1ZXN0cy5wYWdlLnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyJpb24tY2FyZCB7XG4gICAgaGVpZ2h0OiAyMDBweDtcbn0iXX0= */"
 
 /***/ }),
 

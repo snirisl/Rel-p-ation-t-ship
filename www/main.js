@@ -1069,6 +1069,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app_routing_module__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./app-routing.module */ "./src/app/app-routing.module.ts");
 /* harmony import */ var _requests_add_requests_request_message_request_message_component__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./requests/add-requests/request-message/request-message.component */ "./src/app/requests/add-requests/request-message/request-message.component.ts");
 /* harmony import */ var _users_users_service__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./users/users.service */ "./src/app/users/users.service.ts");
+/* harmony import */ var _angular_service_worker__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! @angular/service-worker */ "./node_modules/@angular/service-worker/fesm5/service-worker.js");
+
 
 
 
@@ -1101,7 +1103,8 @@ var AppModule = /** @class */ (function () {
                 _angular_fire__WEBPACK_IMPORTED_MODULE_8__["AngularFireModule"].initializeApp(_environments_environment__WEBPACK_IMPORTED_MODULE_12__["environment"].firebaseConfig),
                 _angular_fire_database__WEBPACK_IMPORTED_MODULE_10__["AngularFireDatabaseModule"],
                 _angular_fire_auth__WEBPACK_IMPORTED_MODULE_9__["AngularFireAuthModule"],
-                _angular_fire_firestore__WEBPACK_IMPORTED_MODULE_11__["AngularFirestoreModule"]
+                _angular_fire_firestore__WEBPACK_IMPORTED_MODULE_11__["AngularFirestoreModule"],
+                _angular_service_worker__WEBPACK_IMPORTED_MODULE_17__["ServiceWorkerModule"].register('ngsw-worker.js', { enabled: _environments_environment__WEBPACK_IMPORTED_MODULE_12__["environment"].production })
             ],
             providers: [
                 _ionic_native_status_bar_ngx__WEBPACK_IMPORTED_MODULE_7__["StatusBar"],
@@ -1572,7 +1575,8 @@ var UsersService = /** @class */ (function () {
         this.userDoc.update(addedUser);
     };
     UsersService.prototype.deleteUser = function (deletedUser) {
-        this.userDoc = this.firestore.doc("added-users/" + deletedUser.id);
+        console.log('inside deleteUser', deletedUser.userId);
+        this.userDoc = this.firestore.doc("added-users/" + deletedUser.userId);
         this.userDoc.delete();
     };
     UsersService.prototype.add = function (newAddedUser) {
