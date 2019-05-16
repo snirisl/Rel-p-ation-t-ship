@@ -15,6 +15,7 @@ import {
 import { Platform, LoadingController } from '@ionic/angular';
 import * as Tesseract from 'tesseract.js';
 import { UsersService } from '../users.service';
+import * as Scanner from 'scanner.js';
 
 @Component({
   selector: 'app-image-picker',
@@ -111,6 +112,7 @@ export class ImagePickerComponent implements OnInit {
           })
           .finally(resultOrError => {
             const splitString = this.imageText.split(/\n/ig);
+            const splitString = this.imageText.split(/\n/gi);
             console.log(splitString);
             this.id = splitString[1];
             this.name = splitString[0];
