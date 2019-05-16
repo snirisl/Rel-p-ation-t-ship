@@ -111,7 +111,6 @@ export class ImagePickerComponent implements OnInit {
             console.log(this.imageText);
           })
           .finally(resultOrError => {
-            const splitString = this.imageText.split(/\n/ig);
             const splitString = this.imageText.split(/\n/gi);
             console.log(splitString);
             this.id = splitString[1];
