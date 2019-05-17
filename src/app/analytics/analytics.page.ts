@@ -8,7 +8,6 @@ import { FirebaseFirestore } from '@angular/fire';
 import { ToastController } from '@ionic/angular';
 import { Users } from '../users/users.model';
 
-
 @Component({
   selector: 'app-analytics',
   templateUrl: './analytics.page.html',
@@ -33,7 +32,9 @@ export class AnalyticsPage implements OnInit {
   ngOnInit() {}
 
   ionViewDidLoad() {
-    this.nurseRef = this.firestore.collection('added-users', ref => ref.where('type','==','n'));
+    this.nurseRef = this.firestore.collection('added-users', ref =>
+      ref.where('type', '==', 'n')
+    );
     this.nurseRef.valueChanges().subscribe(result => {
       this.nurses = result;
     });
@@ -58,7 +59,7 @@ export class AnalyticsPage implements OnInit {
       for (let request of this.chartData) {
         if (request.nurseName === nurse.name) {
           counter += 1;
-          sum += (request.completionDate - request.date);
+          sum += request.completionDate - request.date;
         }
       }
       avg = sum / counter;
@@ -66,11 +67,7 @@ export class AnalyticsPage implements OnInit {
     }
   }
 
-  createCharts(data) {
+  createCharts(data) {}
 
-  }
-
-  updateCharts(data) {
-
-  }
+  updateCharts(data) {}
 }
