@@ -3,12 +3,11 @@ import { RequestsService, RequestData } from '../requests.service';
 import { Request } from '../request.model';
 import {
   ActionSheetController,
-  ModalController,
-  AlertController
+  AlertController,
+  ToastController
 } from '@ionic/angular';
-import { RequestMessageComponent } from './request-message/request-message.component';
 import { Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { DepartmentRequestsService } from '../department-requests.service';
 import { StaticRequest } from '../static-requests.model';
 
@@ -26,8 +25,8 @@ export class AddRequestsPage implements OnInit, OnDestroy {
     private requestsService: RequestsService,
     private departmentRequestsService: DepartmentRequestsService,
     private actionSheetCtrl: ActionSheetController,
-    private alertController: AlertController,
-    private router: Router
+    private router: Router,
+    private toastCtrl: ToastController
   ) {}
 
   ngOnInit() {
@@ -52,7 +51,10 @@ export class AddRequestsPage implements OnInit, OnDestroy {
           {
             text: 'Send',
             handler: () => {
-              this.presentAlert(request);
+              this.requestsService.addRequest(request).then(() => {
+                this.router.navigateByUrl('/requests/tabs/my-requests');
+                this.presentToast();
+              });
             }
           },
           {
@@ -66,22 +68,12 @@ export class AddRequestsPage implements OnInit, OnDestroy {
       });
   }
 
-  async presentAlert(request: StaticRequest) {
-    const alert = await this.alertController.create({
-      header: 'Request Sent',
+  async presentToast() {
+    const toast = await this.toastCtrl.create({
       message:
-        'Your request has been submitted to the medical stuff.<br><br>Thank you.',
-      buttons: [
-        {
-          text: 'Close',
-          handler: () => {
-            this.requestsService.addRequest(request).then(() => {
-              this.router.navigateByUrl('/requests/tabs/my-requests');
-            });
-          }
-        }
-      ]
+        'Your request has been submitted to the medical stuff. Thank you.',
+      duration: 3000
     });
-    await alert.present();
+    toast.present();
   }
 }

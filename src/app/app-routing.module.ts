@@ -28,7 +28,8 @@ const routes: Routes = [
     path: 'assign-rooms',
     loadChildren: './assign-rooms/assign-rooms.module#AssignRoomsPageModule',
     canLoad: [AuthGuard]
-  }
+  },
+  { path: 'analytics', loadChildren: './analytics/analytics.module#AnalyticsPageModule' }
 ];
 
 @NgModule({
