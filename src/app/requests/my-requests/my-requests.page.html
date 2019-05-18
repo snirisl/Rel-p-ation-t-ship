@@ -83,7 +83,7 @@
                   "
                   color="primary"
                 >
-                  By {{ request.patientName }}
+                  Submitted By {{ request.patientName }}
                 </ion-text>
                 <ion-text
                   *ngIf="
@@ -92,8 +92,11 @@
                   "
                   color="primary"
                 >
-                  By {{ request.nurseName }}
+                Fulfilled By {{ request.nurseName }}
                 </ion-text>
+                <p *ngIf="request.status === 'Completed'">
+                    Submitted By {{ request.patientName }}
+                  </p>
                 <ion-label
                   slot="start"
                   text-right

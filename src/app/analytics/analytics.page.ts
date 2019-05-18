@@ -17,9 +17,12 @@ export class AnalyticsPage implements OnInit {
   nurseRef: AngularFirestoreCollection<any>;
   nurses: Users[];
   @ViewChild('valueBarsCanvas') valueBarCanvas;
+  @ViewChild('valueCommonCanvas') valueCommonCanvas;
   valueBarsChart: any;
+  valueCommonChart: any;
 
   chartData = null;
+  commonChartData = null;
 
   constructor(private firestore: AngularFirestore) {}
 
@@ -40,9 +43,11 @@ export class AnalyticsPage implements OnInit {
       if (this.chartData) {
         console.log('true ', result);
         this.updateCharts(result);
+        this.updateCommonCharts(result);
       } else {
         console.log('false ', result);
         this.createCharts(result);
+        this.createCommonChart(result);
       }
     });
   }
@@ -64,10 +69,22 @@ export class AnalyticsPage implements OnInit {
             millisecondsPerHour;
         }
       }
-      avg = sum / counter;
+      avg = +(sum / counter).toFixed();
       reportByNurse[nurse.name] = avg;
     }
     return reportByNurse;
+  }
+
+  getCommonReport() {
+    let reportCommonRequest = {};
+    for (let request of this.commonChartData) {
+      reportCommonRequest[request.title] = 0;
+    }
+    for (let request of this.commonChartData) {
+      reportCommonRequest[request.title] += 1;
+      console.log(reportCommonRequest[request.title]);
+    }
+    return reportCommonRequest;
   }
 
   async createCharts(data) {
@@ -109,6 +126,44 @@ export class AnalyticsPage implements OnInit {
     });
   }
 
+  async createCommonChart(data) {
+    this.commonChartData = data;
+    let colors = [];
+    let i = 0;
+    let commonChartData = await this.getCommonReport();
+    console.log('coomonChartData is :', commonChartData);
+    while (i < this.getObjectSize(commonChartData)) {
+      colors.push(this.getRandomColor());
+      i += 1;
+    }
+    this.valueCommonChart = new Chart(this.valueCommonCanvas.nativeElement, {
+      type: 'bar',
+      data: {
+        labels: Object.keys(commonChartData),
+        datasets: [
+          {
+            data: Object.values(commonChartData),
+            backgroundColor: colors
+          }
+        ]
+      },
+      options: {
+        legend: {
+          display: false
+        },
+        scales: {
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true
+              }
+            }
+          ]
+        }
+      }
+    });
+  }
+
   async updateCharts(data) {
     this.chartData = data;
     let chartData = await this.getReportValues();
@@ -117,6 +172,16 @@ export class AnalyticsPage implements OnInit {
       dataset.data = Object.values(chartData);
     });
     this.valueBarsChart.update();
+  }
+
+  async updateCommonCharts(data) {
+    this.commonChartData = data;
+    let commonChartData = await this.getCommonReport();
+
+    this.valueCommonChart.data.datasets.forEach(dataset => {
+      dataset.data = Object.values(commonChartData);
+    });
+    this.valueCommonChart.update();
   }
 
   getRandomColor() {
