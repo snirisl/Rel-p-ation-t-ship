@@ -41,11 +41,9 @@ export class AnalyticsPage implements OnInit {
     );
     this.ref.valueChanges().subscribe(result => {
       if (this.chartData) {
-        console.log('true ', result);
         this.updateCharts(result);
         this.updateCommonCharts(result);
       } else {
-        console.log('false ', result);
         this.createCharts(result);
         this.createCommonChart(result);
       }
@@ -82,18 +80,15 @@ export class AnalyticsPage implements OnInit {
     }
     for (let request of this.commonChartData) {
       reportCommonRequest[request.title] += 1;
-      console.log(reportCommonRequest[request.title]);
     }
     return reportCommonRequest;
   }
 
   async createCharts(data) {
     this.chartData = data;
-    console.log('chart data is: ' + this.chartData);
     let colors = [];
     let i = 0;
     let chartData = await this.getReportValues();
-    console.log('new chart data is: ' + chartData);
     while (i < this.getObjectSize(chartData)) {
       colors.push(this.getRandomColor());
       i += 1;
@@ -131,7 +126,6 @@ export class AnalyticsPage implements OnInit {
     let colors = [];
     let i = 0;
     let commonChartData = await this.getCommonReport();
-    console.log('coomonChartData is :', commonChartData);
     while (i < this.getObjectSize(commonChartData)) {
       colors.push(this.getRandomColor());
       i += 1;
