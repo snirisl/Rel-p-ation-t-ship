@@ -32,6 +32,12 @@
             <ion-label>Assign Rooms</ion-label>
           </ion-item>
         </ion-menu-toggle>
+        <ion-menu-toggle menu="m1" *ngIf="this.authService.userType !== 'p'">
+          <ion-item lines="none" routerLink="/analytics" button>
+            <ion-icon name="analytics"></ion-icon>
+            <ion-label>Analytics</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
         <ion-menu-toggle menu="m1">
           <ion-item lines="none" (click)="onLogout()" button>
             <ion-icon name="exit"></ion-icon>

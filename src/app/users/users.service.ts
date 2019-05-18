@@ -6,13 +6,7 @@ import {
   AngularFirestoreCollection
 } from '@angular/fire/firestore';
 import { AuthService } from '../auth/auth.service';
-import {
-  map,
-  tap,
-  publishBehavior,
-  publishReplay,
-  refCount
-} from 'rxjs/operators';
+import { map, tap, publishReplay, refCount } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Room } from './room.model';

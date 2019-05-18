@@ -1,14 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { RequestsService, RequestData } from '../requests.service';
 import { IonItemSliding, IonSegment, LoadingController } from '@ionic/angular';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
-import {
-  AngularFirestore,
-  AngularFirestoreDocument,
-  AngularFirestoreCollection
-} from '@angular/fire/firestore';
-import { Users } from 'src/app/users/users.model';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-my-requests',
@@ -29,7 +24,6 @@ export class MyRequestsPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log('in ngOnInit');
     this.segment.value = 'progress';
     this.requests$ = this.requestsService.getRequests();
   }
@@ -54,7 +48,6 @@ export class MyRequestsPage implements OnInit {
   }
 
   deleteRequest(slidingItem: IonItemSliding, request: RequestData) {
-    console.log('in delete');
     slidingItem.close();
     this.loadingCtrl
       .create({
@@ -62,7 +55,6 @@ export class MyRequestsPage implements OnInit {
       })
       .then(loadingEl => {
         loadingEl.present();
-        console.log('in delete 2');
         this.requestsService.deleteRequest(request).then(() => {
           loadingEl.dismiss();
         });
