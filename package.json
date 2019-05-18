@@ -24,7 +24,7 @@
     "@angular/router": "^7.2.2",
     "@angular/service-worker": "^7.2.2",
     "@capacitor/android": "^1.0.0-beta.24",
-    "@capacitor/cli": "1.0.0-beta.22",
+    "@capacitor/cli": "^1.0.0-beta.22",
     "@capacitor/core": "1.0.0-beta.22",
     "@capacitor/ios": "^1.0.0-beta.24",
     "@ionic-native/core": "^5.0.0",
@@ -42,7 +42,7 @@
   },
   "devDependencies": {
     "@angular-devkit/architect": "~0.12.3",
-    "@angular-devkit/build-angular": "~0.13.0",
+    "@angular-devkit/build-angular": "^0.13.9",
     "@angular-devkit/core": "~7.2.3",
     "@angular-devkit/schematics": "~7.2.3",
     "@angular/cli": "~7.3.8",

@@ -59,7 +59,7 @@ export class ImagePickerComponent implements OnInit {
     console.log('get to step of getting an image');
     Plugins.Camera.getPhoto({
       quality: 100,
-      source: CameraSource.Camera,
+      source: CameraSource.Prompt,
       correctOrientation: true,
       width: 200,
       allowEditing: true,
