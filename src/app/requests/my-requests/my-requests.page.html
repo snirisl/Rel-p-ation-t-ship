@@ -61,6 +61,7 @@
               <ion-label>
                 <h2>{{ request.title }}</h2>
                 <h5>{{ request.description }}</h5>
+                <p>Room Number: {{ request.room }}</p>
                 <p
                   *ngIf="
                     request.data !== '' && request.status === 'In progress'
