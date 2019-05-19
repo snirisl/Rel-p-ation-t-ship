@@ -77,12 +77,11 @@ export class UsersService {
   }
 
   updateAddedUser(addedUser: Users) {
-    this.userDoc = this.firestore.doc(`added-users/${addedUser.id}`);
+    this.userDoc = this.firestore.doc(`added-users/${addedUser.userId}`);
     this.userDoc.update(addedUser);
   }
 
   deleteUser(deletedUser: Users) {
-    console.log('inside deleteUser', deletedUser.userId);
     this.userDoc = this.firestore.doc(`added-users/${deletedUser.userId}`);
     this.userDoc.delete();
   }

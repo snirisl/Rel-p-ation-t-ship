@@ -12,7 +12,7 @@ import {
   CameraSource,
   CameraResultType
 } from '@capacitor/core';
-import { Platform, LoadingController } from '@ionic/angular';
+import { Platform, LoadingController, ToastController } from '@ionic/angular';
 import * as Tesseract from 'tesseract.js';
 import { UsersService } from '../users.service';
 import * as Scanner from 'scanner.js';
@@ -34,7 +34,8 @@ export class ImagePickerComponent implements OnInit {
   constructor(
     private platform: Platform,
     private loadingCtrl: LoadingController,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private toastCtrl: ToastController
   ) {}
 
   ngOnInit() {
@@ -67,7 +68,7 @@ export class ImagePickerComponent implements OnInit {
     })
       .then(image => {
         this.selectedImage = image.base64String;
-        this.imagePick.emit(image.base64String);
+        this.recognizeImage();
         console.log('success here');
       })
       .catch(error => {
@@ -85,7 +86,7 @@ export class ImagePickerComponent implements OnInit {
     fr.onload = () => {
       const dataUrl = fr.result.toString();
       this.selectedImage = dataUrl;
-      this.imagePick.emit(pickedFile);
+      this.recognizeImage();
     };
     fr.readAsDataURL(pickedFile);
   }
@@ -118,7 +119,16 @@ export class ImagePickerComponent implements OnInit {
             this.usersService.formIdFromOCR = splitString[1];
             this.usersService.formNameFromOCR = splitString[0];
             loadingEl.dismiss();
+            this.presentToast();
           });
       });
+  }
+
+  async presentToast() {
+    const toast = await this.toastCtrl.create({
+      message: 'Sticker recognized successfuly, please check the accuracy of the data before submitting.',
+      duration: 3000
+    });
+    toast.present();
   }
 }

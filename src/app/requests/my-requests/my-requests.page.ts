@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { RequestsService, RequestData } from '../requests.service';
-import { IonItemSliding, IonSegment, LoadingController } from '@ionic/angular';
+import { IonItemSliding, IonSegment, LoadingController, ToastController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { AngularFirestore } from '@angular/fire/firestore';
@@ -20,7 +20,8 @@ export class MyRequestsPage implements OnInit {
     private requestsService: RequestsService,
     private loadingCtrl: LoadingController,
     public authService: AuthService,
-    public firestore: AngularFirestore
+    public firestore: AngularFirestore,
+    private toastCtrl: ToastController
   ) {}
 
   ngOnInit() {
@@ -43,21 +44,17 @@ export class MyRequestsPage implements OnInit {
         loadingEl.present();
         this.requestsService.updateRequest(request).then(() => {
           loadingEl.dismiss();
+          this.presentToast();
         });
       });
   }
 
-  deleteRequest(slidingItem: IonItemSliding, request: RequestData) {
-    slidingItem.close();
-    this.loadingCtrl
-      .create({
-        message: 'Deleting Request...'
-      })
-      .then(loadingEl => {
-        loadingEl.present();
-        this.requestsService.deleteRequest(request).then(() => {
-          loadingEl.dismiss();
-        });
-      });
+  async presentToast() {
+    const toast = await this.toastCtrl.create({
+      message: 'Request Completed Successfully.',
+      duration: 3000
+    });
+    toast.present();
   }
+
 }

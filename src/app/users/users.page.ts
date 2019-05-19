@@ -112,10 +112,6 @@ export class UsersPage implements OnInit, OnDestroy {
       .then(alertEl => alertEl.present());
   }
 
-  onImagePicked(imageData: string) {
-
-  }
-
   changeOcrFlag() {
     this.useOcrFlag = !this.useOcrFlag;
   }

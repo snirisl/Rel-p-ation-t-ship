@@ -40,21 +40,8 @@
                       [(ngModel)]="user.name"
                     ></ion-input>
                   </ion-item>
+
                   <ion-item>
-                    <ion-select
-                      placeholder="Select Type"
-                      interface="popover"
-                      ngModel
-                      name="type"
-                      required
-                      #typeCtrl="ngModel"
-                      [(ngModel)]="user.type"
-                    >
-                      <ion-select-option value="p">Patient</ion-select-option>
-                      <ion-select-option value="n">Nurse</ion-select-option>
-                    </ion-select>
-                  </ion-item>
-                  <ion-item *ngIf="typeCtrl.value == 'p'">
                     <ion-select
                       placeholder="Select Room Number"
                       interface="popover"
