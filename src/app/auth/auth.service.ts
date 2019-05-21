@@ -5,13 +5,11 @@ import { BehaviorSubject, from, Observable } from 'rxjs';
 import { User } from './user.model';
 import { map, tap } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
-import { stringify } from '@angular/core/src/render3/util';
 import { Users } from '../users/users.model';
 import {
   AngularFirestoreDocument,
   AngularFirestore
 } from '@angular/fire/firestore';
-import { UserStateService } from './user-state.service';
 
 export interface AuthResponseData {
   kind: string;
@@ -31,6 +29,8 @@ export class AuthService {
   private _userType: string;
   private _userName: string;
   private _userRoom: string;
+  private _userId: string;
+  private userDoc: AngularFirestoreDocument<Users>;
 
   constructor(private http: HttpClient, private firestore: AngularFirestore) {
     from(Plugins.Storage.get({ key: 'authData' }))
@@ -51,9 +51,15 @@ export class AuthService {
           this._userName = parsedData.userName;
           this._userType = parsedData.userType;
           this._userRoom = parsedData.userRoom;
+          this._userId = parsedData.userId;
         })
       )
       .subscribe();
+  }
+
+  getCurrUser() {
+    this.userDoc = this.firestore.doc('added-users/' + this._userId);
+    return this.userDoc.valueChanges();
   }
 
   get userName() {

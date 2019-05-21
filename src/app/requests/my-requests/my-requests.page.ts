@@ -4,6 +4,7 @@ import { IonItemSliding, IonSegment, LoadingController, ToastController } from '
 import { Observable } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { Users } from 'src/app/users/users.model';
 
 @Component({
   selector: 'app-my-requests',
@@ -13,7 +14,9 @@ import { AngularFirestore } from '@angular/fire/firestore';
 export class MyRequestsPage implements OnInit {
   status = 'progress';
   requests$: Observable<RequestData[]>;
-
+  curr_user$: Observable<Users>;
+  assignedRooms: string[];
+  isLoading = true;
   @ViewChild(IonSegment) segment: IonSegment;
 
   constructor(
@@ -25,8 +28,16 @@ export class MyRequestsPage implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.isLoading = true;
     this.segment.value = 'progress';
     this.requests$ = this.requestsService.getRequests();
+    this.curr_user$ = this.authService.getCurrUser();
+    this.curr_user$.subscribe(x => {
+      this.assignedRooms = x.rooms;
+      console.log('assigned rooms are: ' + this.assignedRooms);
+      this.isLoading = false;
+      console.log('is loading: ' + this.isLoading);
+    });
   }
 
   onFilterUpdate(event: any) {
