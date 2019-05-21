@@ -72,7 +72,8 @@ export class AddRequestsPage implements OnInit, OnDestroy {
     const toast = await this.toastCtrl.create({
       message:
         'Your request has been submitted to the medical stuff. Thank you.',
-      duration: 3000
+      duration: 3000,
+      color: 'secondary',
     });
     toast.present();
   }

@@ -52,7 +52,8 @@ export class MyRequestsPage implements OnInit {
   async presentToast() {
     const toast = await this.toastCtrl.create({
       message: 'Request Completed Successfully.',
-      duration: 3000
+      duration: 3000,
+      color: 'secondary'
     });
     toast.present();
   }

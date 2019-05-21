@@ -112,7 +112,7 @@ export class AnalyticsPage implements OnInit {
           yAxes: [
             {
               ticks: {
-                beginAtZero: false
+                beginAtZero: true
               }
             }
           ]

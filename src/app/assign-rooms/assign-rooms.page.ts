@@ -63,13 +63,4 @@ export class AssignRoomsPage implements OnInit {
     });
     this.unassignRoomsVar = [];
   }
-
-  // doRefresh(event) {
-  //   console.log('Begin async operation');
-
-  //   setTimeout(() => {
-  //     this.ngOnInit();
-  //     event.target.complete();
-  //   }, 2000);
-  // }
 }

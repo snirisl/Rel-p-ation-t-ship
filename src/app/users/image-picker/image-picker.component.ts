@@ -127,7 +127,8 @@ export class ImagePickerComponent implements OnInit {
   async presentToast() {
     const toast = await this.toastCtrl.create({
       message: 'Sticker recognized successfuly, please check the accuracy of the data before submitting.',
-      duration: 3000
+      duration: 3000,
+      color: 'primary'
     });
     toast.present();
   }

@@ -83,7 +83,7 @@ export class RequestsService {
         patientId: this.currentUser,
         patientName: this.authService.userName,
         nurseId: '',
-        room: '103',
+        room: this.authService.userRoom,
         id: id
       });
   }

@@ -62,7 +62,8 @@ export class ManageUsersPage implements OnInit {
   async presentUpdateToast() {
     const toast = await this.toastCtrl.create({
       message: 'User profile updated.',
-      duration: 3000
+      duration: 3000,
+      color: 'primary'
     });
     toast.present();
   }
@@ -70,7 +71,8 @@ export class ManageUsersPage implements OnInit {
   async presentDeleteToast() {
     const toast = await this.toastCtrl.create({
       message: 'User profile deleted.',
-      duration: 3000
+      duration: 3000,
+      color: 'primary'
     });
     toast.present();
   }

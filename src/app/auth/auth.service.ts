@@ -30,15 +30,9 @@ export class AuthService {
   private _user = new BehaviorSubject<User>(null);
   private _userType: string;
   private _userName: string;
-  private _userObsv: Observable<any>;
-  private user: AngularFirestoreDocument<Users>;
-  private userFetched: Observable<Users[]>;
+  private _userRoom: string;
 
-  constructor(
-    private http: HttpClient,
-    private firestore: AngularFirestore,
-    private userStateService: UserStateService
-  ) {
+  constructor(private http: HttpClient, private firestore: AngularFirestore) {
     from(Plugins.Storage.get({ key: 'authData' }))
       .pipe(
         map(storedData => {
@@ -52,9 +46,11 @@ export class AuthService {
             email: string;
             userType: string;
             userName: string;
+            userRoom: string;
           };
           this._userName = parsedData.userName;
           this._userType = parsedData.userType;
+          this._userRoom = parsedData.userRoom;
         })
       )
       .subscribe();
@@ -72,6 +68,7 @@ export class AuthService {
       }
       this._userType = x.type;
       this._userName = x.name;
+      this._userRoom = x.room;
     });
   }
 
@@ -101,6 +98,10 @@ export class AuthService {
 
   get userType() {
     return this._userType;
+  }
+
+  get userRoom() {
+    return this._userRoom;
   }
 
   login(email: string, password: string) {
@@ -188,7 +189,8 @@ export class AuthService {
       expirationTime.toISOString(),
       userData.email,
       this.userType,
-      this.userName
+      this.userName,
+      this.userRoom
     );
   }
 
@@ -198,7 +200,8 @@ export class AuthService {
     tokenExpirationDate: string,
     email: string,
     userType: string,
-    userName: string
+    userName: string,
+    userRoom: string
   ) {
     const data = JSON.stringify({
       userId: userId,
@@ -206,7 +209,8 @@ export class AuthService {
       tokenExpirationDate: tokenExpirationDate,
       email: email,
       userType: userType,
-      userName: userName
+      userName: userName,
+      userRoom: userRoom
     });
     Plugins.Storage.set({ key: 'authData', value: data });
   }
