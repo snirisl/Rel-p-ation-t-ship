@@ -23,21 +23,21 @@
         <div
           text-center
           *ngIf="
-            !(requests$ | async | filter: status:'status') &&
+            (requests$ | async | filter: status:'status')?.length <= 0 &&
             status === 'progress'
           "
         >
           <p>
-            No Requests found! Please create one first!
+            No Requests found!
           </p>
-          <ion-button color="primary" routerLink="/requests/tabs/add-requests"
+          <ion-button color="primary" routerLink="/requests/tabs/add-requests" *ngIf="this.authService.userType === 'p'"
             >Add Request</ion-button
           >
         </div>
         <div
           text-center
           *ngIf="
-            !(requests$ | async | filter: status:'status') &&
+            (requests$ | async | filter: status:'status')?.length <= 0 &&
             status === 'completed'
           "
         >

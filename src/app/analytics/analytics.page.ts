@@ -6,6 +6,7 @@ import {
 } from '@angular/fire/firestore';
 import { Users } from '../users/users.model';
 import { Chart } from 'chart.js';
+import { exists } from 'fs';
 @Component({
   selector: 'app-analytics',
   templateUrl: './analytics.page.html',
@@ -196,5 +197,9 @@ export class AnalyticsPage implements OnInit {
       }
     }
     return size;
+  }
+
+  exit() {
+    window.location.reload();
   }
 }
