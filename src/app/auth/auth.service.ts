@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { BehaviorSubject, from, Observable } from 'rxjs';
+import { BehaviorSubject, from } from 'rxjs';
 import { User } from './user.model';
 import { map, tap } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
 import { Users } from '../users/users.model';
 import {
-  AngularFirestoreDocument,
   AngularFirestore
 } from '@angular/fire/firestore';
 
@@ -30,7 +29,6 @@ export class AuthService {
   private _userName: string;
   private _userRoom: string;
   private _userId: string;
-  private userDoc: AngularFirestoreDocument<Users>;
 
   constructor(private http: HttpClient, private firestore: AngularFirestore) {
     from(Plugins.Storage.get({ key: 'authData' }))
@@ -55,11 +53,6 @@ export class AuthService {
         })
       )
       .subscribe();
-  }
-
-  getCurrUser() {
-    this.userDoc = this.firestore.doc('added-users/' + this._userId);
-    return this.userDoc.valueChanges();
   }
 
   get userName() {

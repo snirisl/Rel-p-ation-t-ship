@@ -28,16 +28,8 @@ export class MyRequestsPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.isLoading = true;
     this.segment.value = 'progress';
     this.requests$ = this.requestsService.getRequests();
-    this.curr_user$ = this.authService.getCurrUser();
-    this.curr_user$.subscribe(x => {
-      this.assignedRooms = x.rooms;
-      console.log('assigned rooms are: ' + this.assignedRooms);
-      this.isLoading = false;
-      console.log('is loading: ' + this.isLoading);
-    });
   }
 
   onFilterUpdate(event: any) {
@@ -65,6 +57,7 @@ export class MyRequestsPage implements OnInit {
       message: 'Request Completed Successfully.',
       duration: 3000,
       color: 'secondary'
+      duration: 3000
     });
     toast.present();
   }
