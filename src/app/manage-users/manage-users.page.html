@@ -28,7 +28,7 @@
               User Type: {{ user.type == 'p' ? 'Patient' : 'Nurse' }}
             </p>
             <div *ngIf="editState && userToEdit.id == user.id">
-              <form #f="ngForm" (ngSubmit)="update(user)">
+              <form #f="ngForm" (ngSubmit)="update(user)" >
                 <ion-list>
                   <ion-item>
                     <ion-input
