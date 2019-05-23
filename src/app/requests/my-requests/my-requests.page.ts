@@ -1,15 +1,21 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { RequestsService, RequestData } from '../requests.service';
-import { IonItemSliding, IonSegment, LoadingController, ToastController } from '@ionic/angular';
+import {
+  IonItemSliding,
+  IonSegment,
+  LoadingController,
+  ToastController
+} from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Users } from 'src/app/users/users.model';
 
+
 @Component({
   selector: 'app-my-requests',
   templateUrl: './my-requests.page.html',
-  styleUrls: ['./my-requests.page.scss']
+  styleUrls: ['./my-requests.page.scss'],
 })
 export class MyRequestsPage implements OnInit {
   status = 'progress';
@@ -56,9 +62,8 @@ export class MyRequestsPage implements OnInit {
     const toast = await this.toastCtrl.create({
       message: 'Request Completed Successfully.',
       duration: 3000,
-      color: 'secondary',
+      color: 'secondary'
     });
     toast.present();
   }
-
 }

@@ -7,6 +7,7 @@ import {
 import { Users } from '../users/users.model';
 import { Chart } from 'chart.js';
 import { exists } from 'fs';
+import { switchMap, take } from 'rxjs/operators';
 @Component({
   selector: 'app-analytics',
   templateUrl: './analytics.page.html',
@@ -28,39 +29,65 @@ export class AnalyticsPage implements OnInit {
   constructor(private firestore: AngularFirestore) {}
 
   ngOnInit() {
-    // get Nurses list
-    this.nurseRef = this.firestore.collection('added-users', ref =>
-      ref.where('type', '==', 'n')
-    );
-    this.nurseRef.valueChanges().subscribe(result => {
-      this.nurses = result;
-    });
+    this.firestore
+      .collection('added-users', ref => ref.where('type', '==', 'n'))
+      .valueChanges()
+      .pipe(
+        switchMap((nurses: Users[]) => {
+          this.nurses = nurses;
+          console.log(this.nurses);
+          return this.firestore
+            .collection('requests', ref =>
+              ref.where('status', '==', 'Completed')
+            )
+            .valueChanges();
+        })
+      )
+      .subscribe(result => {
+        if (this.chartData) {
+          this.updateCharts(result);
+        } else {
+          this.createCharts(result);
+        }
+        if (this.commonChartData) {
+          this.updateCommonCharts(result);
+        } else {
+          this.createCommonChart(result);
+        }
+      });
+    // // get Nurses list
+    // this.nurseRef = this.firestore.collection('added-users', ref =>
+    //   ref.where('type', '==', 'n')
+    // );
+    // this.nurseRef.valueChanges().subscribe(result => {
+    //   this.nurses = result;
+    // });
 
-    // get Completed Requests
-    this.ref = this.firestore.collection('requests', ref =>
-      ref.where('status', '==', 'Completed')
-    );
-    this.ref.valueChanges().subscribe(result => {
-      if (this.chartData) {
-        this.updateCharts(result);
-        this.updateCommonCharts(result);
-      } else {
-        this.createCharts(result);
-        this.createCommonChart(result);
-      }
-    });
+    // // get Completed Requests
+    // this.ref = this.firestore.collection('requests', ref =>
+    //   ref.where('status', '==', 'Completed')
+    // );
+    // this.ref.valueChanges().subscribe(result => {
+    //   if (this.chartData) {
+    //     this.updateCharts(result);
+    //     this.updateCommonCharts(result);
+    //   } else {
+    //     this.createCharts(result);
+    //     this.createCommonChart(result);
+    //   }
+    // });
   }
 
   getReportValues() {
-    let reportByNurse = {};
-    let millisecondsPerHour = 1000 * 60 * 60;
-    let counter;
-    let sum;
-    let avg;
-    for (let nurse of this.nurses) {
+    const reportByNurse = {};
+    const millisecondsPerHour = 1000 * 60 * 60;
+    let counter: number;
+    let sum: number;
+    let avg: number;
+    for (const nurse of this.nurses) {
       counter = 0;
       sum = 0;
-      for (let request of this.chartData) {
+      for (const request of this.chartData) {
         if (request.nurseName === nurse.name) {
           counter += 1;
           sum +=
@@ -75,11 +102,11 @@ export class AnalyticsPage implements OnInit {
   }
 
   getCommonReport() {
-    let reportCommonRequest = {};
-    for (let request of this.commonChartData) {
+    const reportCommonRequest = {};
+    for (const request of this.commonChartData) {
       reportCommonRequest[request.title] = 0;
     }
-    for (let request of this.commonChartData) {
+    for (const request of this.commonChartData) {
       reportCommonRequest[request.title] += 1;
     }
     return reportCommonRequest;
@@ -87,9 +114,9 @@ export class AnalyticsPage implements OnInit {
 
   async createCharts(data) {
     this.chartData = data;
-    let colors = [];
+    const colors = [];
     let i = 0;
-    let chartData = await this.getReportValues();
+    const chartData = await this.getReportValues();
     while (i < this.getObjectSize(chartData)) {
       colors.push(this.getRandomColor());
       i += 1;
@@ -124,9 +151,9 @@ export class AnalyticsPage implements OnInit {
 
   async createCommonChart(data) {
     this.commonChartData = data;
-    let colors = [];
+    const colors = [];
     let i = 0;
-    let commonChartData = await this.getCommonReport();
+    const commonChartData = await this.getCommonReport();
     while (i < this.getObjectSize(commonChartData)) {
       colors.push(this.getRandomColor());
       i += 1;
@@ -161,7 +188,7 @@ export class AnalyticsPage implements OnInit {
 
   async updateCharts(data) {
     this.chartData = data;
-    let chartData = await this.getReportValues();
+    const chartData = await this.getReportValues();
 
     this.valueBarsChart.data.datasets.forEach(dataset => {
       dataset.data = Object.values(chartData);
@@ -171,7 +198,7 @@ export class AnalyticsPage implements OnInit {
 
   async updateCommonCharts(data) {
     this.commonChartData = data;
-    let commonChartData = await this.getCommonReport();
+    const commonChartData = await this.getCommonReport();
 
     this.valueCommonChart.data.datasets.forEach(dataset => {
       dataset.data = Object.values(commonChartData);
@@ -180,9 +207,9 @@ export class AnalyticsPage implements OnInit {
   }
 
   getRandomColor() {
-    let letters = '0123456789ABCDEF'.split('');
+    const letters = '0123456789ABCDEF'.split('');
     let color = '#';
-    for (var i = 0; i < 6; i++) {
+    for (let i = 0; i < 6; i++) {
       color += letters[Math.floor(Math.random() * 16)];
     }
     return color;
@@ -190,7 +217,7 @@ export class AnalyticsPage implements OnInit {
 
   getObjectSize(obj: {}) {
     let size = 0,
-      key;
+      key: any;
     for (key in obj) {
       if (obj.hasOwnProperty(key)) {
         size++;

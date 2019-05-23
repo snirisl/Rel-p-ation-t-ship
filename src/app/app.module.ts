@@ -15,6 +15,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { RequestMessageComponent } from './requests/add-requests/request-message/request-message.component';
 import { UsersService } from './users/users.service';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [AppComponent, RequestMessageComponent],
@@ -28,7 +29,8 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     AngularFireDatabaseModule,
     AngularFireAuthModule,
     AngularFirestoreModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    BrowserAnimationsModule
   ],
   providers: [
     StatusBar,

@@ -30,7 +30,10 @@
           <p>
             No Requests found!
           </p>
-          <ion-button color="primary" routerLink="/requests/tabs/add-requests" *ngIf="this.authService.userType === 'p'"
+          <ion-button
+            color="primary"
+            routerLink="/requests/tabs/add-requests"
+            *ngIf="this.authService.userType === 'p'"
             >Add Request</ion-button
           >
         </div>
@@ -47,7 +50,9 @@
         </div>
         <ion-list *ngIf="requests$ | async as reqList">
           <ion-item-sliding
-            *ngFor="let request of reqList | filter: status:'status'"
+            *ngFor="
+              let request of reqList | filter: status:'status'
+            "
             #slidingItem
           >
             <ion-item
