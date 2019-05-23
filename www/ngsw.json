@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1558521406201,
+  "timestamp": 1558609965664,
   "index": "/index.html",
   "assetGroups": [
     {
@@ -8,7 +8,7 @@
       "installMode": "prefetch",
       "updateMode": "prefetch",
       "urls": [
-        "/1.0b8d933c9c605cb3601e.js",
+        "/1.4718007b839745a6c806.js",
         "/10.9dfc5381b71f20b8d830.js",
         "/100.08b97c374e6a1bfc1607.js",
         "/101.e95b2d73fcdbea179c6d.js",
@@ -60,7 +60,7 @@
         "/147.bf85f5aab650bc26c0c6.js",
         "/148.7a632c856faf28fe064c.js",
         "/149.679fdfa5084a6b4aa60b.js",
-        "/15.9b0419a61f365afdcd1d.js",
+        "/15.a30952756a8e5dc0ad63.js",
         "/150.090e95d88599670002b0.js",
         "/151.088e08ef73fa6ae41cc6.js",
         "/152.0fcab220a63b1487d657.js",
@@ -104,8 +104,8 @@
         "/19.e18ee34f89e96198e80f.js",
         "/2.4e6419809b84bbf95b12.js",
         "/20.22d1b9f0b977d843d030.js",
-        "/21.978ba4e9d142dc23e7b0.js",
-        "/22.d8f27281dcd9b7da05c9.js",
+        "/21.f73d121ea3389a91b9b8.js",
+        "/22.53b4a17a30113297c4ca.js",
         "/23.0545e4643b83c44361e9.js",
         "/24.b93e7c61cd5192bddf9c.js",
         "/25.e95041ac54c0d78637aa.js",
@@ -192,10 +192,10 @@
         "/common.80bde2b74acb5b9a8010.js",
         "/es2015-polyfills.0115e91e0dcd888f6294.js",
         "/index.html",
-        "/main.83507eeb9729a68d7601.js",
+        "/main.7c4c9b54313d622fbca3.js",
         "/polyfills.4601d1912f38da6a8049.js",
-        "/runtime.5e50ea466e16bd1e1a24.js",
-        "/styles.0cb8a6f867b6553cdbbe.css"
+        "/runtime.989ec440c49387ec9cae.js",
+        "/styles.d423bf7bd2c74b139e9f.css"
       ],
       "patterns": []
     },
@@ -204,6 +204,10 @@
       "installMode": "lazy",
       "updateMode": "prefetch",
       "urls": [
+        "/assets/Images/Get_up.jpg",
+        "/assets/Images/Pain.jpg",
+        "/assets/Images/Shower.jpg",
+        "/assets/Images/Towels.jpeg",
         "/assets/data/superheroes.json",
         "/assets/icon/favicon.png",
         "/assets/icons/icon-128x128.png",
@@ -221,7 +225,7 @@
   ],
   "dataGroups": [],
   "hashTable": {
-    "/1.0b8d933c9c605cb3601e.js": "12a13fd85f79cf1444b3c7a59f71f9c377e05f59",
+    "/1.4718007b839745a6c806.js": "fc2b776c5fd615e529be23234f2a9e76be2ff2ba",
     "/10.9dfc5381b71f20b8d830.js": "97212f876fcf1ba1ba3208e95f6756f596381b05",
     "/100.08b97c374e6a1bfc1607.js": "a86c39e2ac65ff54af085ef1b849f44e19c5d0e8",
     "/101.e95b2d73fcdbea179c6d.js": "2cecd51d52d300dfb6853c6f55c56334765d6c23",
@@ -273,7 +277,7 @@
     "/147.bf85f5aab650bc26c0c6.js": "8db7da79c533b545c3a302c321fe8575f89bdd52",
     "/148.7a632c856faf28fe064c.js": "089e22a20b55307a3f77a6579ecf1d28ee2bd410",
     "/149.679fdfa5084a6b4aa60b.js": "9751251eae6f70ceb7432d31b03c39731e5b7e2d",
-    "/15.9b0419a61f365afdcd1d.js": "58cf5359cdcc0432837d8c771245aa382e110f87",
+    "/15.a30952756a8e5dc0ad63.js": "42b00081ccd1521e80692c7047ac0bd2133b0e6e",
     "/150.090e95d88599670002b0.js": "f76d974481c7b4ce11623a141fbac18bc7f58434",
     "/151.088e08ef73fa6ae41cc6.js": "4b0e85fa3939f2332cb801b1e972ae8aad5c1d93",
     "/152.0fcab220a63b1487d657.js": "daa95951ee056581db29eb2cfb661ac6b6c63c12",
@@ -317,8 +321,8 @@
     "/19.e18ee34f89e96198e80f.js": "3e864fc8a12fc5ebb730ff77b7e0a389610d4927",
     "/2.4e6419809b84bbf95b12.js": "dcad8f1ee16136b08ff70aa7883ce8ce55f05a52",
     "/20.22d1b9f0b977d843d030.js": "cbe16e8fd75f4fac98bdea3759fc9d7af6e01f62",
-    "/21.978ba4e9d142dc23e7b0.js": "c03a11e431546e62664452eb163aada83a48edf0",
-    "/22.d8f27281dcd9b7da05c9.js": "3238c55362bf974bcad1c10e12682a8cd53faddd",
+    "/21.f73d121ea3389a91b9b8.js": "ca1601d81fe2d961b73832316326712a329dba6f",
+    "/22.53b4a17a30113297c4ca.js": "16bd701f27f4c2bc762e573429d2add0f230c762",
     "/23.0545e4643b83c44361e9.js": "7d9d0a6d78b81f7a229f21b5d0821e63c7446d5a",
     "/24.b93e7c61cd5192bddf9c.js": "de2718c588f75ff2cb7ff71e2c2c2673f8262ce2",
     "/25.e95041ac54c0d78637aa.js": "5c4b2601673f4b14b0a5efb3ee7164125bedef53",
@@ -402,6 +406,10 @@
     "/97.e6a92c3b7a0ef69bcd34.js": "4189bf73ce4463a0ea842521d8fd39eb39a20bea",
     "/98.9f18d4058d1f9de80dbb.js": "572998375e199a1e5f076dd75728b8dced3cc022",
     "/99.ff46c1f16dd9d00659dd.js": "15d2b821e836443e8ec3631d614ba35cf6957fed",
+    "/assets/Images/Get_up.jpg": "3674b7aa7cb7524843204e8e92331e367ffda80b",
+    "/assets/Images/Pain.jpg": "7f1ace1a097ec16dd1fa100a574406761915d4a3",
+    "/assets/Images/Shower.jpg": "2ecefe077627101bda04b34812d222b88a044dfb",
+    "/assets/Images/Towels.jpeg": "224f4966f114badaf17653bace5113ca2dccf273",
     "/assets/data/superheroes.json": "645c2c35ec06998bb2f65a3b8af4ed16b16551c1",
     "/assets/icon/favicon.png": "7798b8e0eb61d7375c245af78bbf5c916932bf13",
     "/assets/icons/icon-128x128.png": "dae3b6ed49bdaf4327b92531d4b5b4a5d30c7532",
@@ -415,11 +423,11 @@
     "/assets/shapes.svg": "5413e95adabcb2cb639970051f55e0ddb64ace53",
     "/common.80bde2b74acb5b9a8010.js": "009932b753d3304e9e62b080649763495df1e537",
     "/es2015-polyfills.0115e91e0dcd888f6294.js": "408e46c6ffd83de03db205657b27640383ab2656",
-    "/index.html": "86ad70ca819f6d3f86698a59eafeb66694d9018b",
-    "/main.83507eeb9729a68d7601.js": "6455bd2fc8907827c9e9e29af45e98b5211f3ea0",
+    "/index.html": "1a7ef3784bc3437034224ed31986081fb9da5d4c",
+    "/main.7c4c9b54313d622fbca3.js": "533d7d74399a6bd8c2a27f12a9cbdd3cfc286c6b",
     "/polyfills.4601d1912f38da6a8049.js": "c074fd1d16b652071357644b9e998eefd900e9c5",
-    "/runtime.5e50ea466e16bd1e1a24.js": "e21572f38415d4752927a6a496744bf65a8a9fb5",
-    "/styles.0cb8a6f867b6553cdbbe.css": "2793b11edae302b512898a28d8aebd99a7a698ec"
+    "/runtime.989ec440c49387ec9cae.js": "b1c7ae3c7e427e03bc464119744cb60e9c972d35",
+    "/styles.d423bf7bd2c74b139e9f.css": "2c453de5a47c407795332588cf0425af728a7d50"
   },
   "navigationUrls": [
     {
