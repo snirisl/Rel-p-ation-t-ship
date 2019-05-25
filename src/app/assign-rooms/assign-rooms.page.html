@@ -59,35 +59,5 @@
         </ion-col>
       </ion-row>
     </form>
-    <form #f2="ngForm" (ngSubmit)="unassignRooms()">
-      <ion-row>
-        <ion-col size-sm="6" offset-sm="3">
-          <ion-list>
-            <ion-label position="floating">Choose rooms to unassign:</ion-label>
-            <ion-select
-              placeholder="Select Rooms"
-              [(ngModel)]="unassignRoomsVar"
-              name="rooms"
-              required
-              multiple="true"
-            >
-              <ion-select-option
-                *ngFor="let room of roomList$ | async"
-                [value]="room"
-              >
-                {{ room }}
-              </ion-select-option>
-            </ion-select>
-          </ion-list>
-          <ion-button
-            type="submit"
-            color="primary"
-            expand="block"
-            [disabled]="!f2.valid"
-            >UnAssign</ion-button
-          >
-        </ion-col>
-      </ion-row>
-    </form>
   </ion-grid>
 </ion-content>

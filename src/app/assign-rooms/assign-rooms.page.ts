@@ -8,6 +8,7 @@ import {
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-assign-rooms',
@@ -26,7 +27,8 @@ export class AssignRoomsPage implements OnInit {
   constructor(
     private userService: UsersService,
     private authService: AuthService,
-    private firestore: AngularFirestore
+    private firestore: AngularFirestore,
+    private toastCtrl: ToastController
   ) {}
 
   ngOnInit() {
@@ -41,7 +43,7 @@ export class AssignRoomsPage implements OnInit {
     this.nurseId$ = this.authService.userId;
   }
 
-  assignRooms() {
+  async assignRooms() {
     let nurseId: string;
     this.nurseId$.subscribe(x => {
       nurseId = x;
@@ -51,22 +53,20 @@ export class AssignRoomsPage implements OnInit {
       .update({ rooms: this.assignRoomsVar })
       .then(x => {
         this.assignRoomsVar = [];
+        this.presentToast();
       });
     // this.assignRoomsVar.forEach(element => {
     //   this.roomDoc = this.firestore.doc('rooms/' + element);
     //   this.roomDoc.update({ assignedNurse: nurseId });
     // });
   }
-  unassignRooms() {
-    let nurseId: string;
-    this.nurseId$.subscribe(x => {
-      nurseId = x;
+
+  async presentToast() {
+    const toast = await this.toastCtrl.create({
+      message: 'New room List Was Assigned Successfully.',
+      duration: 3000,
+      color: 'secondary'
     });
-    console.log(this.unassignRoomsVar);
-    this.unassignRoomsVar.forEach(element => {
-      this.roomDoc = this.firestore.doc('rooms/' + element);
-      this.roomDoc.update({ assignedNurse: '' });
-    });
-    this.unassignRoomsVar = [];
+    toast.present();
   }
 }
