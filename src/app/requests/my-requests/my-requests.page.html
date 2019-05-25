@@ -17,7 +17,7 @@
       ><ion-label>Completed Requests</ion-label></ion-segment-button
     >
   </ion-segment>
-  <ion-grid>
+  <ion-grid *ngIf="isLoading | async">
     <ion-row>
       <ion-col size="12" size-sm="8" offset-sm="2" text-center>
         <div
@@ -59,7 +59,7 @@
               *ngIf="
                 (this.authService.userType === 'p' &&
                   request.patientName === this.authService.userName) ||
-                this.authService.userType === 'n' 
+                  (this.authService.userType === 'n' && this.assignedRooms.includes(request.room))
               " class="animated pulse faster"
             >
               <ion-thumbnail slot="start">

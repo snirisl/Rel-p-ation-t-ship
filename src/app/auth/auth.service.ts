@@ -7,7 +7,7 @@ import { map, tap } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
 import { Users } from '../users/users.model';
 import {
-  AngularFirestore
+  AngularFirestore, AngularFirestoreDocument
 } from '@angular/fire/firestore';
 
 export interface AuthResponseData {
@@ -29,6 +29,7 @@ export class AuthService {
   private _userName: string;
   private _userRoom: string;
   private _userId: string;
+  private userDoc: AngularFirestoreDocument<Users>;
 
   constructor(private http: HttpClient, private firestore: AngularFirestore) {
     from(Plugins.Storage.get({ key: 'authData' }))
@@ -53,6 +54,11 @@ export class AuthService {
         })
       )
       .subscribe();
+  }
+
+  getCurrUser() {
+    this.userDoc = this.firestore.doc('added-users/' + this._userId);
+    return this.userDoc.valueChanges();
   }
 
   get userName() {
