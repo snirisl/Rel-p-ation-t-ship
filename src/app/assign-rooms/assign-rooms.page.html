@@ -16,13 +16,13 @@
       <ion-col size-sm="6" offset-sm="3">
         <ion-card *ngIf="roomList$ | async as roomList">
           <ion-card-title text-center>Your assigned rooms</ion-card-title>
-          <ion-card-header *ngIf="(roomList$ | async)?.length <= 0"
+          <ion-card-header *ngIf="roomList?.length <= 0"
             >No rooms assigned yet</ion-card-header
           >
           <ion-card-content>
             <ion-list *ngFor="let assignedRoom of roomList">
               <ion-item>
-                {{ assignedRoom.roomNum }}
+                {{ assignedRoom }}
               </ion-item>
             </ion-list>
           </ion-card-content>
@@ -33,7 +33,7 @@
       <ion-row>
         <ion-col size-sm="6" offset-sm="3">
           <ion-list>
-            <ion-label position="floating">Choose rooms to assign:</ion-label>
+            <ion-label position="floating">Choose new room list:</ion-label>
             <ion-select
               placeholder="Select Rooms"
               [(ngModel)]="assignRoomsVar"
@@ -73,9 +73,9 @@
             >
               <ion-select-option
                 *ngFor="let room of roomList$ | async"
-                [value]="room.roomNum"
+                [value]="room"
               >
-                {{ room.roomNum }}
+                {{ room }}
               </ion-select-option>
             </ion-select>
           </ion-list>

@@ -7,6 +7,7 @@ import {
   AngularFirestore
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-assign-rooms',
@@ -19,7 +20,7 @@ export class AssignRoomsPage implements OnInit {
   roomDoc: AngularFirestoreDocument<Room>;
 
   allRooms$: Observable<Room[]>;
-  roomList$: Observable<Room[]>;
+  roomList$: Observable<string[]>;
   nurseId$: Observable<string>;
 
   constructor(
@@ -30,13 +31,13 @@ export class AssignRoomsPage implements OnInit {
 
   ngOnInit() {
     this.allRooms$ = this.userService.getRooms();
-    this.roomList$ = this.userService.getRoomsAssigned();
+    this.roomList$ = this.authService.getCurrUser().pipe(map(x => x.rooms));
     this.nurseId$ = this.authService.userId;
   }
 
   ionViewWillEnter() {
     this.allRooms$ = this.userService.getRooms();
-    this.roomList$ = this.userService.getRoomsAssigned();
+    this.roomList$ = this.authService.getCurrUser().pipe(map(x => x.rooms));
     this.nurseId$ = this.authService.userId;
   }
 
@@ -45,11 +46,16 @@ export class AssignRoomsPage implements OnInit {
     this.nurseId$.subscribe(x => {
       nurseId = x;
     });
-    this.assignRoomsVar.forEach(element => {
-      this.roomDoc = this.firestore.doc('rooms/' + element);
-      this.roomDoc.update({ assignedNurse: nurseId });
-    });
-    this.assignRoomsVar = [];
+    this.firestore
+      .doc('added-users/' + nurseId)
+      .update({ rooms: this.assignRoomsVar })
+      .then(x => {
+        this.assignRoomsVar = [];
+      });
+    // this.assignRoomsVar.forEach(element => {
+    //   this.roomDoc = this.firestore.doc('rooms/' + element);
+    //   this.roomDoc.update({ assignedNurse: nurseId });
+    // });
   }
   unassignRooms() {
     let nurseId: string;
