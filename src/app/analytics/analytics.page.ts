@@ -6,8 +6,7 @@ import {
 } from '@angular/fire/firestore';
 import { Users } from '../users/users.model';
 import { Chart } from 'chart.js';
-import { exists } from 'fs';
-import { switchMap, take } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 @Component({
   selector: 'app-analytics',
   templateUrl: './analytics.page.html',
@@ -55,27 +54,6 @@ export class AnalyticsPage implements OnInit {
           this.createCommonChart(result);
         }
       });
-    // // get Nurses list
-    // this.nurseRef = this.firestore.collection('added-users', ref =>
-    //   ref.where('type', '==', 'n')
-    // );
-    // this.nurseRef.valueChanges().subscribe(result => {
-    //   this.nurses = result;
-    // });
-
-    // // get Completed Requests
-    // this.ref = this.firestore.collection('requests', ref =>
-    //   ref.where('status', '==', 'Completed')
-    // );
-    // this.ref.valueChanges().subscribe(result => {
-    //   if (this.chartData) {
-    //     this.updateCharts(result);
-    //     this.updateCommonCharts(result);
-    //   } else {
-    //     this.createCharts(result);
-    //     this.createCommonChart(result);
-    //   }
-    // });
   }
 
   getReportValues() {

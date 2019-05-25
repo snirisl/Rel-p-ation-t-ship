@@ -50,17 +50,17 @@
         </div>
         <ion-list *ngIf="requests$ | async as reqList">
           <ion-item-sliding
-            *ngFor="
-              let request of reqList | filter: status:'status'
-            "
-            #slidingItem 
+            *ngFor="let request of reqList | filter: status:'status'"
+            class="animated pulse faster"
+            #slidingItem
           >
             <ion-item
               *ngIf="
                 (this.authService.userType === 'p' &&
                   request.patientName === this.authService.userName) ||
-                  (this.authService.userType === 'n' && this.assignedRooms.includes(request.room))
-              " class="animated pulse faster"
+                (this.authService.userType === 'n' &&
+                  this.assignedRooms.includes(request.room))
+              "
             >
               <ion-thumbnail slot="start">
                 <ion-img [src]="request.imgUrl"></ion-img>

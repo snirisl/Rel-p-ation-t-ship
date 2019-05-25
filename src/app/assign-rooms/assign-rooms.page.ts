@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UsersService } from '../users/users.service';
 import { Room } from '../users/room.model';
 import { AuthService } from '../auth/auth.service';
@@ -17,8 +17,6 @@ import { ToastController } from '@ionic/angular';
 })
 export class AssignRoomsPage implements OnInit {
   assignRoomsVar: any;
-  unassignRoomsVar: any;
-  roomDoc: AngularFirestoreDocument<Room>;
 
   allRooms$: Observable<Room[]>;
   roomList$: Observable<string[]>;
@@ -55,10 +53,6 @@ export class AssignRoomsPage implements OnInit {
         this.assignRoomsVar = [];
         this.presentToast();
       });
-    // this.assignRoomsVar.forEach(element => {
-    //   this.roomDoc = this.firestore.doc('rooms/' + element);
-    //   this.roomDoc.update({ assignedNurse: nurseId });
-    // });
   }
 
   async presentToast() {
