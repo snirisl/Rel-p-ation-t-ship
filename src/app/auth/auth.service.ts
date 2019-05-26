@@ -166,8 +166,7 @@ export class AuthService {
           environment.firebaseAPIKey
         }`,
         { email: email, password: password, returnSecureToken: true }
-      )
-      .pipe(tap(this.setUserData.bind(this)));
+      );
   }
 
   logout() {
