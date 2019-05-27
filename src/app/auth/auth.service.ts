@@ -7,7 +7,8 @@ import { map, tap } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
 import { Users } from '../users/users.model';
 import {
-  AngularFirestore, AngularFirestoreDocument
+  AngularFirestore,
+  AngularFirestoreDocument
 } from '@angular/fire/firestore';
 
 export interface AuthResponseData {
@@ -66,6 +67,8 @@ export class AuthService {
   }
 
   getUserType(userId: string) {
+    console.log('inside getUserType');
+
     const userQuery = this.firestore.doc<Users>(`added-users/${userId}`);
     userQuery.valueChanges().subscribe(x => {
       if (!x) {
@@ -160,13 +163,12 @@ export class AuthService {
   }
 
   signup(email: string, password: string) {
-    return this.http
-      .post<AuthResponseData>(
-        `https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=${
-          environment.firebaseAPIKey
-        }`,
-        { email: email, password: password, returnSecureToken: true }
-      );
+    return this.http.post<AuthResponseData>(
+      `https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=${
+        environment.firebaseAPIKey
+      }`,
+      { email: email, password: password, returnSecureToken: true }
+    );
   }
 
   logout() {

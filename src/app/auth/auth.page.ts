@@ -12,7 +12,6 @@ import { Observable } from 'rxjs';
 })
 export class AuthPage implements OnInit {
   isLoading = false;
-  isLogin = true;
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -33,39 +32,36 @@ export class AuthPage implements OnInit {
       .then(loadingEl => {
         loadingEl.present();
         let authObs: Observable<AuthResponseData>;
-        if (this.isLogin) {
-          authObs = this.authService.login(email, password);
-        } else {
-          authObs = this.authService.signup(email, password);
-        }
-        authObs.subscribe(resData => {
-          this.isLoading = false;
-          loadingEl.dismiss();
-          this.zone.run(
-            () => {
+        authObs = this.authService.login(email, password);
+        authObs.subscribe(
+          resData => {
+            this.isLoading = false;
+            loadingEl.dismiss();
+            this.zone.run(() => {
               this.router
                 .navigate(['/requests', 'tabs', 'my-requests'])
                 .then(() => {
                   location.reload();
                 });
-            },
-            errRes => {
-              loadingEl.dismiss();
-              const code = errRes.error.error.message;
-              let message = 'Could not sign you up, please try again.';
-              if (code === 'EMAIL_EXISTS') {
-                message = 'This Id exists already!';
-              } else if (code === 'EMAIL_NOT_FOUND') {
-                message = 'No such user.';
-              } else if (code === 'INVALID_PASSWORD') {
-                message = 'Could not log you in, please try again.';
-              }
-              this.showAlert(message);
+            });
+          },
+          errRes => {
+            loadingEl.dismiss();
+            const code = errRes.error.error.message;
+            let message = 'Could not sign you up, please try again.';
+            if (code === 'EMAIL_EXISTS') {
+              message = 'This Id exists already!';
+            } else if (code === 'EMAIL_NOT_FOUND') {
+              message = 'No such user.';
+            } else if (code === 'INVALID_PASSWORD') {
+              message = 'Could not log you in, please try again.';
             }
-          );
-        });
+            this.showAlert(message);
+          }
+        );
       });
   }
+
   onSubmit(form: NgForm) {
     if (!form.valid) {
       return;
