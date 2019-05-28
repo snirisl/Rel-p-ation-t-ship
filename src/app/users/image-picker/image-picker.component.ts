@@ -39,11 +39,6 @@ export class ImagePickerComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log('Mobile:', this.platform.is('mobile'));
-    console.log('Hybrid:', this.platform.is('hybrid'));
-    console.log('ios:', this.platform.is('ios'));
-    console.log('Android:', this.platform.is('android'));
-    console.log('Desktop:', this.platform.is('desktop'));
     if (
       (this.platform.is('mobile') && !this.platform.is('hybrid')) ||
       this.platform.is('desktop')
@@ -57,7 +52,6 @@ export class ImagePickerComponent implements OnInit {
       this.filepickerRef.nativeElement.click();
       return;
     }
-    console.log('get to step of getting an image');
     Plugins.Camera.getPhoto({
       quality: 100,
       source: CameraSource.Prompt,
@@ -69,10 +63,8 @@ export class ImagePickerComponent implements OnInit {
       .then(image => {
         this.selectedImage = image.base64String;
         this.recognizeImage();
-        console.log('success here');
       })
       .catch(error => {
-        console.log('this is error');
         return false;
       });
   }
@@ -101,19 +93,15 @@ export class ImagePickerComponent implements OnInit {
         loadingEl.present();
         Tesseract.recognize(this.selectedImage)
           .progress(message => {
-            console.log(message);
           })
           .catch(error => {
-            console.error(error);
             loadingEl.dismiss();
           })
           .then(result => {
             this.imageText = result.text;
-            console.log(this.imageText);
           })
           .finally(resultOrError => {
             const splitString = this.imageText.split(/\n/gi);
-            console.log(splitString);
             this.id = splitString[1];
             this.name = splitString[0];
             this.usersService.formIdFromOCR = splitString[1];

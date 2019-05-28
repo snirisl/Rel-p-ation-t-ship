@@ -34,7 +34,6 @@ export class AnalyticsPage implements OnInit {
       .pipe(
         switchMap((nurses: Users[]) => {
           this.nurses = nurses;
-          console.log(this.nurses);
           return this.firestore
             .collection('requests', ref =>
               ref.where('status', '==', 'Completed')

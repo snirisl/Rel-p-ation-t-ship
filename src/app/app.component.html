@@ -14,25 +14,25 @@
             <ion-text>Requests</ion-text>
           </ion-item>
         </ion-menu-toggle>
-        <ion-menu-toggle menu="m1" *ngIf="this.authService.userType !== 'p'">
+        <ion-menu-toggle menu="m1" *ngIf="this.authService.userType === 'n'">
           <ion-item lines="none" routerLink="/users" button>
             <ion-icon name="person-add"></ion-icon>
             <ion-label>Add User (Patient/Nurse)</ion-label>
           </ion-item>
         </ion-menu-toggle>
-        <ion-menu-toggle menu="m1" *ngIf="this.authService.userType !== 'p'">
+        <ion-menu-toggle menu="m1" *ngIf="this.authService.userType === 'n'">
           <ion-item lines="none" routerLink="/manage-users" button>
             <ion-icon name="people"></ion-icon>
             <ion-label>Manage Users</ion-label>
           </ion-item>
         </ion-menu-toggle>
-        <ion-menu-toggle menu="m1" *ngIf="this.authService.userType !== 'p'">
+        <ion-menu-toggle menu="m1" *ngIf="this.authService.userType === 'n'">
           <ion-item lines="none" routerLink="/assign-rooms" button>
             <ion-icon name="list"></ion-icon>
             <ion-label>Assign Rooms</ion-label>
           </ion-item>
         </ion-menu-toggle>
-        <ion-menu-toggle menu="m1" *ngIf="this.authService.userType !== 'p'">
+        <ion-menu-toggle menu="m1" *ngIf="this.authService.userType === 'n'">
           <ion-item lines="none" routerLink="/analytics" button>
             <ion-icon name="analytics"></ion-icon>
             <ion-label>Analytics</ion-label>

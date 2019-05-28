@@ -67,8 +67,6 @@ export class AuthService {
   }
 
   getUserType(userId: string) {
-    console.log('inside getUserType');
-
     const userQuery = this.firestore.doc<Users>(`added-users/${userId}`);
     userQuery.valueChanges().subscribe(x => {
       if (!x) {
