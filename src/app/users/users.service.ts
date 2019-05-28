@@ -81,9 +81,14 @@ export class UsersService {
     this.userDoc.update(addedUser);
   }
 
-  deleteUser(deletedUser: Users) {
-    this.userDoc = this.firestore.doc(`added-users/${deletedUser.userId}`);
-    this.userDoc.delete();
+  dischargePatient(dischargedUser: Users) {
+    this.userDoc = this.firestore.doc(`added-users/${dischargedUser.userId}`);
+    this.userDoc.update({type: 'dp'});
+  }
+
+  returnPatient(returnedUser: Users) {
+    this.userDoc = this.firestore.doc(`added-users/${returnedUser.userId}`);
+    this.userDoc.update({type: 'p'});
   }
 
   add(newAddedUser: Users) {

@@ -17,14 +17,19 @@
       <ion-item-sliding #slidingItem>
         <ion-item text-wrap  lines="inset"
           ><ion-avatar
-            ><ion-icon name="contact" size="large" color="{{user.type == 'p' ? 'secondary' : ''}}"></ion-icon
+            ><ion-icon *ngIf="user.type !== 'dp'" name="contact" size="large" color="{{user.type == 'p' ? 'secondary' : ''}}"></ion-icon
+          >
+            <ion-icon *ngIf="user.type === 'dp'" name="contact" size="large" color="tertiary"></ion-icon
           ></ion-avatar>
           <ion-label>
             <h5>{{ user.name }}</h5>
             <p>
               Room Number: {{ user.type == 'p' ? user.room : 'N/A' }}
             </p>
-            <p>
+            <p *ngIf="user.type === 'dp'">
+              User Type: Discharged Patient
+            </p>
+            <p *ngIf="user.type !== 'dp'">
               User Type: {{ user.type == 'p' ? 'Patient' : 'Nurse' }}
             </p>
             <div *ngIf="editState && userToEdit.id == user.id">
@@ -75,16 +80,21 @@
             </div>
           </ion-label>
         </ion-item>
-        <ion-item-options side="end" *ngIf="user.type == 'p'">
-          <ion-item-option
+        <ion-item-options side="end" *ngIf="user.type !== 'n'">
+          <ion-item-option *ngIf="user.type === 'p'"
             color="secondary"
             (click)="editUser($event, user, slidingItem)"
             size="small"
           >
             <ion-icon name="create" slot="icon-only"></ion-icon>
           </ion-item-option>
-          <ion-item-option color="danger" (click)="delete(user)">
-            <ion-icon name="trash" slot="icon-only"></ion-icon>
+          <ion-item-option *ngIf="user.type === 'p'" color="primary" (click)="dischargePatient(user)">
+            <ion-icon name="hand" slot="start"></ion-icon>
+            Discharge
+          </ion-item-option>
+          <ion-item-option *ngIf="user.type === 'dp'" color="primary" (click)="returnPatient(user)">
+            <ion-icon name="clipboard" slot="start"></ion-icon>
+            Activate
           </ion-item-option>
         </ion-item-options>
       </ion-item-sliding>
